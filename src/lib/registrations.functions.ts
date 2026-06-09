@@ -187,14 +187,30 @@ function splitEvents(s: string | undefined | null): string[] {
     .filter(Boolean);
 }
 
-// Look up a value by any of the candidate header names (case/space-insensitive).
+// Look up a value by any of the candidate header names.
+// Matches when the header (left of '|', case/space-insensitive) equals,
+// starts with, or contains the candidate. This handles bilingual Google Form
+// headers like "Full Name in Myanmar |အမည်အပြည့်အစုံ".
 function pick(r: Record<string, string>, ...names: string[]): string {
   const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
-  const map = new Map<string, string>();
-  for (const k of Object.keys(r)) map.set(norm(k), r[k]);
+  const entries = Object.keys(r).map((k) => {
+    const left = k.split("|")[0];
+    return { key: k, normLeft: norm(left), normFull: norm(k) };
+  });
   for (const n of names) {
-    const v = map.get(norm(n));
-    if (v !== undefined && v !== "") return v;
+    const nn = norm(n);
+    // 1) exact left-of-pipe
+    let hit = entries.find((e) => e.normLeft === nn);
+    // 2) left-of-pipe starts with candidate
+    if (!hit) hit = entries.find((e) => e.normLeft.startsWith(nn));
+    // 3) full header starts with candidate
+    if (!hit) hit = entries.find((e) => e.normFull.startsWith(nn));
+    // 4) full header includes candidate
+    if (!hit) hit = entries.find((e) => e.normFull.includes(nn));
+    if (hit) {
+      const v = r[hit.key];
+      if (v !== undefined && v !== "") return v;
+    }
   }
   return "";
 }
@@ -217,8 +233,9 @@ export const uploadRegistrationsCsv = createServerFn({ method: "POST" })
     const delimiter = firstLine.includes("\t") ? "\t" : ",";
 
     const parsed = parseDelimited(data.content, delimiter);
+    const headers = parsed.length > 0 ? Object.keys(parsed[0]) : [];
     if (parsed.length === 0) {
-      return { inserted: 0, errors: ["No rows found"], delimiter };
+      return { inserted: 0, errors: ["No rows found"], delimiter, headers, sample: null };
     }
 
     const errors: string[] = [];
@@ -266,8 +283,18 @@ export const uploadRegistrationsCsv = createServerFn({ method: "POST" })
       return row;
     });
 
+    // Sample of first normalized row (with phone_search masked) for admin debug.
+    const sample = rowsToUpsert[0]
+      ? {
+          ...rowsToUpsert[0],
+          phone_search: rowsToUpsert[0].phone_search
+            ? `[${String(rowsToUpsert[0].phone_search).length} chars]`
+            : null,
+        }
+      : null;
+
     if (rowsToUpsert.length === 0) {
-      return { inserted: 0, errors, delimiter };
+      return { inserted: 0, errors, delimiter, headers, sample };
     }
 
     const { error, count } = await sb
@@ -276,7 +303,13 @@ export const uploadRegistrationsCsv = createServerFn({ method: "POST" })
 
     if (error) {
       console.error("[uploadRegistrationsCsv]", error);
-      return { inserted: 0, errors: [...errors, error.message], delimiter };
+      return { inserted: 0, errors: [...errors, error.message], delimiter, headers, sample };
     }
-    return { inserted: count ?? rowsToUpsert.length, errors, delimiter };
+    return {
+      inserted: count ?? rowsToUpsert.length,
+      errors,
+      delimiter,
+      headers,
+      sample,
+    };
   });
