@@ -157,6 +157,18 @@ function SiteNav() {
               {n.en}
             </a>
           ))}
+          <Link
+            to="/schedule"
+            className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
+          >
+            Schedule
+          </Link>
+          <Link
+            to="/technical-guide"
+            className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
+          >
+            Technical Guide
+          </Link>
           <a
             href={REGISTER_URL}
             target="_blank"
