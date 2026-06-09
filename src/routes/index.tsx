@@ -23,8 +23,16 @@ import {
   type PublicRegistration,
   type PublicCounts,
 } from "@/lib/registrations.functions";
-import heroImage from "@/assets/hero-cycling.jpg";
+import heroAsset from "@/assets/mcf-mdyrr.jpg.asset.json";
+import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
+import imgRoadRace from "@/assets/mcf-rr.jpg.asset.json";
+import imgCriterium from "@/assets/mcf-criterium.png.asset.json";
+import imgAction from "@/assets/mcf-action.png.asset.json";
+import imgStart from "@/assets/mcf-start.jpg.asset.json";
+import imgAwards from "@/assets/mcf-awards.png.asset.json";
 import gnlmClipping from "@/assets/gnlm-8june2026.png.asset.json";
+
+const heroImage = heroAsset.url;
 
 export const Route = createFileRoute("/")({
   head: () => ({
