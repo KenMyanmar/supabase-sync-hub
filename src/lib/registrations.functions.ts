@@ -29,7 +29,18 @@ const lookupInput = z.object({
   event: z.string().max(50).optional().default("all"),
   status: z.string().max(80).optional().default("all"),
   page: z.number().int().min(1).max(10_000).optional().default(1),
+  withCounts: z.boolean().optional().default(false),
 });
+
+// Public-safe aggregate counts. Numbers only — never any row data.
+export type PublicCounts = {
+  total: number;
+  roadRace: number;
+  criterium: number;
+  mtbXco: number;
+  pending: number;
+};
+
 
 // Whitelisted columns sent to the browser. phone_search / raw_data are
 // intentionally excluded.
@@ -100,7 +111,13 @@ export const lookupRegistration = createServerFn({ method: "POST" })
 
     if (error) {
       console.error("[lookupRegistration]", error);
-      return { rows: [] as PublicRegistration[], total: 0, page: data.page, pageSize: PAGE_SIZE };
+      return {
+        rows: [] as PublicRegistration[],
+        total: 0,
+        page: data.page,
+        pageSize: PAGE_SIZE,
+        counts: null as PublicCounts | null,
+      };
     }
 
     // Defensive: strip to whitelisted shape.
@@ -114,8 +131,32 @@ export const lookupRegistration = createServerFn({ method: "POST" })
       admin_remark: r.admin_remark ?? null,
     }));
 
-    return { rows: safe, total: count ?? 0, page: data.page, pageSize: PAGE_SIZE };
+    // Optional public-safe aggregate counts. Numbers only.
+    let counts: PublicCounts | null = null;
+    if (data.withCounts) {
+      const headOpts = { count: "exact" as const, head: true };
+      const [tot, rr, cr, mtb, pend] = await Promise.all([
+        sb.from("registrations").select("registration_no", headOpts),
+        sb.from("registrations").select("registration_no", headOpts).contains("events", ["Road Race"]),
+        sb.from("registrations").select("registration_no", headOpts).contains("events", ["Criterium"]),
+        sb.from("registrations").select("registration_no", headOpts).contains("events", ["MTB XCO"]),
+        sb
+          .from("registrations")
+          .select("registration_no", headOpts)
+          .in("status", ["Registration received - pending MCF verification", "Pending"]),
+      ]);
+      counts = {
+        total: tot.count ?? 0,
+        roadRace: rr.count ?? 0,
+        criterium: cr.count ?? 0,
+        mtbXco: mtb.count ?? 0,
+        pending: pend.count ?? 0,
+      };
+    }
+
+    return { rows: safe, total: count ?? 0, page: data.page, pageSize: PAGE_SIZE, counts };
   });
+
 
 // ─── Server-only sync helpers ───────────────────────────────────────────────
 // Not a createServerFn, not exposed as a route. The future admin project
