@@ -24,6 +24,7 @@ import {
   type PublicCounts,
 } from "@/lib/registrations.functions";
 import heroImage from "@/assets/hero-cycling.jpg";
+import gnlmClipping from "@/assets/gnlm-8june2026.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
