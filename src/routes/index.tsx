@@ -110,6 +110,7 @@ function MicrositePage() {
       <SiteNav />
       <main>
         <Hero />
+        <ProgrammeAtAGlance />
         <NoticeBanner />
         <RegistrationStatus />
         <EventsSection />
