@@ -19,7 +19,14 @@ import {
   BookOpen,
   FileWarning,
   ArrowRight,
+  Users,
+  ChevronDown,
 } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   lookupRegistration,
   type PublicRegistration,
