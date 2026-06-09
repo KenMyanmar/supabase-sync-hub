@@ -26,11 +26,18 @@ function AdminPage() {
     setResult("");
     try {
       const r = await upload({ data: { password, content } });
-      setResult(
-        `Detected delimiter: ${r.delimiter === "\t" ? "TAB (TSV)" : "COMMA (CSV)"}\n` +
-          `Inserted/updated: ${r.inserted}` +
-          (r.errors.length ? `\nErrors:\n${r.errors.join("\n")}` : ""),
-      );
+      const parts = [
+        `Detected delimiter: ${r.delimiter === "\t" ? "TAB (TSV)" : "COMMA (CSV)"}`,
+        `Inserted/updated: ${r.inserted}`,
+        "",
+        `Detected headers (${r.headers?.length ?? 0}):`,
+        ...(r.headers ?? []).map((h: string, i: number) => `  ${i + 1}. ${h}`),
+        "",
+        "Sample normalized first row:",
+        r.sample ? JSON.stringify(r.sample, null, 2) : "(none)",
+      ];
+      if (r.errors.length) parts.push("", "Errors:", ...r.errors);
+      setResult(parts.join("\n"));
     } catch (err: any) {
       setResult(`Failed: ${err?.message ?? String(err)}`);
     } finally {
