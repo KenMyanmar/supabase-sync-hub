@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Myanmar Cycling" },
+      { name: "description", content: "Supabase Sync Hub synchronizes registration data from Supabase, enabling public access to event statuses and admin uploads." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Myanmar Cycling" },
+      { property: "og:description", content: "Supabase Sync Hub synchronizes registration data from Supabase, enabling public access to event statuses and admin uploads." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Myanmar Cycling" },
+      { name: "twitter:description", content: "Supabase Sync Hub synchronizes registration data from Supabase, enabling public access to event statuses and admin uploads." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/NCf69D5yBgMjiQfWje1EbwIyjL02/social-images/social-1780981137781-IMG_5755.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/NCf69D5yBgMjiQfWje1EbwIyjL02/social-images/social-1780981137781-IMG_5755.webp" },
     ],
     links: [
       {
