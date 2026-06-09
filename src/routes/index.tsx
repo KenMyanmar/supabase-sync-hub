@@ -964,8 +964,8 @@ function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-white/10">
-              <Bike className="h-4 w-4" />
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white p-1">
+              <img src={mcfLogo.url} alt="MCF logo" className="h-full w-full object-contain" />
             </span>
             <div className="leading-tight">
               <p className="font-semibold">Myanmar Cycling Federation</p>
