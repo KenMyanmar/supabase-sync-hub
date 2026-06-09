@@ -813,13 +813,13 @@ function PointsSection() {
 
 /* ─── Gallery ─────────────────────────────────────────────────────────────── */
 function GallerySection() {
-  const cards = [
-    "Road Race",
-    "Criterium",
-    "MTB XCO",
-    "Riders",
-    "Awards",
-    "Sponsors / Event Village",
+  const cards: { label: string; src?: string }[] = [
+    { label: "Road Race", src: imgRoadRace.url },
+    { label: "Criterium", src: imgCriterium.url },
+    { label: "Cycling Action", src: imgAction.url },
+    { label: "Race Start", src: imgStart.url },
+    { label: "Awards", src: imgAwards.url },
+    { label: "MTB XCO" }, // neutral placeholder until a true MTB XCO photo is available
   ];
   return (
     <section id="gallery" className="bg-[color:var(--mcf-cream)] border-y border-border">
@@ -827,30 +827,48 @@ function GallerySection() {
         <SectionHeader
           eyebrow="Event Photos"
           my="ပွဲတော် ဓာတ်ပုံများ"
-          en="Gallery — real event photos will appear here after the race weekend."
+          en="Gallery — archive photos from the Myanmar Cycling Federation."
         />
         <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-          {cards.map((label) => (
+          {cards.map(({ label, src }) => (
             <figure
               key={label}
               className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-border bg-card shadow-sm"
             >
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(135deg, color-mix(in oklab, var(--mcf-navy) 90%, transparent), color-mix(in oklab, var(--mcf-navy-deep) 95%, transparent))",
-                }}
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-white/90 p-3 text-center">
-                <Camera className="h-5 w-5 opacity-70" />
-                <figcaption className="mt-2 text-xs sm:text-sm font-medium">
-                  {label}
-                </figcaption>
-                <span className="mt-1 text-[10px] uppercase tracking-wider text-white/60">
-                  Photo coming soon
-                </span>
-              </div>
+              {src ? (
+                <>
+                  <img
+                    src={src}
+                    alt={label}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-3">
+                    <figcaption className="text-xs sm:text-sm font-semibold text-white">
+                      {label}
+                    </figcaption>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, color-mix(in oklab, var(--mcf-navy) 90%, transparent), color-mix(in oklab, var(--mcf-navy-deep) 95%, transparent))",
+                    }}
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-white/90 p-3 text-center">
+                    <Camera className="h-5 w-5 opacity-70" />
+                    <figcaption className="mt-2 text-xs sm:text-sm font-medium">
+                      {label}
+                    </figcaption>
+                    <span className="mt-1 text-[10px] uppercase tracking-wider text-white/60">
+                      Photo coming soon
+                    </span>
+                  </div>
+                </>
+              )}
             </figure>
           ))}
         </div>
