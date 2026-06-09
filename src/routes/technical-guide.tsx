@@ -161,7 +161,7 @@ function TechnicalGuidePage() {
                   my="ဇွန် ၂၆"
                   time="07:00"
                   title="Road Race"
-                  venue="Hlegu"
+                  venue="Hlegu 11 Hills Round "
                   type="Points event"
                 />
                 <DayCard
@@ -188,7 +188,7 @@ function TechnicalGuidePage() {
               <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <RouteCard
                   title="Road Race"
-                  venue="Hlegu"
+                  venue="Hlegu 11 Hills Round "
                   details={[
                     "Distance: 100.98 km",
                     "Elevation gain: 806 m",
@@ -226,9 +226,9 @@ function TechnicalGuidePage() {
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <RouteReferenceImage
                   src={routeHlegu.url}
-                  alt="Hlegu Road Race reference map — Hlegu to Phukyi roundabout, 100.98 km, 806 m elevation gain"
-                  title="Road Race — Hlegu (reference)"
-                  caption="Hlegu → Phukyi roundabout out / back · 100.98 km · 806 m gain"
+                  alt="Hlegu 11 Hills Round  Road Race reference map — Hlegu 11 Hills Round  to Phukyi roundabout, 100.98 km, 806 m elevation gain"
+                  title="Road Race — Hlegu 11 Hills Round  (reference)"
+                  caption="Hlegu 11 Hills Round  → Phukyi roundabout out / back · 100.98 km · 806 m gain"
                 />
                 <RouteReferenceImage
                   src={routeCriterium.url}

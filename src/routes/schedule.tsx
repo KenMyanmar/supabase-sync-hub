@@ -45,13 +45,13 @@ const DAYS: Array<{
   {
     date: "26 June 2026",
     my: "ဇွန် ၂၆",
-    heading: "Road Race — Hlegu",
+    heading: "Road Race — Hlegu 11 Hills Round ",
     items: [
       {
         time: "07:00",
         event: "Road Race",
         category: "Men Elite — 100 km",
-        venue: "Hlegu → Phukyi roundabout (out / back)",
+        venue: "Hlegu 11 Hills Round  → Phukyi roundabout (out / back)",
         type: "Points",
       },
       {
@@ -59,14 +59,14 @@ const DAYS: Array<{
         event: "Road Race",
         category:
           "Men Junior — 100 km (paired start with Men Elite, separate classification)",
-        venue: "Hlegu → Phukyi roundabout (out / back)",
+        venue: "Hlegu 11 Hills Round  → Phukyi roundabout (out / back)",
         type: "Points",
       },
       {
         time: "07:15",
         event: "Road Race",
         category: "Women Elite / Open — 60 km",
-        venue: "Hlegu → Milestone 14/1 (out / back)",
+        venue: "Hlegu 11 Hills Round  → Milestone 14/1 (out / back)",
         type: "Points",
       },
     ],
