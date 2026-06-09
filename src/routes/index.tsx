@@ -33,6 +33,8 @@ import imgAction from "@/assets/mcf-action.png.asset.json";
 import imgStart from "@/assets/mcf-start.jpg.asset.json";
 import imgAwards from "@/assets/mcf-awards.png.asset.json";
 import gnlmClipping from "@/assets/gnlm-8june2026.png.asset.json";
+import routeHlegu from "@/assets/mcf-route-hlegu.png.asset.json";
+import routeCriterium from "@/assets/mcf-route-criterium.png.asset.json";
 
 const heroImage = heroAsset.url;
 
@@ -111,6 +113,7 @@ function MicrositePage() {
       <main>
         <Hero />
         <ProgrammeAtAGlance />
+        <RouteReferences />
         <NoticeBanner />
         <RegistrationStatus />
         <EventsSection />
@@ -447,6 +450,73 @@ function ProgrammeAtAGlance() {
             );
           })}
         </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Route reference images ──────────────────────────────────────────────── */
+function RouteReferences() {
+  const routes = [
+    {
+      img: routeHlegu.url,
+      title: "Road Race — Hlegu (reference)",
+      caption:
+        "Hlegu → Phukyi roundabout out / back · 100.98 km · 806 m elevation gain",
+      alt: "Hlegu Road Race reference map — Hlegu to Phukyi roundabout, 100.98 km, 806 m elevation gain",
+    },
+    {
+      img: routeCriterium.url,
+      title: "Criterium — Thuwunna outer ring (reference)",
+      caption: "Closed circuit around Thuwunna Stadium · 1.3 km / lap",
+      alt: "Thuwunna Criterium reference aerial — outer-ring closed circuit, 1.3 km per lap",
+    },
+  ];
+  return (
+    <section className="bg-muted/30 border-b border-border">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
+        <div className="flex items-end justify-between gap-3 flex-wrap">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent">
+              Route references
+            </p>
+            <h2
+              lang="my"
+              className="mt-1 text-2xl sm:text-3xl font-bold text-primary break-words"
+            >
+              လမ်းကြောင်းများ (Working Draft)
+            </h2>
+          </div>
+          <Link
+            to="/technical-guide"
+            hash="routes"
+            className="text-sm text-accent inline-flex items-center gap-1 hover:gap-2 transition-all"
+          >
+            Full route details <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+        <ul className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          {routes.map((r) => (
+            <li key={r.title}>
+              <figure className="rounded-xl border border-border bg-card overflow-hidden shadow-sm">
+                <img
+                  src={r.img}
+                  alt={r.alt}
+                  loading="lazy"
+                  className="w-full h-56 sm:h-64 object-cover"
+                />
+                <figcaption className="px-4 py-3 text-xs">
+                  <p className="font-semibold text-primary">{r.title}</p>
+                  <p className="mt-0.5 text-muted-foreground">{r.caption}</p>
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-xs text-muted-foreground">
+          Reference images for orientation only. Final Route Book, GPX, hazard
+          list and feed zones — Pending in Final Team Version.
+        </p>
       </div>
     </section>
   );
