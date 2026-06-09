@@ -19,7 +19,14 @@ import {
   BookOpen,
   FileWarning,
   ArrowRight,
+  Users,
+  ChevronDown,
 } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   lookupRegistration,
   type PublicRegistration,
@@ -93,6 +100,7 @@ const NAV = [
   { id: "status", my: "စာရင်း", en: "Status" },
   { id: "events", my: "ပြိုင်ပွဲများ", en: "Events" },
   { id: "points", my: "အမှတ်", en: "Points" },
+  { id: "organisers", my: "အဖွဲ့", en: "Organisers" },
   { id: "gallery", my: "ဓာတ်ပုံ", en: "Gallery" },
   { id: "sponsors", my: "ပံ့ပိုးသူ", en: "Sponsors" },
   { id: "media", my: "သတင်း", en: "Media" },
@@ -118,6 +126,7 @@ function MicrositePage() {
         <RegistrationStatus />
         <EventsSection />
         <PointsSection />
+        <OrganisersSection />
         <GallerySection />
         <SponsorsSection />
         <MediaSection />
@@ -1037,7 +1046,147 @@ function PointsSection() {
   );
 }
 
+/* ─── Organisers / Governance ─────────────────────────────────────────────── */
+type Organiser = {
+  role: string;
+  roleMy?: string;
+  name: string;
+  fn: string;
+};
+
+const ORGANISERS_PRIMARY: Organiser[] = [
+  { role: "President / Chair", roleMy: "ဥက္ကဋ္ဌ", name: "U Khin Maung Win", fn: "Strategic direction and final federation oversight." },
+  { role: "Venue / Government Sports Authority Coordination", roleMy: "အားကစားဝန်ကြီးဌာန ဆက်သွယ်ရေး", name: "U Kyaw Min Than — Yangon Region Sports Director, Ministry of Sports", fn: "Venue, state coordination, government support, official sports authority coordination." },
+  { role: "Ministry Sports Coordination / Operations Liaison", roleMy: "လုပ်ငန်းဆက်သွယ်ရေး", name: "Ko Linn Linn", fn: "Assisting U Kyaw Min Than with coordination among relevant authorities, venue arrangements, logistics support, and operational follow-up." },
+  { role: "Vice President / Oversight", roleMy: "ဒုဥက္ကဋ္ဌ — ကြီးကြပ်", name: "U Myat Thu", fn: "Senior federation oversight and advisory role, subject to availability." },
+  { role: "Vice President / Event Director", roleMy: "ဒုဥက္ကဋ္ဌ — ပွဲဦးစီး", name: "Ken Tun", fn: "Overall event execution, coordination, planning, and delivery." },
+  { role: "Secretary General", roleMy: "အထွေထွေအတွင်းရေးမှူး", name: "Ko Myo Than Tun", fn: "Official administration, meeting records, documentation, federation coordination." },
+  { role: "Finance", roleMy: "ဘဏ္ဍာရေး", name: "U Aung Naing Moe", fn: "Budget control, payments, procurement, cash prize preparation, financial reporting." },
+  { role: "PCP / Race Technical Authority", roleMy: "နည်းပညာ အကြီးအကဲ", name: "Ko Naing", fn: "Race technical authority, commissaire control, penalties, protests, result certification." },
+  { role: "Commissaire Panel", roleMy: "ဒိုင်လူကြီးအဖွဲ့", name: "Appointed Commissaires", fn: "Race control, technical decisions, penalties, protests, results." },
+  { role: "Safety Manager", roleMy: "လုံခြုံရေး မန်နေဂျာ", name: "Lianpanga", fn: "Safety plan, risk control, marshal / medical coordination." },
+];
+
+const ORGANISERS_SUPPORT: Organiser[] = [
+  { role: "Safety Support", name: "TBC", fn: "Field safety coordination support." },
+  { role: "Finish Judge", name: "TBC", fn: "Finish order and finish-line control." },
+  { role: "Timing / Results", name: "Timing Team", fn: "RFID timing, backup timing, lap counting, results." },
+  { role: "Registration / Admin", name: "Admin Team", fn: "Registration, sign-on, start-list support." },
+  { role: "Marshal / Security", name: "Field Team", fn: "Route control, crowd control, rider safety." },
+  { role: "Medical", name: "Medical Team", fn: "First aid, ambulance, emergency response." },
+  { role: "Logistics", name: "Ops Team", fn: "Equipment, transport, race materials." },
+  { role: "Media / Sponsor", name: "Media Team", fn: "Public communication, sponsor booths, media coordination." },
+];
+
+function OrganiserTable({ rows, startIndex = 1 }: { rows: Organiser[]; startIndex?: number }) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      {/* Desktop table */}
+      <table className="hidden md:table w-full text-sm">
+        <thead className="bg-primary text-primary-foreground">
+          <tr>
+            <th className="px-4 py-3 text-left w-12">#</th>
+            <th className="px-4 py-3 text-left">Role</th>
+            <th className="px-4 py-3 text-left">Name</th>
+            <th className="px-4 py-3 text-left">Function</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={r.role + i} className="border-t border-border odd:bg-background even:bg-muted/30">
+              <td className="px-4 py-3 align-top font-mono text-xs text-accent font-semibold">{startIndex + i}</td>
+              <td className="px-4 py-3 align-top">
+                <div className="font-semibold text-primary">{r.role}</div>
+                {r.roleMy && <div lang="my" className="text-xs text-muted-foreground mt-0.5">{r.roleMy}</div>}
+              </td>
+              <td className="px-4 py-3 align-top font-medium">{r.name}</td>
+              <td className="px-4 py-3 align-top text-muted-foreground">{r.fn}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {/* Mobile cards */}
+      <ul className="md:hidden divide-y divide-border">
+        {rows.map((r, i) => (
+          <li key={r.role + i} className="p-4">
+            <div className="flex items-start gap-3">
+              <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent/15 text-xs font-bold text-accent">
+                {startIndex + i}
+              </span>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-semibold text-primary">{r.role}</div>
+                {r.roleMy && <div lang="my" className="text-xs text-muted-foreground">{r.roleMy}</div>}
+                <div className="mt-1 text-sm font-medium">{r.name}</div>
+                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{r.fn}</p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function OrganisersSection() {
+  const [open, setOpen] = useState(false);
+  return (
+    <section id="organisers" className="bg-muted/20 border-y border-border">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-accent">
+          <Users className="h-4 w-4" />
+          <span>Governance</span>
+        </div>
+        <h2 className="mt-2 text-2xl sm:text-3xl font-bold text-primary">
+          <span lang="my">စီစဉ်ကျင်းပရေးအဖွဲ့</span>
+          <span className="text-muted-foreground"> · </span>
+          Meet the Organisers
+        </h2>
+        <p lang="my" className="mt-4 max-w-3xl text-sm sm:text-base text-foreground/80 leading-relaxed">
+          ၂၀၂၆ ခုနှစ် (၆၄) ကြိမ်မြောက် မြန်မာနိုင်ငံ စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲအား မြန်မာနိုင်ငံ စက်ဘီးအဖွဲ့ချုပ်၊ အားကစားနှင့် လူငယ်ရေးရာဝန်ကြီးဌာနနှင့် သက်ဆိုင်ရာ တာဝန်ရှိသူများ ပူးပေါင်းဆောင်ရွက်၍ ကျင်းပသွားမည်ဖြစ်ပါသည်။
+        </p>
+
+        <div className="mt-8">
+          <OrganiserTable rows={ORGANISERS_PRIMARY} startIndex={1} />
+        </div>
+
+        <Collapsible open={open} onOpenChange={setOpen} className="mt-6">
+          <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 text-left shadow-sm hover:bg-muted/40 transition-colors">
+            <div>
+              <div className="text-sm font-semibold text-primary">
+                Operations Support Teams
+              </div>
+              <div lang="my" className="text-xs text-muted-foreground">
+                လုပ်ငန်းဆောင်ရွက်ရေး အထောက်အကူပြုအဖွဲ့များ
+              </div>
+            </div>
+            <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-3">
+            <OrganiserTable rows={ORGANISERS_SUPPORT} startIndex={11} />
+          </CollapsibleContent>
+        </Collapsible>
+
+        <div className="mt-8 rounded-xl border-l-4 border-l-accent border border-border bg-card p-5 shadow-sm">
+          <div className="text-xs font-semibold uppercase tracking-wider text-accent">
+            Governance note
+          </div>
+          <p className="mt-2 text-sm text-foreground/85 leading-relaxed">
+            The President provides strategic direction and final federation oversight.
+            U Kyaw Min Than and Ko Linn Linn support government, venue, authority
+            coordination and logistics arrangements. The Event Director manages
+            overall execution. Race decisions, penalties, protests and final results
+            remain under the authority of the PCP and Commissaire Panel. Safety
+            planning is coordinated by the Safety Manager with the Event Director,
+            PCP, medical, marshal and traffic/security teams.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Gallery ─────────────────────────────────────────────────────────────── */
+
 function GallerySection() {
   const cards: { label: string; src?: string }[] = [
     { label: "Road Race", src: imgRoadRace.url },
