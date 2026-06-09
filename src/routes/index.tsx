@@ -100,6 +100,7 @@ const NAV = [
   { id: "status", my: "စာရင်း", en: "Status" },
   { id: "events", my: "ပြိုင်ပွဲများ", en: "Events" },
   { id: "points", my: "အမှတ်", en: "Points" },
+  { id: "organisers", my: "အဖွဲ့", en: "Organisers" },
   { id: "gallery", my: "ဓာတ်ပုံ", en: "Gallery" },
   { id: "sponsors", my: "ပံ့ပိုးသူ", en: "Sponsors" },
   { id: "media", my: "သတင်း", en: "Media" },
