@@ -254,8 +254,8 @@ function Hero() {
           className="mt-4 max-w-full break-words text-3xl font-bold leading-[1.25] sm:text-4xl md:text-5xl lg:text-6xl"
         >
           ၂၀၂၆ ခုနှစ် (၆၄) ကြိမ်မြောက်
-          <br className="hidden sm:inline" />{" "}
-          မြန်မာနိုင်ငံ စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲ
+          <br />
+          &nbsp;စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲ
         </h1>
         <p className="mt-3 max-w-2xl text-base sm:text-lg text-white/85">
           Myanmar Cycling Federation National Cycling Event 2026
