@@ -83,12 +83,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Myanmar Cycling" },
       { property: "og:description", content: "Supabase Sync Hub synchronizes registration data from Supabase, enabling public access to event statuses and admin uploads." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Myanmar Cycling" },
       { name: "twitter:description", content: "Supabase Sync Hub synchronizes registration data from Supabase, enabling public access to event statuses and admin uploads." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/NCf69D5yBgMjiQfWje1EbwIyjL02/social-images/social-1780981137781-IMG_5755.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/NCf69D5yBgMjiQfWje1EbwIyjL02/social-images/social-1780981137781-IMG_5755.webp" },
+      { property: "og:image", content: "https://cyclings.live/__l5e/assets-v1/e5e9beb0-fd28-42bc-926a-db89ac64ced9/mcf-og-share.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://cyclings.live/__l5e/assets-v1/e5e9beb0-fd28-42bc-926a-db89ac64ced9/mcf-og-share.png" },
     ],
     links: [
       {
