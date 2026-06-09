@@ -434,6 +434,7 @@ function ProgrammeAtAGlance() {
                   <p className="mt-3 text-[11px] uppercase tracking-wider text-muted-foreground">
                     {d.date} · <span lang="my">{d.my}</span>
                   </p>
+                  <p className="mt-0.5 font-mono text-xs text-accent">{d.time}</p>
                   <p className="mt-1 text-lg font-bold text-primary">{d.title}</p>
                   <p className="text-sm text-muted-foreground break-words">
                     {d.venue}
