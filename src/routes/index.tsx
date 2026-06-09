@@ -24,6 +24,7 @@ import {
   type PublicCounts,
 } from "@/lib/registrations.functions";
 import heroImage from "@/assets/hero-cycling.jpg";
+import gnlmClipping from "@/assets/gnlm-8june2026.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -888,25 +889,19 @@ function MediaSection() {
           en="Featured in Mainstream Media"
         />
         <article className="mt-8 grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-4 rounded-xl border border-border bg-card overflow-hidden shadow-sm">
-          <div className="relative aspect-[4/3] md:aspect-auto md:min-h-full bg-primary/5">
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(135deg, color-mix(in oklab, var(--mcf-navy) 12%, transparent), color-mix(in oklab, var(--mcf-navy) 4%, transparent))",
-              }}
+          <a
+            href={gnlmClipping.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative block bg-white"
+          >
+            <img
+              src={gnlmClipping.url}
+              alt="The Global New Light of Myanmar — Sports page, 8 June 2026, featuring the 64th MCF National Cycling Event"
+              loading="lazy"
+              className="w-full h-full object-contain md:object-cover md:aspect-auto aspect-[4/3]"
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-primary/80 p-4">
-              <Newspaper className="h-7 w-7" />
-              <p className="mt-2 text-sm font-semibold">
-                The Global New Light of Myanmar
-              </p>
-              <p className="text-xs text-muted-foreground">Sports — 8 June 2026</p>
-              <span className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground">
-                Newspaper image coming soon
-              </span>
-            </div>
-          </div>
+          </a>
           <div className="p-5 sm:p-6">
             <p className="text-[11px] font-semibold uppercase tracking-wider text-accent">
               Featured Story
