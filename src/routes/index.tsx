@@ -219,6 +219,26 @@ function SiteNav() {
                   </span>
                 </a>
               ))}
+              <Link
+                to="/schedule"
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm hover:bg-muted flex items-center justify-between"
+              >
+                <span>Schedule</span>
+                <span lang="my" className="text-xs text-muted-foreground">
+                  အစီအစဉ်
+                </span>
+              </Link>
+              <Link
+                to="/technical-guide"
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm hover:bg-muted flex items-center justify-between"
+              >
+                <span>Technical Guide</span>
+                <span lang="my" className="text-xs text-muted-foreground">
+                  နည်းပညာလမ်းညွှန်
+                </span>
+              </Link>
               <a
                 href={REGISTER_URL}
                 target="_blank"
