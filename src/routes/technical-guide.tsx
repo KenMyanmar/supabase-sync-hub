@@ -226,7 +226,7 @@ function TechnicalGuidePage() {
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <RouteReferenceImage
                   src={routeHlegu.url}
-                  alt="Hlegu 11 Hills Round  Road Race reference map — Hlegu to Phukyi roundabout, 100.98 km, 806 m elevation gain"
+                  alt="Hlegu 11 Hills Round  Road Race reference map — Hlegu 11 Hills Round  to Phukyi roundabout, 100.98 km, 806 m elevation gain"
                   title="Road Race — Hlegu 11 Hills Round  (reference)"
                   caption="Hlegu 11 Hills Round  → Phukyi roundabout out / back · 100.98 km · 806 m gain"
                 />

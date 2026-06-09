@@ -52,7 +52,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Official microsite for the 2026 64th Myanmar Cycling Federation National Cycling Event (တံခွန်စိုက်ဖလားပြိုင်ပွဲ) — 26–28 June 2026, Hlegu / Taikkyi / Thuwunna.",
+          "Official microsite for the 2026 64th Myanmar Cycling Federation National Cycling Event (တံခွန်စိုက်ဖလားပြိုင်ပွဲ) — 26–28 June 2026, Hlegu 11 Hills Round  / Taikkyi / Thuwunna.",
       },
       { property: "og:title", content: "MCF National Cycling Event 2026" },
       {
@@ -472,7 +472,7 @@ function RouteReferences() {
       title: "Road Race — Hlegu 11 Hills Round  (reference)",
       caption:
         "Hlegu 11 Hills Round  → Phukyi roundabout out / back · 100.98 km · 806 m elevation gain",
-      alt: "Hlegu 11 Hills Round  Road Race reference map — Hlegu to Phukyi roundabout, 100.98 km, 806 m elevation gain",
+      alt: "Hlegu 11 Hills Round  Road Race reference map — Hlegu 11 Hills Round  to Phukyi roundabout, 100.98 km, 806 m elevation gain",
     },
     {
       img: routeCriterium.url,
