@@ -1,3 +1,11 @@
+// Admin sync will be handled by a separate MCF admin project.
+// This public project only displays registration status.
+//
+// Note: because the future admin panel will be a separate Lovable project,
+// it cannot directly import this helper. It can copy/reuse the same logic,
+// or we can later expose a protected sync endpoint from this project that
+// the admin project calls over HTTPS.
+
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
@@ -34,28 +42,21 @@ const PUBLIC_COLUMNS =
 export function normalizePhone(raw: string | null | undefined): string {
   const d = (raw ?? "").replace(/\D/g, "");
   if (!d) return "";
-  // Canonical: if starts with 95 + 9 (Myanmar mobile), keep as-is.
-  // If starts with 9 (no country code), prepend 0 -> 09...
-  // If starts with 09, keep.
-  // Always store both local and intl variants joined by '|' for partial match.
   const variants = new Set<string>();
   variants.add(d);
   if (d.startsWith("95")) {
-    // 959xxxxxxxx -> local 09xxxxxxxx
     const rest = d.slice(2);
     if (rest.startsWith("9")) variants.add("0" + rest);
   } else if (d.startsWith("09")) {
-    // local -> intl 959xxxxxxxx
     variants.add("95" + d.slice(1));
   } else if (d.startsWith("9")) {
-    // bare 9xxxxxxxx -> 09xxxxxxxx and 959xxxxxxxx
     variants.add("0" + d);
     variants.add("95" + d);
   }
   return Array.from(variants).join("|");
 }
 
-// ─── Public lookup (server-only DB access, RLS bypassed via service role) ──
+// ─── Public lookup (the ONLY server fn exposed to the browser) ─────────────
 export const lookupRegistration = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown) => lookupInput.parse(raw))
   .handler(async ({ data }) => {
@@ -116,14 +117,11 @@ export const lookupRegistration = createServerFn({ method: "POST" })
     return { rows: safe, total: count ?? 0, page: data.page, pageSize: PAGE_SIZE };
   });
 
-// ─── Admin: CSV/TSV/TXT upload ─────────────────────────────────────────────
-const uploadInput = z.object({
-  password: z.string().min(1).max(500),
-  content: z.string().min(1).max(5_000_000), // ~5MB
-});
+// ─── Server-only sync helpers ───────────────────────────────────────────────
+// Not a createServerFn, not exposed as a route. The future admin project
+// will own ingestion; this code stays as reference / reusable logic.
 
 function parseDelimited(text: string, delimiter: string): Record<string, string>[] {
-  // RFC-4180-ish parser supporting quoted fields.
   const rows: string[][] = [];
   let field = "";
   let row: string[] = [];
@@ -163,7 +161,6 @@ function parseDelimited(text: string, delimiter: string): Record<string, string>
     rows.push(row);
   }
   if (rows.length === 0) return [];
-  // Strip BOM from first header cell, then trim all headers.
   const rawHeader = rows[0];
   if (rawHeader.length > 0) {
     rawHeader[0] = rawHeader[0].replace(/^\uFEFF/, "");
@@ -187,10 +184,7 @@ function splitEvents(s: string | undefined | null): string[] {
     .filter(Boolean);
 }
 
-// Look up a value by any of the candidate header names.
-// Matches when the header (left of '|', case/space-insensitive) equals,
-// starts with, or contains the candidate. This handles bilingual Google Form
-// headers like "Full Name in Myanmar |အမည်အပြည့်အစုံ".
+// Bilingual-aware header lookup: handles "Full Name in Myanmar |အမည်...".
 function pick(r: Record<string, string>, ...names: string[]): string {
   const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
   const entries = Object.keys(r).map((k) => {
@@ -199,13 +193,9 @@ function pick(r: Record<string, string>, ...names: string[]): string {
   });
   for (const n of names) {
     const nn = norm(n);
-    // 1) exact left-of-pipe
     let hit = entries.find((e) => e.normLeft === nn);
-    // 2) left-of-pipe starts with candidate
     if (!hit) hit = entries.find((e) => e.normLeft.startsWith(nn));
-    // 3) full header starts with candidate
     if (!hit) hit = entries.find((e) => e.normFull.startsWith(nn));
-    // 4) full header includes candidate
     if (!hit) hit = entries.find((e) => e.normFull.includes(nn));
     if (hit) {
       const v = r[hit.key];
@@ -215,101 +205,123 @@ function pick(r: Record<string, string>, ...names: string[]): string {
   return "";
 }
 
-export const uploadRegistrationsCsv = createServerFn({ method: "POST" })
-  .inputValidator((raw: unknown) => uploadInput.parse(raw))
-  .handler(async ({ data }) => {
-    const adminPassword = process.env.ADMIN_PASSWORD;
-    if (!adminPassword || data.password !== adminPassword) {
-      throw new Error("Unauthorized");
+export type NormalizedRegistration = {
+  registration_no: string;
+  name: string | null;
+  english_name: string | null;
+  team_club: string;
+  events: string[];
+  status: string;
+  admin_remark: string | null;
+  phone_search: string | null;
+  first_received?: string;
+};
+
+const DEFAULT_STATUS = "Registration received - pending MCF verification";
+
+// Pure helper: parsed header→value records → normalized DB rows.
+// Raw Google Form rows may carry private fields (NRC, email, DOB, guardian,
+// emergency contact, UCI ID). Only public-safe normalized fields are kept;
+// `raw_data` is intentionally NOT included.
+export function normalizeGoogleSheetRows(
+  rows: Record<string, string>[],
+): NormalizedRegistration[] {
+  return rows.map((r, idx) => {
+    let reg = pick(r, "registration_no", "reg_no", "no");
+    const name = pick(r, "name", "Full Name in Myanmar");
+    const english = pick(r, "english_name", "english", "Full Name in English");
+    let team = pick(
+      r,
+      "team_club",
+      "team",
+      "club",
+      "Team / Club / State / Region Name",
+    );
+    const events = pick(r, "events", "event", "Events Entered");
+    let status = pick(r, "status");
+    const remark = pick(r, "admin_remark", "remark");
+    const phone = pick(r, "phone_search", "phone", "Phone / Viber");
+    const timestamp = pick(r, "first_received", "Timestamp");
+
+    if (!reg) {
+      const seq = String(idx + 1).padStart(4, "0");
+      reg = `NC26-${seq}`;
     }
+    if (!team) team = "Independent Rider";
+    if (!status) status = DEFAULT_STATUS;
 
-    const { extAdmin } = await import("@/integrations/ext-supabase/admin.server");
-    const sb = extAdmin();
-
-    // Strip BOM for detection purposes.
-    const text = data.content.replace(/^\uFEFF/, "");
-    const firstLineEnd = text.indexOf("\n");
-    const firstLine = firstLineEnd === -1 ? text : text.slice(0, firstLineEnd);
-    const delimiter = firstLine.includes("\t") ? "\t" : ",";
-
-    const parsed = parseDelimited(data.content, delimiter);
-    const headers = parsed.length > 0 ? Object.keys(parsed[0]) : [];
-    if (parsed.length === 0) {
-      return { inserted: 0, errors: ["No rows found"], delimiter, headers, sample: null };
-    }
-
-    const errors: string[] = [];
-    const defaultStatus = "Registration received - pending MCF verification";
-
-    const rowsToUpsert = parsed.map((r, idx) => {
-      // Public-form headers
-      let reg = pick(r, "registration_no", "reg_no", "no");
-      let name = pick(r, "name", "Full Name in Myanmar");
-      let english = pick(r, "english_name", "english", "Full Name in English");
-      let team = pick(
-        r,
-        "team_club",
-        "team",
-        "club",
-        "Team / Club / State / Region Name",
-      );
-      let events = pick(r, "events", "event", "Events Entered");
-      let status = pick(r, "status");
-      let remark = pick(r, "admin_remark", "remark");
-      let phone = pick(r, "phone_search", "phone", "Phone / Viber");
-      let timestamp = pick(r, "first_received", "Timestamp");
-
-      if (!reg) {
-        const seq = String(idx + 1).padStart(4, "0");
-        reg = `NC26-${seq}`;
-      }
-      if (!team) team = "Independent Rider";
-      if (!status) status = defaultStatus;
-
-      const row: Record<string, unknown> = {
-        registration_no: reg,
-        name: name || null,
-        english_name: english || null,
-        team_club: team,
-        events: splitEvents(events),
-        status,
-        admin_remark: remark || null,
-        phone_search: normalizePhone(phone) || null,
-        // raw_data intentionally omitted: raw Google Form rows may contain
-        // private fields (NRC, email, DOB, guardian, emergency contact, UCI
-        // ID). Only normalized public-safe fields are stored.
-      };
-      if (timestamp) row.first_received = timestamp;
-      return row;
-    });
-
-    // Sample of first normalized row (with phone_search masked) for admin debug.
-    const sample = rowsToUpsert[0]
-      ? {
-          ...rowsToUpsert[0],
-          phone_search: rowsToUpsert[0].phone_search
-            ? `[${String(rowsToUpsert[0].phone_search).length} chars]`
-            : null,
-        }
-      : null;
-
-    if (rowsToUpsert.length === 0) {
-      return { inserted: 0, errors, delimiter, headers, sample };
-    }
-
-    const { error, count } = await sb
-      .from("registrations")
-      .upsert(rowsToUpsert, { onConflict: "registration_no", count: "exact" });
-
-    if (error) {
-      console.error("[uploadRegistrationsCsv]", error);
-      return { inserted: 0, errors: [...errors, error.message], delimiter, headers, sample };
-    }
-    return {
-      inserted: count ?? rowsToUpsert.length,
-      errors,
-      delimiter,
-      headers,
-      sample,
+    const out: NormalizedRegistration = {
+      registration_no: reg,
+      name: name || null,
+      english_name: english || null,
+      team_club: team,
+      events: splitEvents(events),
+      status,
+      admin_remark: remark || null,
+      phone_search: normalizePhone(phone) || null,
     };
+    if (timestamp) out.first_received = timestamp;
+    return out;
   });
+}
+
+const DEFAULT_SHEET_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/1i8u0t6P6_45BoLxWINIZBAP-FI8AUUeb01RGKvHtobo/export?format=csv&gid=0";
+
+export type SyncResult = {
+  inserted: number;
+  errors: string[];
+  headers: string[];
+  sample: NormalizedRegistration | null;
+};
+
+// Server-side sync. NOT exposed via createServerFn or route. The future
+// admin project can copy this logic or call a protected endpoint we add later.
+export async function syncFromGoogleSheet(opts?: {
+  csvUrl?: string;
+  csvText?: string;
+}): Promise<SyncResult> {
+  let csv = opts?.csvText;
+  if (!csv) {
+    const url = opts?.csvUrl ?? DEFAULT_SHEET_CSV_URL;
+    const res = await fetch(url, { redirect: "follow" });
+    if (!res.ok) {
+      return {
+        inserted: 0,
+        errors: [`Failed to fetch sheet: HTTP ${res.status}`],
+        headers: [],
+        sample: null,
+      };
+    }
+    csv = await res.text();
+  }
+
+  const text = csv.replace(/^\uFEFF/, "");
+  const firstLineEnd = text.indexOf("\n");
+  const firstLine = firstLineEnd === -1 ? text : text.slice(0, firstLineEnd);
+  const delimiter = firstLine.includes("\t") ? "\t" : ",";
+
+  const parsed = parseDelimited(csv, delimiter);
+  const headers = parsed.length > 0 ? Object.keys(parsed[0]) : [];
+  if (parsed.length === 0) {
+    return { inserted: 0, errors: ["No rows found"], headers, sample: null };
+  }
+
+  const normalized = normalizeGoogleSheetRows(parsed);
+  const sample = normalized[0] ?? null;
+
+  // Dynamic import keeps the service-role admin client out of any
+  // client-reachable import chain regardless of bundler graph tracing.
+  const { extAdmin } = await import("@/integrations/ext-supabase/admin.server");
+  const sb = extAdmin();
+
+  const { error, count } = await sb
+    .from("registrations")
+    .upsert(normalized, { onConflict: "registration_no", count: "exact" });
+
+  if (error) {
+    console.error("[syncFromGoogleSheet]", error);
+    return { inserted: 0, errors: [error.message], headers, sample };
+  }
+  return { inserted: count ?? normalized.length, errors: [], headers, sample };
+}
