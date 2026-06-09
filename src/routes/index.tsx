@@ -47,7 +47,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "၂၀၂၆ ခုနှစ် (၆၄) ကြိမ်မြောက် မြန်မာနိုင်ငံ စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲ — Road Race · MTB XCO · Criterium.",
+          "၂၀၂၆ ခုနှစ် (၆၄) ကြိမ်မြောက် \n စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲ — Road Race · MTB XCO · Criterium.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
