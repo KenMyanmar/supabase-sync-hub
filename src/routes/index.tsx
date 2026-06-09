@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
@@ -11,12 +11,14 @@ import {
   Bike,
   Clock,
   Camera,
-  Newspaper,
   Menu,
   ExternalLink,
   ChevronLeft,
   ChevronRight,
   X,
+  BookOpen,
+  FileWarning,
+  ArrowRight,
 } from "lucide-react";
 import {
   lookupRegistration,
@@ -108,6 +110,7 @@ function MicrositePage() {
       <SiteNav />
       <main>
         <Hero />
+        <ProgrammeAtAGlance />
         <NoticeBanner />
         <RegistrationStatus />
         <EventsSection />
@@ -154,6 +157,18 @@ function SiteNav() {
               {n.en}
             </a>
           ))}
+          <Link
+            to="/schedule"
+            className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
+          >
+            Schedule
+          </Link>
+          <Link
+            to="/technical-guide"
+            className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
+          >
+            Technical Guide
+          </Link>
           <a
             href={REGISTER_URL}
             target="_blank"
@@ -204,6 +219,26 @@ function SiteNav() {
                   </span>
                 </a>
               ))}
+              <Link
+                to="/schedule"
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm hover:bg-muted flex items-center justify-between"
+              >
+                <span>Schedule</span>
+                <span lang="my" className="text-xs text-muted-foreground">
+                  အစီအစဉ်
+                </span>
+              </Link>
+              <Link
+                to="/technical-guide"
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2.5 text-sm hover:bg-muted flex items-center justify-between"
+              >
+                <span>Technical Guide</span>
+                <span lang="my" className="text-xs text-muted-foreground">
+                  နည်းပညာလမ်းညွှန်
+                </span>
+              </Link>
               <a
                 href={REGISTER_URL}
                 target="_blank"
@@ -296,6 +331,123 @@ function Hero() {
     </section>
   );
 }
+
+/* ─── Race Programme at a glance ──────────────────────────────────────────── */
+function ProgrammeAtAGlance() {
+  const days = [
+    {
+      date: "26 June 2026",
+      my: "ဇွန် ၂၆",
+      title: "Road Race",
+      venue: "Hlegu",
+      type: "Points event",
+      icon: Bike,
+      anchor: "#26-June-2026",
+    },
+    {
+      date: "27 June 2026",
+      my: "ဇွန် ၂၇",
+      title: "MTB XCO",
+      venue: "Taikkyi Mirror Mountains",
+      type: "Separate event",
+      icon: Mountain,
+      anchor: "#27-June-2026",
+    },
+    {
+      date: "28 June 2026",
+      my: "ဇွန် ၂၈",
+      title: "Criterium + Awards",
+      venue: "Thuwunna",
+      type: "Points event + Ceremony",
+      icon: Trophy,
+      anchor: "#28-June-2026",
+    },
+  ];
+  return (
+    <section className="bg-background border-b border-border">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent">
+              Race Programme at a glance
+            </p>
+            <h2
+              lang="my"
+              className="mt-1 text-2xl sm:text-3xl font-bold text-primary break-words max-w-full"
+            >
+              ၂၆ – ၂၈ ဇွန် ၂၀၂၆ အစီအစဉ်
+            </h2>
+          </div>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <Link
+              to="/schedule"
+              className="inline-flex items-center gap-1 rounded-md border border-input bg-background px-3 py-2 hover:bg-muted"
+            >
+              <CalendarDays className="h-4 w-4" /> Full schedule
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+            <Link
+              to="/technical-guide"
+              className="inline-flex items-center gap-1 rounded-md border border-input bg-background px-3 py-2 hover:bg-muted"
+            >
+              <BookOpen className="h-4 w-4" /> Technical Guide
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-3 inline-flex items-start gap-2 rounded-md border border-l-4 border-l-accent bg-accent/5 px-3 py-2 text-xs">
+          <FileWarning className="h-3.5 w-3.5 mt-0.5 text-accent shrink-0" />
+          <span>
+            <span className="font-semibold">Working Draft v1</span>
+            <span className="text-muted-foreground">
+              {" "}
+              — Final Team Version pending. /{" "}
+              <span lang="my">
+                ပထမအဆင့် မူကြမ်း — Final Team Version ထုတ်ပြန်ရန် ကျန်ပါသည်။
+              </span>
+            </span>
+          </span>
+        </div>
+
+        <ul className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          {days.map((d) => {
+            const Icon = d.icon;
+            return (
+              <li key={d.date}>
+                <Link
+                  to="/schedule"
+                  hash={d.anchor.slice(1)}
+                  className="group flex h-full flex-col rounded-xl border border-border bg-card p-5 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-accent">
+                      {d.type}
+                    </span>
+                  </div>
+                  <p className="mt-3 text-[11px] uppercase tracking-wider text-muted-foreground">
+                    {d.date} · <span lang="my">{d.my}</span>
+                  </p>
+                  <p className="mt-1 text-lg font-bold text-primary">{d.title}</p>
+                  <p className="text-sm text-muted-foreground break-words">
+                    {d.venue}
+                  </p>
+                  <span className="mt-auto pt-3 text-xs text-accent inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                    View schedule <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 
 /* ─── Official Notice ─────────────────────────────────────────────────────── */
 function NoticeBanner() {
@@ -1012,6 +1164,19 @@ function SiteFooter() {
                 </a>
               </li>
             ))}
+            <li>
+              <Link to="/schedule" className="text-white/80 hover:text-white">
+                Schedule
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/technical-guide"
+                className="text-white/80 hover:text-white"
+              >
+                Technical Guide
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
