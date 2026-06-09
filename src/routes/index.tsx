@@ -826,7 +826,7 @@ function GallerySection() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <SectionHeader
           eyebrow="Event Photos"
-          my="ပွဲတော် ဓာတ်ပုံများ"
+          my="ဓာတ်ပုံများ"
           en="Gallery — archive photos from the Myanmar Cycling Federation."
         />
         <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
