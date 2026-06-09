@@ -145,8 +145,25 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+
+  /* Sticky nav offset for in-page anchors */
+  section[id] {
+    scroll-margin-top: 4.5rem;
+  }
+
+  /* Myanmar text safety: never let long Myanmar headlines overflow */
+  [lang="my"] {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-break: loose;
+  }
 }
+
