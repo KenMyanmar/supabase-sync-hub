@@ -915,7 +915,7 @@ function MediaSection() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <SectionHeader
           eyebrow="Media Coverage"
-          my="သတင်းမီဒီယာတွင် ဖော်ပြခြင်း"
+          my="သတင်းမီဒီယာ"
           en="Featured in Mainstream Media"
         />
         <article className="mt-8 grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-4 rounded-xl border border-border bg-card overflow-hidden shadow-sm">
