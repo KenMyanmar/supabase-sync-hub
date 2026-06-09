@@ -83,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Myanmar Cycling" },
       { property: "og:description", content: "Supabase Sync Hub synchronizes registration data from Supabase, enabling public access to event statuses and admin uploads." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Myanmar Cycling" },
       { name: "twitter:description", content: "Supabase Sync Hub synchronizes registration data from Supabase, enabling public access to event statuses and admin uploads." },
