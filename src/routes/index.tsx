@@ -126,6 +126,7 @@ function MicrositePage() {
         <RegistrationStatus />
         <EventsSection />
         <PointsSection />
+        <OrganisersSection />
         <GallerySection />
         <SponsorsSection />
         <MediaSection />
