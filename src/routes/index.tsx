@@ -338,6 +338,7 @@ function ProgrammeAtAGlance() {
     {
       date: "26 June 2026",
       my: "ဇွန် ၂၆",
+      time: "07:00",
       title: "Road Race",
       venue: "Hlegu",
       type: "Points event",
@@ -347,6 +348,7 @@ function ProgrammeAtAGlance() {
     {
       date: "27 June 2026",
       my: "ဇွန် ၂၇",
+      time: "07:00",
       title: "MTB XCO",
       venue: "Taikkyi Mirror Mountains",
       type: "Separate event",
@@ -356,6 +358,7 @@ function ProgrammeAtAGlance() {
     {
       date: "28 June 2026",
       my: "ဇွန် ၂၈",
+      time: "06:30 onward",
       title: "Criterium + Awards",
       venue: "Thuwunna",
       type: "Points event + Ceremony",
@@ -431,6 +434,7 @@ function ProgrammeAtAGlance() {
                   <p className="mt-3 text-[11px] uppercase tracking-wider text-muted-foreground">
                     {d.date} · <span lang="my">{d.my}</span>
                   </p>
+                  <p className="mt-0.5 font-mono text-xs text-accent">{d.time}</p>
                   <p className="mt-1 text-lg font-bold text-primary">{d.title}</p>
                   <p className="text-sm text-muted-foreground break-words">
                     {d.venue}
