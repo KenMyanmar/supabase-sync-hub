@@ -1164,6 +1164,19 @@ function SiteFooter() {
                 </a>
               </li>
             ))}
+            <li>
+              <Link to="/schedule" className="text-white/80 hover:text-white">
+                Schedule
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/technical-guide"
+                className="text-white/80 hover:text-white"
+              >
+                Technical Guide
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
