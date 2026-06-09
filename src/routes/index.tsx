@@ -56,6 +56,15 @@ function PublicList() {
           </p>
         </header>
 
+        <aside
+          className="mb-6 rounded-md border border-border bg-muted/40 p-4 text-sm leading-relaxed"
+          lang="my"
+        >
+          ဤစာရင်းသည် Registration Received List သာ ဖြစ်ပါသည်။ Final Start List
+          မဟုတ်သေးပါ။ Final Start List ကို MCF မှ category, age, event, MCF/UCI ID
+          နှင့် eligibility စိစစ်ပြီးနောက် ထပ်မံကြေညာပေးသွားမည်ဖြစ်ပါသည်။
+        </aside>
+
         <section className="mb-4 flex flex-wrap gap-3 items-end">
           <div className="flex-1 min-w-[220px]">
             <label className="block text-xs font-medium mb-1">Search</label>
