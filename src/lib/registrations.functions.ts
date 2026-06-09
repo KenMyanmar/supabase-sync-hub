@@ -29,7 +29,18 @@ const lookupInput = z.object({
   event: z.string().max(50).optional().default("all"),
   status: z.string().max(80).optional().default("all"),
   page: z.number().int().min(1).max(10_000).optional().default(1),
+  withCounts: z.boolean().optional().default(false),
 });
+
+// Public-safe aggregate counts. Numbers only — never any row data.
+export type PublicCounts = {
+  total: number;
+  roadRace: number;
+  criterium: number;
+  mtbXco: number;
+  pending: number;
+};
+
 
 // Whitelisted columns sent to the browser. phone_search / raw_data are
 // intentionally excluded.
