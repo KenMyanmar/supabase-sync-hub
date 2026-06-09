@@ -187,14 +187,30 @@ function splitEvents(s: string | undefined | null): string[] {
     .filter(Boolean);
 }
 
-// Look up a value by any of the candidate header names (case/space-insensitive).
+// Look up a value by any of the candidate header names.
+// Matches when the header (left of '|', case/space-insensitive) equals,
+// starts with, or contains the candidate. This handles bilingual Google Form
+// headers like "Full Name in Myanmar |အမည်အပြည့်အစုံ".
 function pick(r: Record<string, string>, ...names: string[]): string {
   const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
-  const map = new Map<string, string>();
-  for (const k of Object.keys(r)) map.set(norm(k), r[k]);
+  const entries = Object.keys(r).map((k) => {
+    const left = k.split("|")[0];
+    return { key: k, normLeft: norm(left), normFull: norm(k) };
+  });
   for (const n of names) {
-    const v = map.get(norm(n));
-    if (v !== undefined && v !== "") return v;
+    const nn = norm(n);
+    // 1) exact left-of-pipe
+    let hit = entries.find((e) => e.normLeft === nn);
+    // 2) left-of-pipe starts with candidate
+    if (!hit) hit = entries.find((e) => e.normLeft.startsWith(nn));
+    // 3) full header starts with candidate
+    if (!hit) hit = entries.find((e) => e.normFull.startsWith(nn));
+    // 4) full header includes candidate
+    if (!hit) hit = entries.find((e) => e.normFull.includes(nn));
+    if (hit) {
+      const v = r[hit.key];
+      if (v !== undefined && v !== "") return v;
+    }
   }
   return "";
 }
