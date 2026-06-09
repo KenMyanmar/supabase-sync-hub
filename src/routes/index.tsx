@@ -318,7 +318,7 @@ function Hero() {
             <MapPin className="h-4 w-4 mt-0.5 text-white/80 shrink-0" />
             <dt className="sr-only">Venues</dt>
             <dd className="font-medium break-words">
-              Hlegu · Taikkyi Mirror Mountains · Thuwunna
+              Hlegu 11 Hills Round  · Taikkyi Mirror Mountains · Thuwunna
             </dd>
           </div>
         </dl>
@@ -352,7 +352,7 @@ function ProgrammeAtAGlance() {
       my: "ဇွန် ၂၆",
       time: "07:00",
       title: "Road Race",
-      venue: "Hlegu",
+      venue: "Hlegu 11 Hills Round ",
       type: "Points event",
       icon: Bike,
       anchor: "#26-June-2026",
@@ -469,10 +469,10 @@ function RouteReferences() {
   const routes = [
     {
       img: routeHlegu.url,
-      title: "Road Race — Hlegu (reference)",
+      title: "Road Race — Hlegu 11 Hills Round  (reference)",
       caption:
-        "Hlegu → Phukyi roundabout out / back · 100.98 km · 806 m elevation gain",
-      alt: "Hlegu Road Race reference map — Hlegu to Phukyi roundabout, 100.98 km, 806 m elevation gain",
+        "Hlegu 11 Hills Round  → Phukyi roundabout out / back · 100.98 km · 806 m elevation gain",
+      alt: "Hlegu 11 Hills Round  Road Race reference map — Hlegu to Phukyi roundabout, 100.98 km, 806 m elevation gain",
     },
     {
       img: routeCriterium.url,
@@ -493,7 +493,7 @@ function RouteReferences() {
               lang="my"
               className="mt-1 text-2xl sm:text-3xl font-bold text-primary break-words"
             >
-              လမ်းကြောင်းများ (Working Draft)
+              လမ်းကြောင်းများ
             </h2>
           </div>
           <Link
@@ -915,7 +915,7 @@ function EventsSection() {
       title: "Road Race",
       my: "Road Race",
       date: "26 June 2026",
-      venue: "Hlegu",
+      venue: "Hlegu 11 Hills Round ",
       icon: Bike,
       points: true,
       note: "Counts toward တံခွန်စိုက်ဖလား points.",
@@ -1142,7 +1142,7 @@ function OrganisersSection() {
           Meet the Organisers
         </h2>
         <p lang="my" className="mt-4 max-w-3xl text-sm sm:text-base text-foreground/80 leading-relaxed">
-          ၂၀၂၆ ခုနှစ် (၆၄) ကြိမ်မြောက် မြန်မာနိုင်ငံ စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲအား မြန်မာနိုင်ငံ စက်ဘီးအဖွဲ့ချုပ်၊ အားကစားနှင့် လူငယ်ရေးရာဝန်ကြီးဌာနနှင့် သက်ဆိုင်ရာ တာဝန်ရှိသူများ ပူးပေါင်းဆောင်ရွက်၍ ကျင်းပသွားမည်ဖြစ်ပါသည်။
+          ၂၀၂၆ ခုနှစ် (၆၄) ကြိမ်မြောက် မြန်မာနိုင်ငံ စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲအား မြန်မာနိုင်ငံ စက်ဘီးအဖွဲ့ချုပ်၊ အားကစားဝန်ကြီးဌာနနှင့် သက်ဆိုင်ရာ တာဝန်ရှိသူများ ပူးပေါင်းဆောင်ရွက်၍ ကျင်းပသွားမည်ဖြစ်ပါသည်။
         </p>
 
         <div className="mt-8">
