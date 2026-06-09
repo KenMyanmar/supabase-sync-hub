@@ -128,9 +128,13 @@ function SiteNav() {
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
         <a href="#overview" className="flex items-center gap-2 min-w-0">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Bike className="h-4 w-4" />
-          </span>
+          <img
+            src={mcfLogo.url}
+            alt="MCF logo"
+            width={32}
+            height={32}
+            className="h-8 w-8 object-contain shrink-0"
+          />
           <span className="flex flex-col leading-tight min-w-0">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">
               MCF
