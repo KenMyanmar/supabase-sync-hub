@@ -47,7 +47,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "၂၀၂၆ ခုနှစ် (၆၄) ကြိမ်မြောက် မြန်မာနိုင်ငံ စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲ — Road Race · MTB XCO · Criterium.",
+          "၂၀၂၆ ခုနှစ် (၆၄) ကြိမ်မြောက် \n စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲ — Road Race · MTB XCO · Criterium.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -254,8 +254,8 @@ function Hero() {
           className="mt-4 max-w-full break-words text-3xl font-bold leading-[1.25] sm:text-4xl md:text-5xl lg:text-6xl"
         >
           ၂၀၂၆ ခုနှစ် (၆၄) ကြိမ်မြောက်
-          <br className="hidden sm:inline" />{" "}
-          မြန်မာနိုင်ငံ စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲ
+          <br />
+          &nbsp;စက်ဘီး တံခွန်စိုက်ဖလားပြိုင်ပွဲ
         </h1>
         <p className="mt-3 max-w-2xl text-base sm:text-lg text-white/85">
           Myanmar Cycling Federation National Cycling Event 2026
@@ -826,7 +826,7 @@ function GallerySection() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <SectionHeader
           eyebrow="Event Photos"
-          my="ပွဲတော် ဓာတ်ပုံများ"
+          my="ဓာတ်ပုံများ"
           en="Gallery — archive photos from the Myanmar Cycling Federation."
         />
         <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
@@ -915,7 +915,7 @@ function MediaSection() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         <SectionHeader
           eyebrow="Media Coverage"
-          my="သတင်းမီဒီယာတွင် ဖော်ပြခြင်း"
+          my="သတင်းမီဒီယာ"
           en="Featured in Mainstream Media"
         />
         <article className="mt-8 grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-4 rounded-xl border border-border bg-card overflow-hidden shadow-sm">
