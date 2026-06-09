@@ -18,9 +18,10 @@ export const Route = createFileRoute("/")({
   component: PublicList,
 });
 
-const EVENTS = ["all", "Road Race", "Criterium"];
+const EVENTS = ["all", "Road Race", "Criterium", "MTB XCO"];
 const STATUSES = [
   "all",
+  "Registration received - pending MCF verification",
   "Pending",
   "Duplicate / under review",
   "Confirmed for provisional start list",

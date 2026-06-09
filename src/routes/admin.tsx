@@ -11,14 +11,12 @@ export const Route = createFileRoute("/admin")({
 function AdminPage() {
   const upload = useServerFn(uploadRegistrationsCsv);
   const [password, setPassword] = useState("");
-  const [format, setFormat] = useState<"csv" | "tsv">("tsv");
   const [content, setContent] = useState("");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<string>("");
 
   async function onFile(f: File | null) {
     if (!f) return;
-    setFormat(f.name.toLowerCase().endsWith(".tsv") ? "tsv" : "csv");
     setContent(await f.text());
   }
 
@@ -27,9 +25,10 @@ function AdminPage() {
     setBusy(true);
     setResult("");
     try {
-      const r = await upload({ data: { password, format, content } });
+      const r = await upload({ data: { password, content } });
       setResult(
-        `Inserted/updated: ${r.inserted}` +
+        `Detected delimiter: ${r.delimiter === "\t" ? "TAB (TSV)" : "COMMA (CSV)"}\n` +
+          `Inserted/updated: ${r.inserted}` +
           (r.errors.length ? `\nErrors:\n${r.errors.join("\n")}` : ""),
       );
     } catch (err: any) {
@@ -42,10 +41,12 @@ function AdminPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-3xl px-4 py-8">
-        <h1 className="text-2xl font-bold mb-2">Admin · CSV/TSV Upload</h1>
+        <h1 className="text-2xl font-bold mb-2">Admin · CSV / TSV / TXT Upload</h1>
         <p className="text-sm text-muted-foreground mb-6">
-          Fallback importer for registrations. Header columns (case-insensitive):{" "}
-          <code>registration_no, name, english_name, team_club, events, status, admin_remark, phone</code>.
+          Delimiter is auto-detected (TAB → TSV, otherwise CSV). UTF-8 BOM is stripped.
+          Accepts public headers (<code>registration_no, name, english_name, team_club, events, status, admin_remark, phone</code>)
+          or raw Google Form headers (<code>Timestamp, Full Name in Myanmar, Full Name in English, Team / Club / State / Region Name, Events Entered, Phone / Viber</code>).
+          Missing <code>registration_no</code> is auto-generated as <code>NC26-0001</code>, <code>NC26-0002</code>, …
           Existing rows with the same <code>registration_no</code> are updated.
         </p>
 
@@ -62,44 +63,24 @@ function AdminPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">File (.csv or .tsv)</label>
+            <label className="block text-sm font-medium mb-1">File (.csv, .tsv, .txt)</label>
             <input
               type="file"
-              accept=".csv,.tsv,text/csv,text/tab-separated-values"
+              accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain"
               onChange={(e) => onFile(e.target.files?.[0] ?? null)}
               className="text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Or paste content ({format.toUpperCase()})
-            </label>
+            <label className="block text-sm font-medium mb-1">Or paste content</label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={10}
               className="w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-xs"
-              placeholder="registration_no\tname\tenglish_name\tteam_club\tevents\tstatus\tadmin_remark\tphone"
+              placeholder="Paste CSV or TSV content here…"
             />
-            <div className="mt-2 flex gap-3 text-xs">
-              <label className="flex items-center gap-1">
-                <input
-                  type="radio"
-                  checked={format === "tsv"}
-                  onChange={() => setFormat("tsv")}
-                />{" "}
-                TSV (tab-separated, safer for Myanmar text)
-              </label>
-              <label className="flex items-center gap-1">
-                <input
-                  type="radio"
-                  checked={format === "csv"}
-                  onChange={() => setFormat("csv")}
-                />{" "}
-                CSV
-              </label>
-            </div>
           </div>
 
           <button
