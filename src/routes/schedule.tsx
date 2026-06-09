@@ -12,7 +12,7 @@ export const Route = createFileRoute("/schedule")({
       {
         name: "description",
         content:
-          "Day-by-day programme (Working Draft v1) for the 2026 64th MCF National Cycling Event — Road Race 26 June, MTB XCO 27 June, Criterium and Awards 28 June. Final times TBC.",
+          "Working Draft v1 day-by-day programme for the 2026 64th MCF National Cycling Event — Road Race 26 June, MTB XCO 27 June, Criterium and Awards 28 June. Final Team Version pending.",
       },
       {
         property: "og:title",
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/schedule")({
       {
         property: "og:description",
         content:
-          "Working Draft v1 day-by-day programme. Final times TBC by MCF.",
+          "Working Draft v1 day-by-day programme. Final Team Version pending.",
       },
     ],
   }),
@@ -36,8 +36,6 @@ type Item = {
   type: "Points" | "Separate" | "Ceremony" | "Meeting";
 };
 
-const TBC = "TBC";
-
 const DAYS: Array<{
   date: string;
   my: string;
@@ -50,17 +48,25 @@ const DAYS: Array<{
     heading: "Road Race — Hlegu",
     items: [
       {
-        time: TBC,
-        event: "Sign-on, number check, roll call",
-        category: "All Road Race riders",
-        venue: "Hlegu Start Area",
-        type: "Meeting",
+        time: "07:00",
+        event: "Road Race",
+        category: "Men Elite — 100 km",
+        venue: "Hlegu → Phukyi roundabout (out / back)",
+        type: "Points",
       },
       {
-        time: TBC,
+        time: "07:00",
         event: "Road Race",
-        category: "Elite / Open / Junior (M & W)",
-        venue: "Hlegu rolling course",
+        category:
+          "Men Junior — 100 km (paired start with Men Elite, separate classification)",
+        venue: "Hlegu → Phukyi roundabout (out / back)",
+        type: "Points",
+      },
+      {
+        time: "07:15",
+        event: "Road Race",
+        category: "Women Elite / Open — 60 km",
+        venue: "Hlegu → Milestone 14/1 (out / back)",
         type: "Points",
       },
     ],
@@ -71,17 +77,10 @@ const DAYS: Array<{
     heading: "MTB XCO — Taikkyi Mirror Mountains",
     items: [
       {
-        time: TBC,
-        event: "Sign-on, number check, course inspection",
-        category: "All MTB XCO riders",
-        venue: "Taikkyi Mirror Mountains",
-        type: "Meeting",
-      },
-      {
-        time: TBC,
+        time: "07:00",
         event: "MTB XCO",
-        category: "Open categories",
-        venue: "Taikkyi Mirror Mountains",
+        category: "Men Open",
+        venue: "We Love Taikkyi → Mirror Mountains",
         type: "Separate",
       },
     ],
@@ -92,31 +91,45 @@ const DAYS: Array<{
     heading: "Criterium + Awards — Thuwunna",
     items: [
       {
-        time: TBC,
-        event: "Sign-on, number check, roll call",
+        time: "06:30",
+        event: "License Control / Sign-on",
         category: "All Criterium riders",
-        venue: "Thuwunna outer-loop",
+        venue: "Thuwunna",
         type: "Meeting",
       },
       {
-        time: TBC,
+        time: "07:00",
         event: "Criterium",
-        category: "Junior / Elite / Open (M & W)",
-        venue: "Thuwunna 1.3 km circuit",
+        category: "Men Junior — 15 laps / approx. 20 km",
+        venue: "Thuwunna outer ring (1.3 km / lap)",
         type: "Points",
       },
       {
-        time: "10:00 (Working Draft)",
+        time: "08:00",
+        event: "Criterium",
+        category: "Women Elite / Open — 16 laps / approx. 21 km",
+        venue: "Thuwunna outer ring",
+        type: "Points",
+      },
+      {
+        time: "09:00",
+        event: "Criterium",
+        category: "Men Elite — 20 laps / approx. 26 km",
+        venue: "Thuwunna outer ring",
+        type: "Points",
+      },
+      {
+        time: "10:00",
         event: "Special Open Criterium",
         category: "Men's Open — 15 laps",
-        venue: "Thuwunna outer-loop",
+        venue: "Thuwunna outer ring",
         type: "Separate",
       },
       {
-        time: "11:30 (Working Draft)",
+        time: "11:30",
         event: "Awards Ceremony / ဆုပေးပွဲ",
         category: "All medalists",
-        venue: "MCF Grounds, Thuwunna",
+        venue: "MCF Compound, Thuwunna",
         type: "Ceremony",
       },
     ],
@@ -203,11 +216,11 @@ function SchedulePage() {
                 <table className="min-w-full text-sm">
                   <thead className="bg-muted/60 text-left">
                     <tr>
-                      <th className="px-3 py-2.5 font-semibold w-32">Time</th>
+                      <th className="px-3 py-2.5 font-semibold w-24">Time</th>
                       <th className="px-3 py-2.5 font-semibold">Event</th>
                       <th className="px-3 py-2.5 font-semibold">Category</th>
                       <th className="px-3 py-2.5 font-semibold">Venue</th>
-                      <th className="px-3 py-2.5 font-semibold w-32">Type</th>
+                      <th className="px-3 py-2.5 font-semibold w-28">Type</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -240,16 +253,13 @@ function SchedulePage() {
 
         <div className="mt-12 rounded-md border border-border bg-muted/30 p-4 text-sm">
           <p>
-            <span className="font-semibold">Reminder:</span> Times marked{" "}
-            <code className="px-1 rounded bg-background border border-border text-xs">
-              TBC
-            </code>{" "}
-            are not yet confirmed. Final times will be released by MCF in the
-            Final Team Version.
+            <span className="font-semibold">Reminder:</span> Times above reflect
+            the current Working Draft. They may still be adjusted by MCF before
+            the Final Team Version is released.
           </p>
           <p lang="my" className="mt-2 text-xs text-muted-foreground">
-            အချိန်အသေးစိတ်များကို MCF မှ Final Team Version ထုတ်ပြန်ပြီးမှသာ
-            အတည်ပြုသွားမည်ဖြစ်ပါသည်။
+            အချိန်များသည် Working Draft အဆင့်ဖြစ်ပြီး MCF မှ Final Team Version
+            ထုတ်ပြန်ပြီးမှသာ နောက်ဆုံးအတည်ပြုသွားမည်ဖြစ်ပါသည်။
           </p>
         </div>
 
@@ -317,7 +327,7 @@ function ScheduleFooter() {
           မြန်မာနိုင်ငံ စက်ဘီးအဖွဲ့ချုပ်
         </p>
         <p className="mt-3 text-xs text-white/60">
-          Schedule — Working Draft v1. Final times pending in Final Team Version.
+          Schedule — Working Draft v1. Final Team Version pending.
         </p>
       </div>
     </footer>
@@ -332,10 +342,9 @@ function DraftNotice() {
         <span className="font-semibold">Working Draft v1</span>
         <span className="text-muted-foreground">
           {" "}
-          — Final Team Version pending. Times marked TBC are not yet confirmed. /{" "}
+          — Final Team Version pending. /{" "}
           <span lang="my">
-            ပထမအဆင့် မူကြမ်း — အချိန်အသေးစိတ်များ Final Team Version တွင်
-            အတည်ပြုမည်။
+            ပထမအဆင့် မူကြမ်း — Final Team Version ထုတ်ပြန်ရန် ကျန်ပါသည်။
           </span>
         </span>
       </span>
