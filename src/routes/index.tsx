@@ -23,8 +23,16 @@ import {
   type PublicRegistration,
   type PublicCounts,
 } from "@/lib/registrations.functions";
-import heroImage from "@/assets/hero-cycling.jpg";
+import heroAsset from "@/assets/mcf-mdyrr.jpg.asset.json";
+import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
+import imgRoadRace from "@/assets/mcf-rr.jpg.asset.json";
+import imgCriterium from "@/assets/mcf-criterium.png.asset.json";
+import imgAction from "@/assets/mcf-action.png.asset.json";
+import imgStart from "@/assets/mcf-start.jpg.asset.json";
+import imgAwards from "@/assets/mcf-awards.png.asset.json";
 import gnlmClipping from "@/assets/gnlm-8june2026.png.asset.json";
+
+const heroImage = heroAsset.url;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -120,9 +128,13 @@ function SiteNav() {
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
         <a href="#overview" className="flex items-center gap-2 min-w-0">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Bike className="h-4 w-4" />
-          </span>
+          <img
+            src={mcfLogo.url}
+            alt="MCF logo"
+            width={32}
+            height={32}
+            className="h-8 w-8 object-contain shrink-0"
+          />
           <span className="flex flex-col leading-tight min-w-0">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">
               MCF
@@ -801,13 +813,13 @@ function PointsSection() {
 
 /* ─── Gallery ─────────────────────────────────────────────────────────────── */
 function GallerySection() {
-  const cards = [
-    "Road Race",
-    "Criterium",
-    "MTB XCO",
-    "Riders",
-    "Awards",
-    "Sponsors / Event Village",
+  const cards: { label: string; src?: string }[] = [
+    { label: "Road Race", src: imgRoadRace.url },
+    { label: "Criterium", src: imgCriterium.url },
+    { label: "Cycling Action", src: imgAction.url },
+    { label: "Race Start", src: imgStart.url },
+    { label: "Awards", src: imgAwards.url },
+    { label: "MTB XCO" }, // neutral placeholder until a true MTB XCO photo is available
   ];
   return (
     <section id="gallery" className="bg-[color:var(--mcf-cream)] border-y border-border">
@@ -815,30 +827,48 @@ function GallerySection() {
         <SectionHeader
           eyebrow="Event Photos"
           my="ပွဲတော် ဓာတ်ပုံများ"
-          en="Gallery — real event photos will appear here after the race weekend."
+          en="Gallery — archive photos from the Myanmar Cycling Federation."
         />
         <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-          {cards.map((label) => (
+          {cards.map(({ label, src }) => (
             <figure
               key={label}
               className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-border bg-card shadow-sm"
             >
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(135deg, color-mix(in oklab, var(--mcf-navy) 90%, transparent), color-mix(in oklab, var(--mcf-navy-deep) 95%, transparent))",
-                }}
-              />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-white/90 p-3 text-center">
-                <Camera className="h-5 w-5 opacity-70" />
-                <figcaption className="mt-2 text-xs sm:text-sm font-medium">
-                  {label}
-                </figcaption>
-                <span className="mt-1 text-[10px] uppercase tracking-wider text-white/60">
-                  Photo coming soon
-                </span>
-              </div>
+              {src ? (
+                <>
+                  <img
+                    src={src}
+                    alt={label}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-3">
+                    <figcaption className="text-xs sm:text-sm font-semibold text-white">
+                      {label}
+                    </figcaption>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, color-mix(in oklab, var(--mcf-navy) 90%, transparent), color-mix(in oklab, var(--mcf-navy-deep) 95%, transparent))",
+                    }}
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-white/90 p-3 text-center">
+                    <Camera className="h-5 w-5 opacity-70" />
+                    <figcaption className="mt-2 text-xs sm:text-sm font-medium">
+                      {label}
+                    </figcaption>
+                    <span className="mt-1 text-[10px] uppercase tracking-wider text-white/60">
+                      Photo coming soon
+                    </span>
+                  </div>
+                </>
+              )}
             </figure>
           ))}
         </div>
@@ -934,8 +964,8 @@ function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-white/10">
-              <Bike className="h-4 w-4" />
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white p-1">
+              <img src={mcfLogo.url} alt="MCF logo" className="h-full w-full object-contain" />
             </span>
             <div className="leading-tight">
               <p className="font-semibold">Myanmar Cycling Federation</p>
