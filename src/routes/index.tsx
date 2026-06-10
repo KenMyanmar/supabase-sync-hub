@@ -1253,6 +1253,8 @@ function GallerySection() {
 }
 
 /* ─── Sponsors / Event Village ────────────────────────────────────────────── */
+import mspCatLogo from "@/assets/msp-cat-logo.jpg.asset.json";
+
 function SponsorsSection() {
   const slots = Array.from({ length: 8 }, (_, i) => i + 1);
   return (
@@ -1263,21 +1265,47 @@ function SponsorsSection() {
           my="ပံ့ပိုးသူများ နှင့် Event Village"
           en="Sponsor booths and partner activities — especially on 28 June at Thuwunna."
         />
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-          {slots.map((n) => (
-            <div
-              key={n}
-              className="aspect-[3/2] rounded-lg border border-dashed border-border bg-card flex items-center justify-center text-center px-3"
-            >
-              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                Sponsor Slot
-              </span>
-            </div>
-          ))}
+
+        {/* Main Sponsor */}
+        <div className="mt-8">
+          <div className="text-center mb-3">
+            <span className="inline-block text-[11px] uppercase tracking-[0.2em] text-primary font-semibold border-b-2 border-accent pb-1">
+              အဓိက ပံ့ပိုးသူ / Main Sponsor
+            </span>
+          </div>
+          <div className="rounded-xl border-2 border-primary bg-card p-4 sm:p-6 shadow-sm flex items-center justify-center">
+            <img
+              src={mspCatLogo.url}
+              alt="MSP | CAT — Main Sponsor of the 64th Myanmar National Cycling Championships 2026"
+              className="max-h-32 sm:max-h-40 w-auto object-contain"
+              loading="lazy"
+            />
+          </div>
         </div>
-        <p className="mt-4 text-xs text-muted-foreground">
-          Sponsor logos will be added here as partners are confirmed.
-        </p>
+
+        {/* Partner Sponsors */}
+        <div className="mt-10">
+          <div className="text-center mb-3">
+            <span className="inline-block text-[11px] uppercase tracking-[0.2em] text-muted-foreground font-semibold">
+              ပါတနာ ပံ့ပိုးသူများ / Partner Sponsors
+            </span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+            {slots.map((n) => (
+              <div
+                key={n}
+                className="aspect-[3/2] rounded-lg border border-dashed border-border bg-card flex items-center justify-center text-center px-3"
+              >
+                <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                  Sponsor Slot
+                </span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-muted-foreground text-center">
+            Additional sponsor logos will be added here as partners are confirmed.
+          </p>
+        </div>
       </div>
     </section>
   );

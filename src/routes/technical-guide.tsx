@@ -401,13 +401,14 @@ function TechnicalGuidePage() {
                     {[
                       ["Road Race — Men Elite 1–5", "700,000 / 500,000 / 300,000 / 200,000 / 100,000"],
                       ["Road Race — Women Elite 1–5", "700,000 / 500,000 / 300,000 / 200,000 / 100,000"],
-                      ["Road Race — Men Junior 1–3", "500,000 / 300,000 / 100,000"],
+                      ["Road Race — Men Junior 1–3", "500,000 / 300,000 / 200,000"],
                       ["Road Race — Champion Team 1–3", "1,500,000 / 1,000,000 / 500,000"],
                       ["Men Elite — Best Player", "1,000,000"],
                       ["Women Elite — Best Player", "700,000"],
+                      ["Men Junior — Best Player", "500,000"],
                       ["MTB XCO — Men Open 1–5", "700,000 / 500,000 / 300,000 / 200,000 / 100,000"],
                       ["Criterium — Men/Women Elite 1–5", "700,000 / 500,000 / 300,000 / 200,000 / 100,000"],
-                      ["Criterium — Men Junior 1–3", "500,000 / 300,000 / 100,000"],
+                      ["Criterium — Men Junior 1–3", "500,000 / 300,000 / 200,000"],
                       ["Criterium — Special Open 1–5", "400,000 / 300,000 / 200,000 / 100,000 / 50,000"],
                       ["Criterium — Special Open 6–10", "Medal / commemorative award"],
                     ].map(([k, v], i) => (
