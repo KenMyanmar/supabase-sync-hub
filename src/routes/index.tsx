@@ -1255,9 +1255,11 @@ function GallerySection() {
 /* ─── Sponsors / Event Village ────────────────────────────────────────────── */
 import mspCatLogo from "@/assets/msp-cat-logo.jpg.asset.json";
 import easyGasLogo from "@/assets/easy-gas-logo.png.asset.json";
+import bbChickenLogo from "@/assets/bb-chicken-collagen-broth.png.asset.json";
 
 const partnerSponsors = [
   { name: "Easy Gas", logo: easyGasLogo.url },
+  { name: "BB Chicken Collagen Broth", logo: bbChickenLogo.url },
 ];
 
 function SponsorsSection() {
