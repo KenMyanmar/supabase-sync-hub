@@ -1254,9 +1254,15 @@ function GallerySection() {
 
 /* ─── Sponsors / Event Village ────────────────────────────────────────────── */
 import mspCatLogo from "@/assets/msp-cat-logo.jpg.asset.json";
+import easyGasLogo from "@/assets/easy-gas-logo.png.asset.json";
+
+const partnerSponsors = [
+  { name: "Easy Gas", logo: easyGasLogo.url },
+];
 
 function SponsorsSection() {
-  const slots = Array.from({ length: 8 }, (_, i) => i + 1);
+  const emptySlots = Math.max(0, 8 - partnerSponsors.length);
+
   return (
     <section id="sponsors" className="bg-background">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
@@ -1291,9 +1297,22 @@ function SponsorsSection() {
             </span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-            {slots.map((n) => (
+            {partnerSponsors.map((s) => (
               <div
-                key={n}
+                key={s.name}
+                className="aspect-[3/2] rounded-lg border border-border bg-card flex items-center justify-center p-3 shadow-sm"
+              >
+                <img
+                  src={s.logo}
+                  alt={`${s.name} — Partner Sponsor`}
+                  className="max-h-full max-w-full object-contain"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+            {Array.from({ length: emptySlots }, (_, i) => i + 1).map((n) => (
+              <div
+                key={`slot-${n}`}
                 className="aspect-[3/2] rounded-lg border border-dashed border-border bg-card flex items-center justify-center text-center px-3"
               >
                 <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -1302,6 +1321,7 @@ function SponsorsSection() {
               </div>
             ))}
           </div>
+
           <p className="mt-4 text-xs text-muted-foreground text-center">
             Additional sponsor logos will be added here as partners are confirmed.
           </p>
