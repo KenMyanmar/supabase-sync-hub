@@ -80,11 +80,13 @@ function computeAgeOnRaceDay(dobIso: string): number {
   return age;
 }
 
-function computeCategory(age: number, gender: "Male" | "Female"): string {
-  const prefix = gender === "Female" ? "Women" : "Men";
-  if (age < 18) return `${prefix} Junior`;
-  if (age < 40) return `${prefix} Elite`;
-  return `${prefix} Master`;
+function computeCategory(_age: number, gender: "Male" | "Female", dobIso: string): string {
+  if (gender === "Female") return "Women Elite / Open";
+  const birthYear = parseInt(dobIso.slice(0, 4), 10);
+  // 2026 MCF rules: no Men Master category.
+  if (birthYear <= 2007) return "Men Elite";
+  if (birthYear >= 2008 && birthYear <= 2010) return "Men Junior";
+  return "Needs review / age outside announced Junior rule";
 }
 
 function pad4(n: number): string {
