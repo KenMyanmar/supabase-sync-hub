@@ -108,11 +108,10 @@ export const submitRegistration = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown) => submitSchema.parse(raw))
   .handler(async ({ data }) => {
     const { extAdmin } = await import("@/integrations/ext-supabase/admin.server");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { getRequestHeader } = await import("@tanstack/react-start/server");
 
     const ext = extAdmin();
-    const internal = supabaseAdmin;
+
 
     // Server-side validation: guardian required for under-18, UCI ID when uci_status=yes
     const age = computeAgeOnRaceDay(data.dob);
