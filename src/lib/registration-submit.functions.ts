@@ -218,8 +218,9 @@ export const submitRegistration = createServerFn({ method: "POST" })
           email: data.email || null,
           township: data.township,
           state_region: data.state_region,
-          height_cm: data.height_cm ?? null,
-          weight_kg: data.weight_kg ?? null,
+          height_cm: data.height_cm != null ? String(data.height_cm) : null,
+          weight_kg: data.weight_kg != null ? String(data.weight_kg) : null,
+
           emergency_name: data.emergency_name,
           emergency_phone: data.emergency_phone,
           guardian_name: data.guardian_name || null,
