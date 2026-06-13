@@ -12,7 +12,6 @@ import {
   Clock,
   Camera,
   Menu,
-  ExternalLink,
   ChevronLeft,
   ChevronRight,
   X,

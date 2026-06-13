@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   BookOpen,
   CalendarDays,
-  ExternalLink,
   FileWarning,
   Gavel,
   Map as MapIcon,
