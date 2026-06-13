@@ -144,22 +144,23 @@ export const submitRegistration = createServerFn({ method: "POST" })
 
     // ─── Compute next NC26 number from BOTH tables, max(known,164)+1 ────────
     async function nextNumber(): Promise<number> {
-      const [extRes, intRes] = await Promise.all([
+      const [extRegRes, extSubRes] = await Promise.all([
         ext.from("registrations")
           .select("registration_no")
           .like("registration_no", "NC26-%")
           .order("registration_no", { ascending: false })
           .limit(1),
-        internal.from("registration_submissions")
+        ext.from("registration_submissions")
           .select("registration_no")
           .like("registration_no", "NC26-%")
           .order("registration_no", { ascending: false })
           .limit(1),
       ]);
-      const extMax = suffixOf(extRes.data?.[0]?.registration_no);
-      const intMax = suffixOf(intRes.data?.[0]?.registration_no);
-      return Math.max(extMax, intMax, 164) + 1;
+      const extRegMax = suffixOf(extRegRes.data?.[0]?.registration_no);
+      const extSubMax = suffixOf(extSubRes.data?.[0]?.registration_no);
+      return Math.max(extRegMax, extSubMax, 164) + 1;
     }
+
 
     // ─── Duplicate flagging (no auto-merge) ───────────────────────────────
     const phoneSearch = normalizePhone(data.phone);
