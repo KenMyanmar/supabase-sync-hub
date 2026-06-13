@@ -198,8 +198,9 @@ export const submitRegistration = createServerFn({ method: "POST" })
     for (let attempt = 0; attempt < 3; attempt++) {
       const n = await nextNumber();
       const candidate = `NC26-${pad4(n)}`;
-      const { error } = await internal
+      const { error } = await ext
         .from("registration_submissions")
+
         .insert({
           registration_no: candidate,
           rider_type: data.rider_type,
