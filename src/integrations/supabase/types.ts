@@ -14,7 +14,153 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      registration_submissions: {
+        Row: {
+          coach_name: string | null
+          computed_category: string | null
+          consent_antidoping: boolean | null
+          consent_data: boolean | null
+          consent_disqualification: boolean | null
+          consent_media: boolean | null
+          consent_medical: boolean | null
+          consent_rules: boolean | null
+          consent_safety: boolean | null
+          dob: string | null
+          email: string | null
+          emergency_name: string | null
+          emergency_phone: string | null
+          events: string[] | null
+          gender: string | null
+          guardian_consent: boolean | null
+          guardian_name: string | null
+          guardian_nrc: string | null
+          guardian_phone: string | null
+          guardian_relationship: string | null
+          guardian_signature: string | null
+          height_cm: number | null
+          id: string
+          ip_hash: string | null
+          manager_name: string | null
+          manager_phone: string | null
+          name_en: string | null
+          name_my: string | null
+          nationality: string | null
+          nrc_or_passport: string | null
+          phone: string | null
+          possible_duplicate_of: string[] | null
+          registration_no: string
+          rfid_ack: boolean | null
+          rider_type: string | null
+          state_region: string | null
+          submitted_at: string
+          submitter_name: string | null
+          team_club: string | null
+          township: string | null
+          typed_signature: string | null
+          uci_ack: boolean | null
+          uci_id: string | null
+          uci_status: string | null
+          user_agent: string | null
+          weight_kg: number | null
+        }
+        Insert: {
+          coach_name?: string | null
+          computed_category?: string | null
+          consent_antidoping?: boolean | null
+          consent_data?: boolean | null
+          consent_disqualification?: boolean | null
+          consent_media?: boolean | null
+          consent_medical?: boolean | null
+          consent_rules?: boolean | null
+          consent_safety?: boolean | null
+          dob?: string | null
+          email?: string | null
+          emergency_name?: string | null
+          emergency_phone?: string | null
+          events?: string[] | null
+          gender?: string | null
+          guardian_consent?: boolean | null
+          guardian_name?: string | null
+          guardian_nrc?: string | null
+          guardian_phone?: string | null
+          guardian_relationship?: string | null
+          guardian_signature?: string | null
+          height_cm?: number | null
+          id?: string
+          ip_hash?: string | null
+          manager_name?: string | null
+          manager_phone?: string | null
+          name_en?: string | null
+          name_my?: string | null
+          nationality?: string | null
+          nrc_or_passport?: string | null
+          phone?: string | null
+          possible_duplicate_of?: string[] | null
+          registration_no: string
+          rfid_ack?: boolean | null
+          rider_type?: string | null
+          state_region?: string | null
+          submitted_at?: string
+          submitter_name?: string | null
+          team_club?: string | null
+          township?: string | null
+          typed_signature?: string | null
+          uci_ack?: boolean | null
+          uci_id?: string | null
+          uci_status?: string | null
+          user_agent?: string | null
+          weight_kg?: number | null
+        }
+        Update: {
+          coach_name?: string | null
+          computed_category?: string | null
+          consent_antidoping?: boolean | null
+          consent_data?: boolean | null
+          consent_disqualification?: boolean | null
+          consent_media?: boolean | null
+          consent_medical?: boolean | null
+          consent_rules?: boolean | null
+          consent_safety?: boolean | null
+          dob?: string | null
+          email?: string | null
+          emergency_name?: string | null
+          emergency_phone?: string | null
+          events?: string[] | null
+          gender?: string | null
+          guardian_consent?: boolean | null
+          guardian_name?: string | null
+          guardian_nrc?: string | null
+          guardian_phone?: string | null
+          guardian_relationship?: string | null
+          guardian_signature?: string | null
+          height_cm?: number | null
+          id?: string
+          ip_hash?: string | null
+          manager_name?: string | null
+          manager_phone?: string | null
+          name_en?: string | null
+          name_my?: string | null
+          nationality?: string | null
+          nrc_or_passport?: string | null
+          phone?: string | null
+          possible_duplicate_of?: string[] | null
+          registration_no?: string
+          rfid_ack?: boolean | null
+          rider_type?: string | null
+          state_region?: string | null
+          submitted_at?: string
+          submitter_name?: string | null
+          team_club?: string | null
+          township?: string | null
+          typed_signature?: string | null
+          uci_ack?: boolean | null
+          uci_id?: string | null
+          uci_status?: string | null
+          user_agent?: string | null
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
