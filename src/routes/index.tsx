@@ -12,7 +12,6 @@ import {
   Clock,
   Camera,
   Menu,
-  ExternalLink,
   ChevronLeft,
   ChevronRight,
   X,
@@ -67,7 +66,7 @@ export const Route = createFileRoute("/")({
   component: MicrositePage,
 });
 
-const REGISTER_URL = "https://forms.gle/zi9jLZMcBTsQQnXN9";
+const REGISTER_PATH = "/register" as const;
 
 const EVENTS = ["all", "Road Race", "Criterium", "MTB XCO"];
 const STATUSES = [
@@ -181,14 +180,12 @@ function SiteNav() {
           >
             Technical Guide
           </Link>
-          <a
-            href={REGISTER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to={REGISTER_PATH}
             className="ml-2 inline-flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground hover:opacity-90"
           >
-            Register <ExternalLink className="h-3.5 w-3.5" />
-          </a>
+            Register
+          </Link>
         </nav>
         <button
           className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-input"
@@ -251,14 +248,13 @@ function SiteNav() {
                   နည်းပညာလမ်းညွှန်
                 </span>
               </Link>
-              <a
-                href={REGISTER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to={REGISTER_PATH}
+                onClick={() => setOpen(false)}
                 className="mt-3 inline-flex items-center justify-center gap-1 rounded-md bg-accent px-3 py-2.5 text-sm font-medium text-accent-foreground"
               >
-                Register Now <ExternalLink className="h-3.5 w-3.5" />
-              </a>
+                Register Now
+              </Link>
             </nav>
           </div>
         </div>
@@ -330,14 +326,12 @@ function Hero() {
           >
             Check Registration Status
           </a>
-          <a
-            href={REGISTER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to={REGISTER_PATH}
             className="inline-flex items-center justify-center gap-2 rounded-md border border-white/40 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm hover:bg-white/20"
           >
-            Register Now <ExternalLink className="h-4 w-4" />
-          </a>
+            Register Now
+          </Link>
         </div>
       </div>
     </section>
@@ -1414,15 +1408,15 @@ function SiteFooter() {
           <p className="text-[11px] font-semibold uppercase tracking-wider text-white/60">
             Official Registration
           </p>
-          <a
-            href={REGISTER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to={REGISTER_PATH}
             className="mt-3 inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground hover:opacity-95"
           >
-            Open Registration Form <ExternalLink className="h-3.5 w-3.5" />
-          </a>
-          <p className="mt-3 text-xs text-white/60 break-all">{REGISTER_URL}</p>
+            Open Registration Form
+          </Link>
+          <p className="mt-3 text-xs text-white/60">
+            Official MCF registration — no Google account required.
+          </p>
         </div>
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-wider text-white/60">

@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   BookOpen,
   CalendarDays,
-  ExternalLink,
   FileWarning,
   Gavel,
   Map as MapIcon,
@@ -18,7 +17,7 @@ import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
 import routeHlegu from "@/assets/mcf-route-hlegu.png.asset.json";
 import routeCriterium from "@/assets/mcf-route-criterium.png.asset.json";
 
-const REGISTER_URL = "https://forms.gle/zi9jLZMcBTsQQnXN9";
+const REGISTER_PATH = "/register" as const;
 
 export const Route = createFileRoute("/technical-guide")({
   head: () => ({
@@ -127,16 +126,13 @@ function TechnicalGuidePage() {
                   ],
                   [
                     "Online Registration",
-                    <a
+                    <Link
                       key="reg"
-                      href={REGISTER_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-accent underline inline-flex items-center gap-1 break-all"
+                      to={REGISTER_PATH}
+                      className="text-accent underline inline-flex items-center gap-1"
                     >
-                      {REGISTER_URL}
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>,
+                      Register at cyclings.live/register
+                    </Link>,
                   ],
                   [
                     "စည်းမျဉ်းမူဘောင် / Rulebook",
