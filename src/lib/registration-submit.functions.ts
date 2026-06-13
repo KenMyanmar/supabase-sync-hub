@@ -108,11 +108,10 @@ export const submitRegistration = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown) => submitSchema.parse(raw))
   .handler(async ({ data }) => {
     const { extAdmin } = await import("@/integrations/ext-supabase/admin.server");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { getRequestHeader } = await import("@tanstack/react-start/server");
 
     const ext = extAdmin();
-    const internal = supabaseAdmin;
+
 
     // Server-side validation: guardian required for under-18, UCI ID when uci_status=yes
     const age = computeAgeOnRaceDay(data.dob);
@@ -145,22 +144,23 @@ export const submitRegistration = createServerFn({ method: "POST" })
 
     // ─── Compute next NC26 number from BOTH tables, max(known,164)+1 ────────
     async function nextNumber(): Promise<number> {
-      const [extRes, intRes] = await Promise.all([
+      const [extRegRes, extSubRes] = await Promise.all([
         ext.from("registrations")
           .select("registration_no")
           .like("registration_no", "NC26-%")
           .order("registration_no", { ascending: false })
           .limit(1),
-        internal.from("registration_submissions")
+        ext.from("registration_submissions")
           .select("registration_no")
           .like("registration_no", "NC26-%")
           .order("registration_no", { ascending: false })
           .limit(1),
       ]);
-      const extMax = suffixOf(extRes.data?.[0]?.registration_no);
-      const intMax = suffixOf(intRes.data?.[0]?.registration_no);
-      return Math.max(extMax, intMax, 164) + 1;
+      const extRegMax = suffixOf(extRegRes.data?.[0]?.registration_no);
+      const extSubMax = suffixOf(extSubRes.data?.[0]?.registration_no);
+      return Math.max(extRegMax, extSubMax, 164) + 1;
     }
+
 
     // ─── Duplicate flagging (no auto-merge) ───────────────────────────────
     const phoneSearch = normalizePhone(data.phone);
@@ -198,8 +198,9 @@ export const submitRegistration = createServerFn({ method: "POST" })
     for (let attempt = 0; attempt < 3; attempt++) {
       const n = await nextNumber();
       const candidate = `NC26-${pad4(n)}`;
-      const { error } = await internal
+      const { error } = await ext
         .from("registration_submissions")
+
         .insert({
           registration_no: candidate,
           rider_type: data.rider_type,
@@ -217,8 +218,9 @@ export const submitRegistration = createServerFn({ method: "POST" })
           email: data.email || null,
           township: data.township,
           state_region: data.state_region,
-          height_cm: data.height_cm ?? null,
-          weight_kg: data.weight_kg ?? null,
+          height_cm: data.height_cm != null ? String(data.height_cm) : null,
+          weight_kg: data.weight_kg != null ? String(data.weight_kg) : null,
+
           emergency_name: data.emergency_name,
           emergency_phone: data.emergency_phone,
           guardian_name: data.guardian_name || null,
