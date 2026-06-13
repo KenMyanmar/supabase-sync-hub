@@ -134,7 +134,7 @@ export const submitRegistration = createServerFn({ method: "POST" })
       data.consent_disqualification && data.consent_antidoping;
     if (!allConsents) throw new Error("All consents must be acknowledged.");
 
-    const category = computeCategory(age, data.gender);
+    const category = computeCategory(age, data.gender, data.dob);
 
     // Best-effort IP hash (Cloudflare/Workers / general)
     const ipRaw =
