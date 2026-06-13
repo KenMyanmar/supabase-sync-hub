@@ -1251,11 +1251,13 @@ import mspCatLogo from "@/assets/msp-cat-logo.jpg.asset.json";
 import easyGasLogo from "@/assets/easy-gas-logo.png.asset.json";
 import bbChickenLogo from "@/assets/bb-chicken-collagen-broth.png.asset.json";
 import focusCoreLogo from "@/assets/focuscore-logo.jpg.asset.json";
+import sportsGearTradingLogo from "@/assets/sports-gear-trading-logo.png.asset.json";
 
 const partnerSponsors = [
   { name: "Easy Gas", logo: easyGasLogo.url },
   { name: "BB Chicken Collagen Broth", logo: bbChickenLogo.url },
   { name: "FocusCore", logo: focusCoreLogo.url },
+  { name: "Sports Gear Trading", logo: sportsGearTradingLogo.url },
 ];
 
 function SponsorsSection() {
