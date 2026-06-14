@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, CalendarDays, FileWarning, MapPin } from "lucide-react";
 import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
 
-export const Route = createFileRoute("/schedule")({
+export const Route = createFileRoute("/programme")({
   head: () => ({
     meta: [
       {

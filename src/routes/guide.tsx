@@ -19,7 +19,7 @@ import routeCriterium from "@/assets/mcf-route-criterium.png.asset.json";
 
 const REGISTER_PATH = "/register" as const;
 
-export const Route = createFileRoute("/technical-guide")({
+export const Route = createFileRoute("/guide")({
   head: () => ({
     meta: [
       {

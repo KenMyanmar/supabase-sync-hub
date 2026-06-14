@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TechnicalGuideRouteImport } from './routes/technical-guide'
 import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ProgrammeRouteImport } from './routes/programme'
+import { Route as GuideRouteImport } from './routes/guide'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TechnicalGuideRoute = TechnicalGuideRouteImport.update({
@@ -29,6 +31,16 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProgrammeRoute = ProgrammeRouteImport.update({
+  id: '/programme',
+  path: '/programme',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideRoute = GuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +49,16 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/guide': typeof GuideRoute
+  '/programme': typeof ProgrammeRoute
   '/register': typeof RegisterRoute
   '/schedule': typeof ScheduleRoute
   '/technical-guide': typeof TechnicalGuideRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/guide': typeof GuideRoute
+  '/programme': typeof ProgrammeRoute
   '/register': typeof RegisterRoute
   '/schedule': typeof ScheduleRoute
   '/technical-guide': typeof TechnicalGuideRoute
@@ -50,20 +66,43 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/guide': typeof GuideRoute
+  '/programme': typeof ProgrammeRoute
   '/register': typeof RegisterRoute
   '/schedule': typeof ScheduleRoute
   '/technical-guide': typeof TechnicalGuideRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/register' | '/schedule' | '/technical-guide'
+  fullPaths:
+    | '/'
+    | '/guide'
+    | '/programme'
+    | '/register'
+    | '/schedule'
+    | '/technical-guide'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/register' | '/schedule' | '/technical-guide'
-  id: '__root__' | '/' | '/register' | '/schedule' | '/technical-guide'
+  to:
+    | '/'
+    | '/guide'
+    | '/programme'
+    | '/register'
+    | '/schedule'
+    | '/technical-guide'
+  id:
+    | '__root__'
+    | '/'
+    | '/guide'
+    | '/programme'
+    | '/register'
+    | '/schedule'
+    | '/technical-guide'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GuideRoute: typeof GuideRoute
+  ProgrammeRoute: typeof ProgrammeRoute
   RegisterRoute: typeof RegisterRoute
   ScheduleRoute: typeof ScheduleRoute
   TechnicalGuideRoute: typeof TechnicalGuideRoute
@@ -92,6 +131,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/programme': {
+      id: '/programme'
+      path: '/programme'
+      fullPath: '/programme'
+      preLoaderRoute: typeof ProgrammeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide': {
+      id: '/guide'
+      path: '/guide'
+      fullPath: '/guide'
+      preLoaderRoute: typeof GuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +157,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GuideRoute: GuideRoute,
+  ProgrammeRoute: ProgrammeRoute,
   RegisterRoute: RegisterRoute,
   ScheduleRoute: ScheduleRoute,
   TechnicalGuideRoute: TechnicalGuideRoute,
