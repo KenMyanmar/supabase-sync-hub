@@ -116,7 +116,6 @@ function statusBadgeClass(status: string | null): string {
 function MicrositePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteNav />
       <main>
         <Hero />
         <ProgrammeAtAGlance />
@@ -135,133 +134,7 @@ function MicrositePage() {
   );
 }
 
-/* ─── Sticky Nav ──────────────────────────────────────────────────────────── */
-function SiteNav() {
-  const [open, setOpen] = useState(false);
-  return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-        <a href="#overview" className="flex items-center gap-2 min-w-0">
-          <img
-            src={mcfLogo.url}
-            alt="MCF logo"
-            width={32}
-            height={32}
-            className="h-8 w-8 object-contain shrink-0"
-          />
-          <span className="flex flex-col leading-tight min-w-0">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">
-              MCF
-            </span>
-            <span className="text-[11px] text-muted-foreground truncate">
-              National Cycling Event 2026
-            </span>
-          </span>
-        </a>
-        <nav className="hidden md:flex items-center gap-1">
-          {NAV.map((n) => (
-            <a
-              key={n.id}
-              href={`#${n.id}`}
-              className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
-            >
-              {n.en}
-            </a>
-          ))}
-          <Link
-            to="/schedule"
-            className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
-          >
-            Schedule
-          </Link>
-          <Link
-            to="/technical-guide"
-            className="rounded-md px-3 py-1.5 text-sm text-foreground/80 hover:bg-muted hover:text-foreground"
-          >
-            Technical Guide
-          </Link>
-          <Link
-            to={REGISTER_PATH}
-            className="ml-2 inline-flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground hover:opacity-90"
-          >
-            Register
-          </Link>
-        </nav>
-        <button
-          className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-input"
-          onClick={() => setOpen(true)}
-          aria-label="Open menu"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-      </div>
-      {open && (
-        <div
-          className="fixed inset-0 z-50 bg-foreground/40 md:hidden"
-          onClick={() => setOpen(false)}
-        >
-          <div
-            className="absolute right-0 top-0 h-full w-72 max-w-[85vw] bg-background p-4 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-semibold text-primary">Menu</span>
-              <button
-                className="h-9 w-9 inline-flex items-center justify-center rounded-md border border-input"
-                onClick={() => setOpen(false)}
-                aria-label="Close menu"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <nav className="flex flex-col">
-              {NAV.map((n) => (
-                <a
-                  key={n.id}
-                  href={`#${n.id}`}
-                  onClick={() => setOpen(false)}
-                  className="rounded-md px-3 py-2.5 text-sm hover:bg-muted flex items-center justify-between"
-                >
-                  <span>{n.en}</span>
-                  <span lang="my" className="text-xs text-muted-foreground">
-                    {n.my}
-                  </span>
-                </a>
-              ))}
-              <Link
-                to="/schedule"
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm hover:bg-muted flex items-center justify-between"
-              >
-                <span>Schedule</span>
-                <span lang="my" className="text-xs text-muted-foreground">
-                  အစီအစဉ်
-                </span>
-              </Link>
-              <Link
-                to="/technical-guide"
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm hover:bg-muted flex items-center justify-between"
-              >
-                <span>Technical Guide</span>
-                <span lang="my" className="text-xs text-muted-foreground">
-                  နည်းပညာလမ်းညွှန်
-                </span>
-              </Link>
-              <Link
-                to={REGISTER_PATH}
-                onClick={() => setOpen(false)}
-                className="mt-3 inline-flex items-center justify-center gap-1 rounded-md bg-accent px-3 py-2.5 text-sm font-medium text-accent-foreground"
-              >
-                Register Now
-              </Link>
-            </nav>
-          </div>
-        </div>
-      )}
-    </header>
-  );
-}
+/* SiteNav removed — global header lives in src/components/SiteHeader.tsx */
 
 /* ─── Hero ─────────────────────────────────────────────────────────────────── */
 function Hero() {

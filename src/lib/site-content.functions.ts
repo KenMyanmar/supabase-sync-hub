@@ -1,0 +1,207 @@
+// Public read-only content server functions backed by the external Supabase
+// project (the same one that powers /register).
+//
+// Every fn loads the admin client INSIDE the handler so the service-role
+// module never leaks into the client bundle.
+//
+// All fns swallow "missing table" / "permission" errors and return empty
+// arrays so the site renders the bilingual empty state until the MCF team
+// creates and populates the tables.
+
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+
+type BilingualRow = Record<string, unknown>;
+
+async function safeSelect<T = BilingualRow>(
+  table: string,
+  query: (q: any) => any,
+): Promise<T[]> {
+  try {
+    const { extAdmin } = await import("@/integrations/ext-supabase/admin.server");
+    const base = extAdmin().from(table).select("*");
+    const { data, error } = await query(base);
+    if (error) {
+      // Table missing / not yet granted — degrade silently to empty
+      if (
+        error.code === "42P01" || // undefined_table
+        error.code === "42501" || // insufficient privilege
+        /relation .* does not exist/i.test(error.message ?? "") ||
+        /permission denied/i.test(error.message ?? "")
+      ) {
+        return [];
+      }
+      console.error(`[site-content] ${table}`, error);
+      return [];
+    }
+    return (data as T[]) ?? [];
+  } catch (e) {
+    console.error(`[site-content] ${table} threw`, e);
+    return [];
+  }
+}
+
+// ─── Press Releases ────────────────────────────────────────────────────────
+export type PressRelease = {
+  id: string;
+  slug: string;
+  published_at: string | null;
+  cover_url: string | null;
+  title_en: string | null;
+  title_mm: string | null;
+  summary_en: string | null;
+  summary_mm: string | null;
+  body_en: string | null;
+  body_mm: string | null;
+};
+
+export const listPressReleases = createServerFn({ method: "GET" }).handler(
+  async () =>
+    safeSelect<PressRelease>("press_releases", (q) =>
+      q.eq("is_published", true).order("published_at", { ascending: false }),
+    ),
+);
+
+export const getPressRelease = createServerFn({ method: "GET" })
+  .inputValidator((raw: unknown) => z.object({ slug: z.string() }).parse(raw))
+  .handler(async ({ data }) => {
+    const rows = await safeSelect<PressRelease>("press_releases", (q) =>
+      q.eq("slug", data.slug).eq("is_published", true).limit(1),
+    );
+    return rows[0] ?? null;
+  });
+
+// ─── Notices ───────────────────────────────────────────────────────────────
+export type Notice = {
+  id: string;
+  ref_no: string | null;
+  issued_at: string | null;
+  title_en: string | null;
+  title_mm: string | null;
+  body_en: string | null;
+  body_mm: string | null;
+  attachment_url: string | null;
+};
+
+export const listNotices = createServerFn({ method: "GET" }).handler(async () =>
+  safeSelect<Notice>("notices", (q) =>
+    q.eq("is_published", true).order("issued_at", { ascending: false }),
+  ),
+);
+
+// ─── Events / Stages ───────────────────────────────────────────────────────
+export type EventRow = {
+  id: string;
+  slug: string;
+  name_en: string | null;
+  name_mm: string | null;
+  date: string | null;
+  location_en: string | null;
+  location_mm: string | null;
+};
+
+export type StageRow = {
+  id: string;
+  event_id: string;
+  slug: string;
+  name_en: string | null;
+  name_mm: string | null;
+  date: string | null;
+  distance_km: number | null;
+  category: string | null;
+};
+
+export const listEvents = createServerFn({ method: "GET" }).handler(async () =>
+  safeSelect<EventRow>("events", (q) => q.order("date", { ascending: true })),
+);
+
+export const listStages = createServerFn({ method: "GET" }).handler(async () =>
+  safeSelect<StageRow>("stages", (q) => q.order("date", { ascending: true })),
+);
+
+// ─── Start Lists / Results / Standings ─────────────────────────────────────
+export type StartListRow = {
+  id: string;
+  stage_id: string;
+  bib: number | null;
+  registration_no: string | null;
+  name_en: string | null;
+  name_mm: string | null;
+  team_club: string | null;
+  category: string | null;
+};
+
+export type ResultRow = {
+  id: string;
+  stage_id: string;
+  position: number | null;
+  bib: number | null;
+  registration_no: string | null;
+  name_en: string | null;
+  name_mm: string | null;
+  team_club: string | null;
+  time_ms: number | null;
+  gap_ms: number | null;
+  points: number | null;
+  status: string | null;
+};
+
+export type StandingRow = {
+  id: string;
+  event_id: string;
+  classification: string;
+  position: number | null;
+  bib: number | null;
+  registration_no: string | null;
+  name_en: string | null;
+  name_mm: string | null;
+  team_club: string | null;
+  points_or_time_ms: number | null;
+};
+
+export const listStartLists = createServerFn({ method: "GET" }).handler(
+  async () =>
+    safeSelect<StartListRow>("start_lists", (q) =>
+      q.order("bib", { ascending: true }),
+    ),
+);
+
+export const listResults = createServerFn({ method: "GET" }).handler(async () =>
+  safeSelect<ResultRow>("results", (q) =>
+    q.order("position", { ascending: true }),
+  ),
+);
+
+export const listStandings = createServerFn({ method: "GET" }).handler(
+  async () =>
+    safeSelect<StandingRow>("standings", (q) =>
+      q.order("classification", { ascending: true }).order("position", { ascending: true }),
+    ),
+);
+
+// ─── Confirmed riders / teams (filtered view of public.registrations) ──────
+// Public-safe columns only. Reuses the existing public registrations table;
+// when admin marks a registration "Confirmed for provisional start list" or
+// similar, it shows up here.
+export type ConfirmedRider = {
+  registration_no: string;
+  name: string | null;
+  english_name: string | null;
+  team_club: string | null;
+  events: string[] | null;
+  status: string | null;
+};
+
+export const listConfirmedRiders = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const rows = await safeSelect<ConfirmedRider>("registrations", (q) =>
+      q
+        .select(
+          "registration_no, name, english_name, team_club, events, status",
+        )
+        .ilike("status", "%Confirmed%")
+        .order("registration_no", { ascending: true }),
+    );
+    return rows;
+  },
+);

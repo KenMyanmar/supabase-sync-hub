@@ -11,8 +11,19 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TechnicalGuideRouteImport } from './routes/technical-guide'
 import { Route as ScheduleRouteImport } from './routes/schedule'
+import { Route as RidersRouteImport } from './routes/riders'
+import { Route as ResultsRouteImport } from './routes/results'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ProgrammeRouteImport } from './routes/programme'
+import { Route as PartnersRouteImport } from './routes/partners'
+import { Route as MediaRouteImport } from './routes/media'
+import { Route as GuideRouteImport } from './routes/guide'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MediaIndexRouteImport } from './routes/media.index'
+import { Route as MediaPressRouteImport } from './routes/media.press'
+import { Route as MediaGalleryRouteImport } from './routes/media.gallery'
+import { Route as MediaContactRouteImport } from './routes/media.contact'
+import { Route as MediaPressSlugRouteImport } from './routes/media.press.$slug'
 
 const TechnicalGuideRoute = TechnicalGuideRouteImport.update({
   id: '/technical-guide',
@@ -24,9 +35,39 @@ const ScheduleRoute = ScheduleRouteImport.update({
   path: '/schedule',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RidersRoute = RidersRouteImport.update({
+  id: '/riders',
+  path: '/riders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgrammeRoute = ProgrammeRouteImport.update({
+  id: '/programme',
+  path: '/programme',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnersRoute = PartnersRouteImport.update({
+  id: '/partners',
+  path: '/partners',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MediaRoute = MediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideRoute = GuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -34,37 +75,145 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MediaIndexRoute = MediaIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MediaRoute,
+} as any)
+const MediaPressRoute = MediaPressRouteImport.update({
+  id: '/press',
+  path: '/press',
+  getParentRoute: () => MediaRoute,
+} as any)
+const MediaGalleryRoute = MediaGalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => MediaRoute,
+} as any)
+const MediaContactRoute = MediaContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => MediaRoute,
+} as any)
+const MediaPressSlugRoute = MediaPressSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => MediaPressRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/guide': typeof GuideRoute
+  '/media': typeof MediaRouteWithChildren
+  '/partners': typeof PartnersRoute
+  '/programme': typeof ProgrammeRoute
   '/register': typeof RegisterRoute
+  '/results': typeof ResultsRoute
+  '/riders': typeof RidersRoute
   '/schedule': typeof ScheduleRoute
   '/technical-guide': typeof TechnicalGuideRoute
+  '/media/contact': typeof MediaContactRoute
+  '/media/gallery': typeof MediaGalleryRoute
+  '/media/press': typeof MediaPressRouteWithChildren
+  '/media/': typeof MediaIndexRoute
+  '/media/press/$slug': typeof MediaPressSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/guide': typeof GuideRoute
+  '/partners': typeof PartnersRoute
+  '/programme': typeof ProgrammeRoute
   '/register': typeof RegisterRoute
+  '/results': typeof ResultsRoute
+  '/riders': typeof RidersRoute
   '/schedule': typeof ScheduleRoute
   '/technical-guide': typeof TechnicalGuideRoute
+  '/media/contact': typeof MediaContactRoute
+  '/media/gallery': typeof MediaGalleryRoute
+  '/media/press': typeof MediaPressRouteWithChildren
+  '/media': typeof MediaIndexRoute
+  '/media/press/$slug': typeof MediaPressSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/guide': typeof GuideRoute
+  '/media': typeof MediaRouteWithChildren
+  '/partners': typeof PartnersRoute
+  '/programme': typeof ProgrammeRoute
   '/register': typeof RegisterRoute
+  '/results': typeof ResultsRoute
+  '/riders': typeof RidersRoute
   '/schedule': typeof ScheduleRoute
   '/technical-guide': typeof TechnicalGuideRoute
+  '/media/contact': typeof MediaContactRoute
+  '/media/gallery': typeof MediaGalleryRoute
+  '/media/press': typeof MediaPressRouteWithChildren
+  '/media/': typeof MediaIndexRoute
+  '/media/press/$slug': typeof MediaPressSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/register' | '/schedule' | '/technical-guide'
+  fullPaths:
+    | '/'
+    | '/guide'
+    | '/media'
+    | '/partners'
+    | '/programme'
+    | '/register'
+    | '/results'
+    | '/riders'
+    | '/schedule'
+    | '/technical-guide'
+    | '/media/contact'
+    | '/media/gallery'
+    | '/media/press'
+    | '/media/'
+    | '/media/press/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/register' | '/schedule' | '/technical-guide'
-  id: '__root__' | '/' | '/register' | '/schedule' | '/technical-guide'
+  to:
+    | '/'
+    | '/guide'
+    | '/partners'
+    | '/programme'
+    | '/register'
+    | '/results'
+    | '/riders'
+    | '/schedule'
+    | '/technical-guide'
+    | '/media/contact'
+    | '/media/gallery'
+    | '/media/press'
+    | '/media'
+    | '/media/press/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/guide'
+    | '/media'
+    | '/partners'
+    | '/programme'
+    | '/register'
+    | '/results'
+    | '/riders'
+    | '/schedule'
+    | '/technical-guide'
+    | '/media/contact'
+    | '/media/gallery'
+    | '/media/press'
+    | '/media/'
+    | '/media/press/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GuideRoute: typeof GuideRoute
+  MediaRoute: typeof MediaRouteWithChildren
+  PartnersRoute: typeof PartnersRoute
+  ProgrammeRoute: typeof ProgrammeRoute
   RegisterRoute: typeof RegisterRoute
+  ResultsRoute: typeof ResultsRoute
+  RidersRoute: typeof RidersRoute
   ScheduleRoute: typeof ScheduleRoute
   TechnicalGuideRoute: typeof TechnicalGuideRoute
 }
@@ -85,11 +234,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScheduleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/riders': {
+      id: '/riders'
+      path: '/riders'
+      fullPath: '/riders'
+      preLoaderRoute: typeof RidersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programme': {
+      id: '/programme'
+      path: '/programme'
+      fullPath: '/programme'
+      preLoaderRoute: typeof ProgrammeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partners': {
+      id: '/partners'
+      path: '/partners'
+      fullPath: '/partners'
+      preLoaderRoute: typeof PartnersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/media': {
+      id: '/media'
+      path: '/media'
+      fullPath: '/media'
+      preLoaderRoute: typeof MediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide': {
+      id: '/guide'
+      path: '/guide'
+      fullPath: '/guide'
+      preLoaderRoute: typeof GuideRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -99,25 +290,84 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/media/': {
+      id: '/media/'
+      path: '/'
+      fullPath: '/media/'
+      preLoaderRoute: typeof MediaIndexRouteImport
+      parentRoute: typeof MediaRoute
+    }
+    '/media/press': {
+      id: '/media/press'
+      path: '/press'
+      fullPath: '/media/press'
+      preLoaderRoute: typeof MediaPressRouteImport
+      parentRoute: typeof MediaRoute
+    }
+    '/media/gallery': {
+      id: '/media/gallery'
+      path: '/gallery'
+      fullPath: '/media/gallery'
+      preLoaderRoute: typeof MediaGalleryRouteImport
+      parentRoute: typeof MediaRoute
+    }
+    '/media/contact': {
+      id: '/media/contact'
+      path: '/contact'
+      fullPath: '/media/contact'
+      preLoaderRoute: typeof MediaContactRouteImport
+      parentRoute: typeof MediaRoute
+    }
+    '/media/press/$slug': {
+      id: '/media/press/$slug'
+      path: '/$slug'
+      fullPath: '/media/press/$slug'
+      preLoaderRoute: typeof MediaPressSlugRouteImport
+      parentRoute: typeof MediaPressRoute
+    }
   }
 }
 
+interface MediaPressRouteChildren {
+  MediaPressSlugRoute: typeof MediaPressSlugRoute
+}
+
+const MediaPressRouteChildren: MediaPressRouteChildren = {
+  MediaPressSlugRoute: MediaPressSlugRoute,
+}
+
+const MediaPressRouteWithChildren = MediaPressRoute._addFileChildren(
+  MediaPressRouteChildren,
+)
+
+interface MediaRouteChildren {
+  MediaContactRoute: typeof MediaContactRoute
+  MediaGalleryRoute: typeof MediaGalleryRoute
+  MediaPressRoute: typeof MediaPressRouteWithChildren
+  MediaIndexRoute: typeof MediaIndexRoute
+}
+
+const MediaRouteChildren: MediaRouteChildren = {
+  MediaContactRoute: MediaContactRoute,
+  MediaGalleryRoute: MediaGalleryRoute,
+  MediaPressRoute: MediaPressRouteWithChildren,
+  MediaIndexRoute: MediaIndexRoute,
+}
+
+const MediaRouteWithChildren = MediaRoute._addFileChildren(MediaRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GuideRoute: GuideRoute,
+  MediaRoute: MediaRouteWithChildren,
+  PartnersRoute: PartnersRoute,
+  ProgrammeRoute: ProgrammeRoute,
   RegisterRoute: RegisterRoute,
+  ResultsRoute: ResultsRoute,
+  RidersRoute: RidersRoute,
   ScheduleRoute: ScheduleRoute,
   TechnicalGuideRoute: TechnicalGuideRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
