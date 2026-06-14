@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { CalendarDays, FileWarning, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/programme")({
@@ -264,7 +264,7 @@ function SchedulePage() {
 
         <p className="mt-6">
           <Link
-            to="/technical-guide"
+            to="/guide"
             className="text-accent underline text-sm"
           >
             ← Read the full Technical Guide / နည်းပညာလမ်းညွှန်
