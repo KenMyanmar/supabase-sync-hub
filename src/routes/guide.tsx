@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  ArrowLeft,
   BookOpen,
   CalendarDays,
   FileWarning,
@@ -13,7 +12,6 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
 import routeHlegu from "@/assets/mcf-route-hlegu.png.asset.json";
 import routeCriterium from "@/assets/mcf-route-criterium.png.asset.json";
 
@@ -62,7 +60,7 @@ const TOC = [
 function TechnicalGuidePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <GuideNav />
+      
       <main className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
         <header className="max-w-3xl">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent">
@@ -145,7 +143,7 @@ function TechnicalGuidePage() {
             <Section id="schedule" icon={CalendarDays} my="အစီအစဉ်" en="Schedule">
               <p className="text-sm text-muted-foreground">
                 Working Draft start times. Full day-by-day programme on the{" "}
-                <Link to="/schedule" className="text-accent underline">
+                <Link to="/programme" className="text-accent underline">
                   Schedule page
                 </Link>
                 .
@@ -590,46 +588,6 @@ function TechnicalGuidePage() {
   );
 }
 
-function GuideNav() {
-  return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-        <Link to="/" className="flex items-center gap-2 min-w-0">
-          <img
-            src={mcfLogo.url}
-            alt="MCF logo"
-            width={32}
-            height={32}
-            className="h-8 w-8 object-contain shrink-0"
-          />
-          <span className="flex flex-col leading-tight min-w-0">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">
-              MCF
-            </span>
-            <span className="text-[11px] text-muted-foreground truncate">
-              National Cycling Event 2026
-            </span>
-          </span>
-        </Link>
-        <nav className="flex items-center gap-1 text-sm">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-1 rounded-md px-3 py-1.5 hover:bg-muted"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Home
-          </Link>
-          <Link
-            to="/schedule"
-            className="rounded-md px-3 py-1.5 hover:bg-muted"
-          >
-            Schedule
-          </Link>
-        </nav>
-      </div>
-    </header>
-  );
-}
 
 function GuideFooter() {
   return (
