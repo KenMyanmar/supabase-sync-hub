@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  ArrowLeft,
   BookOpen,
   CalendarDays,
   FileWarning,
@@ -13,7 +12,6 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
-import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
 import routeHlegu from "@/assets/mcf-route-hlegu.png.asset.json";
 import routeCriterium from "@/assets/mcf-route-criterium.png.asset.json";
 
@@ -145,7 +143,7 @@ function TechnicalGuidePage() {
             <Section id="schedule" icon={CalendarDays} my="အစီအစဉ်" en="Schedule">
               <p className="text-sm text-muted-foreground">
                 Working Draft start times. Full day-by-day programme on the{" "}
-                <Link to="/schedule" className="text-accent underline">
+                <Link to="/programme" className="text-accent underline">
                   Schedule page
                 </Link>
                 .
