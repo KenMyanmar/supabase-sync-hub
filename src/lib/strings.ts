@@ -239,7 +239,7 @@ export const FANS = {
     title: { en: "Award Ceremony", mm: "ဆုပေးပွဲ" },
     date: { en: "28 June 2026", mm: "၂၀၂၆ ဇွန် ၂၈" },
     location: { en: "MCF compound · Thuwunna", mm: "MCF ဝင်း · သုဝဏ္ဏ" },
-    time: { en: "After Criterium races", mm: "ခရိုက်တီးရီယမ်ပြိုင်ပွဲများပြီးနောက်" },
+    time: { en: "10:00–10:40 (after final Criterium and stage prep)", mm: "၁၀:၀၀–၁၀:၄၀ (နောက်ဆုံး Criterium နှင့် စင်ပြင်ဆင်မှုပြီးနောက်)" },
   },
 } as const;
 
