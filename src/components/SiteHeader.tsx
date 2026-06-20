@@ -6,15 +6,18 @@ import { useLang, t } from "@/lib/i18n";
 import { NAV, MEDIA_SUBNAV, CTA } from "@/lib/strings";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MobileNav } from "@/components/MobileNav";
+import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
 import { cn } from "@/lib/utils";
 
 const HIDE_ON: string[] = ["/register"];
 
 export function SiteHeader() {
   const { lang } = useLang();
+  const { loading: regLoading, open: regOpen } = useRegistrationOpen();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mediaOpen, setMediaOpen] = useState(false);
+
 
   if (HIDE_ON.some((p) => pathname.startsWith(p))) return null;
 
@@ -100,13 +103,16 @@ export function SiteHeader() {
                 </Link>
               );
             })}
-            <Link
-              to="/register"
-              className="ml-2 inline-flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground hover:opacity-90"
-            >
-              {t(CTA.register, lang)}
-            </Link>
+            {!regLoading && regOpen && (
+              <Link
+                to="/register"
+                className="ml-2 inline-flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground hover:opacity-90"
+              >
+                {t(CTA.register, lang)}
+              </Link>
+            )}
             <LanguageToggle className="ml-2" />
+
           </nav>
 
           {/* Mobile trigger */}

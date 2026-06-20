@@ -28,8 +28,11 @@ import {
   lookupRegistration,
   type PublicRegistration,
   type PublicCounts,
+
 } from "@/lib/registrations.functions";
+import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
 import heroAsset from "@/assets/mcf-mdyrr.jpg.asset.json";
+
 import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
 import imgRoadRace from "@/assets/mcf-rr.jpg.asset.json";
 import imgCriterium from "@/assets/mcf-criterium.png.asset.json";
@@ -136,7 +139,9 @@ function MicrositePage() {
 
 /* ─── Hero ─────────────────────────────────────────────────────────────────── */
 function Hero() {
+  const { loading: regLoading, open: regOpen } = useRegistrationOpen();
   return (
+
     <section
       id="overview"
       className="relative isolate min-h-[80svh] overflow-hidden text-white"
@@ -197,12 +202,15 @@ function Hero() {
           >
             Check Registration Status
           </a>
-          <Link
-            to={REGISTER_PATH}
-            className="inline-flex items-center justify-center gap-2 rounded-md border border-white/40 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm hover:bg-white/20"
-          >
-            Register Now
-          </Link>
+          {!regLoading && regOpen && (
+            <Link
+              to={REGISTER_PATH}
+              className="inline-flex items-center justify-center gap-2 rounded-md border border-white/40 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm hover:bg-white/20"
+            >
+              Register Now
+            </Link>
+          )}
+
         </div>
       </div>
     </section>
@@ -1253,7 +1261,9 @@ function MediaSection() {
 /* ─── Footer ──────────────────────────────────────────────────────────────── */
 function SiteFooter() {
   const year = useMemo(() => new Date().getFullYear(), []);
+  const { loading: regLoading, open: regOpen, messageMm, messageEn } = useRegistrationOpen();
   return (
+
     <footer className="bg-[color:var(--mcf-navy-deep)] text-white/85">
       <div className="mx-auto max-w-6xl px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
@@ -1281,15 +1291,28 @@ function SiteFooter() {
           <p className="text-[11px] font-semibold uppercase tracking-wider text-white/60">
             Official Registration
           </p>
-          <Link
-            to={REGISTER_PATH}
-            className="mt-3 inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground hover:opacity-95"
-          >
-            Open Registration Form
-          </Link>
-          <p className="mt-3 text-xs text-white/60">
-            Official MCF registration — no Google account required.
-          </p>
+          {regLoading ? null : regOpen ? (
+            <>
+              <Link
+                to={REGISTER_PATH}
+                className="mt-3 inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground hover:opacity-95"
+              >
+                Open Registration Form
+              </Link>
+              <p className="mt-3 text-xs text-white/60">
+                Official MCF registration — no Google account required.
+              </p>
+            </>
+          ) : (
+            <div className="mt-3 rounded-md border border-white/20 bg-white/5 p-3">
+              <p lang="my" className="text-sm font-medium text-white/90">
+                မှတ်ပုံတင်ခြင်း ပိတ်သိမ်းပြီးဖြစ်ပါသည်
+              </p>
+              <p lang="my" className="mt-1 text-xs text-white/70">{messageMm}</p>
+              <p className="mt-1 text-xs text-white/60">{messageEn}</p>
+            </div>
+          )}
+
         </div>
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-wider text-white/60">

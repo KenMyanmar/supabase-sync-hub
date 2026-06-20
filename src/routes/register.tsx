@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, AlertTriangle } from "lucide-react";
 import { submitRegistration } from "@/lib/registration-submit.functions";
+import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +14,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
+
 
 export const Route = createFileRoute("/register")({
   head: () => ({
@@ -134,12 +136,37 @@ const CONSENTS: Array<{ key: keyof FormState; label: string; my: string }> = [
 ];
 
 function RegisterPage() {
+  const { loading: regLoading, open: regOpen, messageMm, messageEn } = useRegistrationOpen();
   const submit = useServerFn(submitRegistration);
   const [step, setStep] = useState(0);
   const [s, setS] = useState<FormState>(empty);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
+
+  if (regLoading) return null;
+  if (!regOpen) {
+    return (
+      <main className="mx-auto flex min-h-[60vh] max-w-xl items-center justify-center px-4 py-12">
+        <section className="w-full rounded-lg border bg-background p-8 text-center shadow-sm">
+          <h1 lang="my" className="text-xl font-semibold">
+            မှတ်ပုံတင်ခြင်း ပိတ်သိမ်းပြီးဖြစ်ပါသည်
+          </h1>
+          <p lang="my" className="mt-4 text-muted-foreground">{messageMm}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{messageEn}</p>
+          <div className="mt-6">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-muted"
+            >
+              ← Home
+            </Link>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
 
   const age = useMemo(() => ageOnRaceDay(s.dob), [s.dob]);
   const isMinor = age != null && age < 18;

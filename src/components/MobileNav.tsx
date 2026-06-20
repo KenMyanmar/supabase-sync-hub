@@ -4,11 +4,14 @@ import { useEffect } from "react";
 import { useLang, t } from "@/lib/i18n";
 import { MOBILE_NAV, MEDIA_SUBNAV, CTA } from "@/lib/strings";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
 
 type Props = { open: boolean; onClose: () => void };
 
 export function MobileNav({ open, onClose }: Props) {
   const { lang } = useLang();
+  const { loading: regLoading, open: regOpen } = useRegistrationOpen();
+
 
   useEffect(() => {
     if (!open) return;
@@ -42,13 +45,16 @@ export function MobileNav({ open, onClose }: Props) {
 
         <div className="flex-1 overflow-y-auto px-3 py-4">
           {/* Register first */}
-          <Link
-            to="/register"
-            onClick={onClose}
-            className="mb-4 inline-flex w-full items-center justify-center gap-1 rounded-md bg-accent px-3 py-3 text-sm font-semibold text-accent-foreground"
-          >
-            {t(CTA.register, lang)}
-          </Link>
+          {!regLoading && regOpen && (
+            <Link
+              to="/register"
+              onClick={onClose}
+              className="mb-4 inline-flex w-full items-center justify-center gap-1 rounded-md bg-accent px-3 py-3 text-sm font-semibold text-accent-foreground"
+            >
+              {t(CTA.register, lang)}
+            </Link>
+          )}
+
 
           <nav className="flex flex-col">
             {MOBILE_NAV.map((n) => (
