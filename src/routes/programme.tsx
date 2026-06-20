@@ -341,6 +341,74 @@ function SchedulePage() {
   );
 }
 
+const AWARD_ORDER: Array<{ en: string; mm: string }> = [
+  { en: "Open Category — Top 10", mm: "Open တန်း အကောင်းဆုံး ၁၀ ဦး" },
+  { en: "Junior — Gold / Silver / Bronze", mm: "လူငယ်တန်း ပထမဆု / ဒုတိယဆု / တတိယဆု" },
+  { en: "Women — Gold / Silver / Bronze", mm: "အမျိုးသမီးတန်း ပထမဆု / ဒုတိယဆု / တတိယဆု" },
+  { en: "Men Elite — Gold / Silver / Bronze", mm: "အမျိုးသား Elite တန်း ပထမဆု / ဒုတိယဆု / တတိယဆု" },
+  { en: "Team Classification — Top 3", mm: "အသင်းလိုက် အကောင်းဆုံး ၃ သင်း" },
+  { en: "Recognition — BMX Demonstration Team", mm: "BMX သရုပ်ပြအဖွဲ့အား ဂုဏ်ပြုခြင်း" },
+  { en: "Recognition — Fixie Demonstration Team", mm: "Fixie သရုပ်ပြအဖွဲ့အား ဂုဏ်ပြုခြင်း" },
+];
+
+const SPECTATOR_NOTES_EN = [
+  "Sign-on closes 15 minutes before each start.",
+  "Times are based on a 1.3 km circuit and may be adjusted by officials.",
+  "Award ceremony begins after the final Criterium and stage preparation.",
+  "Spectators must follow marshals, police, and MCF officials.",
+];
+
+const SPECTATOR_NOTES_MM = [
+  "ပြိုင်ပွဲဝင် အမည်စာရင်းသွင်းခြင်းကို ပြိုင်ပွဲစတင်ချိန်မတိုင်မီ ၁၅ မိနစ်အလိုတွင် ပိတ်ပါမည်။",
+  "အချိန်ဇယားသည် ၁ ပတ်လျှင် ၁.၃ ကီလိုမီတာရှိသော Criterium လမ်းကြောင်းအပေါ် အခြေခံထားပြီး တာဝန်ရှိသူများမှ လိုအပ်သလို ပြင်ဆင်နိုင်ပါသည်။",
+  "ဆုချီးမြှင့်ပွဲကို နောက်ဆုံး Criterium ပြိုင်ပွဲနှင့် စင်မြင့်ပြင်ဆင်မှုများပြီးနောက် စတင်ပါမည်။",
+  "ပရိသတ်များသည် marshal များ၊ ရဲနှင့် MCF တာဝန်ရှိသူများ၏ ညွှန်ကြားချက်များကို လိုက်နာရမည်။",
+];
+
+function Day3Extras() {
+  return (
+    <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="rounded-lg border border-border bg-card p-5">
+        <h3 className="font-semibold text-primary">
+          Award Ceremony Order{" "}
+          <span lang="my" className="text-sm text-muted-foreground">
+            · ဆုချီးမြှင့်ပွဲ အစီအစဉ်
+          </span>
+        </h3>
+        <ol className="mt-3 space-y-2 text-sm list-decimal list-inside">
+          {AWARD_ORDER.map((a) => (
+            <li key={a.en}>
+              <span>{a.en}</span>
+              <span lang="my" className="block pl-5 text-xs text-muted-foreground">
+                {a.mm}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div className="rounded-md border border-border border-l-4 border-l-accent bg-accent/5 p-5 text-sm">
+        <h3 className="font-semibold text-primary">
+          Spectator Notes{" "}
+          <span lang="my" className="text-sm text-muted-foreground">
+            · ပရိသတ်များအတွက် မှတ်ချက်များ
+          </span>
+        </h3>
+        <ul className="mt-3 space-y-1.5 list-disc list-inside">
+          {SPECTATOR_NOTES_EN.map((n) => (
+            <li key={n}>{n}</li>
+          ))}
+        </ul>
+        <ul lang="my" className="mt-3 space-y-1.5 list-disc list-inside text-xs text-muted-foreground">
+          {SPECTATOR_NOTES_MM.map((n) => (
+            <li key={n}>{n}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 
 function ScheduleFooter() {
   return (
