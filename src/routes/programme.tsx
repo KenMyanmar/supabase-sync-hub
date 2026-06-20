@@ -279,6 +279,7 @@ function SchedulePage() {
                       <th className="px-3 py-2.5 font-semibold">Category</th>
                       <th className="px-3 py-2.5 font-semibold">Venue</th>
                       <th className="px-3 py-2.5 font-semibold w-28">Type</th>
+                      <th className="px-3 py-2.5 font-semibold">Notes</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -300,11 +301,16 @@ function SchedulePage() {
                             {it.type}
                           </span>
                         </td>
+                        <td className="px-3 py-2 text-xs text-muted-foreground">
+                          {it.notes ?? ""}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+
+              {day.date === "28 June 2026" ? <Day3Extras /> : null}
             </section>
           ))}
         </div>
