@@ -202,12 +202,15 @@ function Hero() {
           >
             Check Registration Status
           </a>
-          <Link
-            to={REGISTER_PATH}
-            className="inline-flex items-center justify-center gap-2 rounded-md border border-white/40 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm hover:bg-white/20"
-          >
-            Register Now
-          </Link>
+          {!regLoading && regOpen && (
+            <Link
+              to={REGISTER_PATH}
+              className="inline-flex items-center justify-center gap-2 rounded-md border border-white/40 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm hover:bg-white/20"
+            >
+              Register Now
+            </Link>
+          )}
+
         </div>
       </div>
     </section>
