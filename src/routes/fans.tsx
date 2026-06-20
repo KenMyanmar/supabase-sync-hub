@@ -127,6 +127,14 @@ function FansPage() {
             </dt>
             <dd className="col-span-2">{t(FANS.awards.time, lang)}</dd>
           </dl>
+          <Link
+            to="/programme"
+            className="mt-3 inline-block text-sm text-primary underline underline-offset-2"
+          >
+            {lang === "mm"
+              ? "Day 3 အစီအစဉ်အပြည့်အစုံ ကြည့်ရှုရန် →"
+              : "See full Day 3 run-of-show →"}
+          </Link>
         </Block>
       </div>
 
