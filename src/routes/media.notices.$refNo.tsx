@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { listNotices } from "@/lib/site-content.functions";
-import { useLang, pick } from "@/lib/i18n";
+import { useLang } from "@/lib/i18n";
 import { CTA } from "@/lib/strings";
 import { RichTextContent } from "@/components/RichTextContent";
 
@@ -37,8 +37,9 @@ function NoticeDetail() {
   const { lang } = useLang();
   const { refNo } = Route.useParams();
   const row = useSuspenseQuery(noticeQO(refNo)).data!;
-  const title = pick(row, "title", lang) || row.ref_no || "Official notice";
-  const body = pick(row, "body", lang);
+  const title = row.title_mm || row.title_en || row.ref_no || "Official notice";
+  const secondaryTitle = row.title_mm && row.title_en && row.title_en !== row.title_mm ? row.title_en : null;
+  const body = row.body_mm || row.body_en || "";
 
   return (
     <article className="max-w-3xl space-y-4">
@@ -48,7 +49,10 @@ function NoticeDetail() {
       <p className="text-xs text-muted-foreground">
         {row.issued_at ? new Date(row.issued_at).toLocaleDateString() : ""}
       </p>
-      <h1 className="text-2xl font-bold text-primary sm:text-3xl">{title}</h1>
+      <div className="space-y-1">
+        <h1 lang="my" className="text-2xl font-bold text-primary sm:text-3xl">{title}</h1>
+        {secondaryTitle ? <p className="text-sm text-muted-foreground">{secondaryTitle}</p> : null}
+      </div>
       {row.attachment_url ? (
         <img
           src={row.attachment_url}

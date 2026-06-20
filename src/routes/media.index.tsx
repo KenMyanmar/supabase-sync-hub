@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listPressReleases, listNotices } from "@/lib/site-content.functions";
-import { useLang, pick } from "@/lib/i18n";
 import { EMPTY, CTA } from "@/lib/strings";
 import { NoResultsYet } from "@/components/NoResultsYet";
 
@@ -11,8 +10,10 @@ type MediaEntry =
       id: string;
       slug: string;
       publishedAt: string | null;
-      title: { en: string | null; mm: string | null };
-      summary: { en: string | null; mm: string | null };
+      titleMm: string | null;
+      titleEn: string | null;
+      summaryMm: string | null;
+      summaryEn: string | null;
       imageUrl: string | null;
       tags: string[];
     }
@@ -21,8 +22,10 @@ type MediaEntry =
       id: string;
       refNo: string | null;
       publishedAt: string | null;
-      title: { en: string | null; mm: string | null };
-      summary: { en: string | null; mm: string | null };
+      titleMm: string | null;
+      titleEn: string | null;
+      summaryMm: string | null;
+      summaryEn: string | null;
       imageUrl: string | null;
       tags: string[];
     };
@@ -36,8 +39,10 @@ const mediaQO = queryOptions({
       id: p.id,
       slug: p.slug,
       publishedAt: p.published_at,
-      title: { en: p.title_en, mm: p.title_mm },
-      summary: { en: p.summary_en, mm: p.summary_mm },
+      titleMm: p.title_mm,
+      titleEn: p.title_en,
+      summaryMm: p.summary_mm,
+      summaryEn: p.summary_en,
       imageUrl: p.cover_url,
       tags: inferTags(p.title_en, p.title_mm, p.summary_en, p.summary_mm),
     }));
@@ -46,11 +51,10 @@ const mediaQO = queryOptions({
       id: n.id,
       refNo: n.ref_no,
       publishedAt: n.issued_at,
-      title: { en: n.title_en, mm: n.title_mm },
-      summary: {
-        en: n.body_en?.split(/\n+/)[0] ?? n.title_en,
-        mm: n.body_mm?.split(/\n+/)[0] ?? n.title_mm,
-      },
+      titleMm: n.title_mm,
+      titleEn: n.title_en,
+      summaryMm: n.body_mm?.split(/\n+/)[0] ?? n.title_mm,
+      summaryEn: n.body_en?.split(/\n+/)[0] ?? n.title_en,
       imageUrl: n.attachment_url,
       tags: ["Announcement", "Event Info", "Media"],
     }));
@@ -86,81 +90,46 @@ export const Route = createFileRoute("/media/")({
 });
 
 function MediaNews() {
-  const { lang } = useLang();
   const items = useSuspenseQuery(mediaQO).data;
   if (items.length === 0) return <NoResultsYet message={EMPTY.noNews} />;
   return (
     <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
-      {items.map((item) => {
-        const title =
-          (lang === "mm" && item.title.mm ? item.title.mm : item.title.en) ||
-          item.title.mm ||
-          "Media item";
-        const summary =
-          (lang === "mm" && item.summary.mm ? item.summary.mm : item.summary.en) ||
-          item.summary.mm ||
-          "";
-
-        return (
-          <li key={`${item.kind}-${item.id}`}>
-            {item.kind === "press" ? (
-              <Link
-                to="/media/press/$slug"
-                params={{ slug: item.slug }}
-                className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
-              >
-                <MediaCardContent
-                  title={title}
-                  summary={summary}
-                  imageUrl={item.imageUrl}
-                  publishedAt={item.publishedAt}
-                  tags={item.tags}
-                  lang={lang}
-                />
-              </Link>
-            ) : (
-              <Link
-                to="/media/notices/$refNo"
-                params={{ refNo: item.refNo ?? item.id }}
-                className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
-              >
-                <MediaCardContent
-                  title={title}
-                  summary={summary}
-                  imageUrl={item.imageUrl}
-                  publishedAt={item.publishedAt}
-                  tags={item.tags}
-                  lang={lang}
-                />
-              </Link>
-            )}
-          </li>
-        );
-      })}
+      {items.map((item) => (
+        <li key={`${item.kind}-${item.id}`}>
+          {item.kind === "press" ? (
+            <Link
+              to="/media/press/$slug"
+              params={{ slug: item.slug }}
+              className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
+            >
+              <MediaCardContent item={item} />
+            </Link>
+          ) : (
+            <Link
+              to="/media/notices/$refNo"
+              params={{ refNo: item.refNo ?? item.id }}
+              className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
+            >
+              <MediaCardContent item={item} />
+            </Link>
+          )}
+        </li>
+      ))}
     </ul>
   );
 }
 
-function MediaCardContent({
-  title,
-  summary,
-  imageUrl,
-  publishedAt,
-  tags,
-  lang,
-}: {
-  title: string;
-  summary: string;
-  imageUrl: string | null;
-  publishedAt: string | null;
-  tags: string[];
-  lang: "en" | "mm";
-}) {
+function MediaCardContent({ item }: { item: MediaEntry }) {
+  const title = item.titleMm || item.titleEn || "Media item";
+  const secondaryTitle = item.titleMm && item.titleEn && item.titleEn !== item.titleMm ? item.titleEn : null;
+  const summary = item.summaryMm || item.summaryEn || "";
+  const secondarySummary = item.summaryMm && item.summaryEn && item.summaryEn !== item.summaryMm ? item.summaryEn : null;
+
   return (
     <>
-      {imageUrl ? (
+      {item.imageUrl ? (
         <img
-          src={imageUrl}
+          src={item.imageUrl}
           alt={title}
           className="aspect-[16/9] w-full object-cover"
           loading="lazy"
@@ -168,18 +137,24 @@ function MediaCardContent({
       ) : null}
       <div className="space-y-3 p-4">
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <span>{publishedAt ? new Date(publishedAt).toLocaleDateString() : ""}</span>
-          {tags.map((tag) => (
+          <span>{item.publishedAt ? new Date(item.publishedAt).toLocaleDateString() : ""}</span>
+          {item.tags.map((tag) => (
             <span key={tag} className="rounded border border-border px-2 py-0.5">
               {tag}
             </span>
           ))}
         </div>
-        <h2 className="font-semibold text-foreground">{title}</h2>
-        <p className="line-clamp-3 text-sm text-muted-foreground">{summary}</p>
-        <span className="inline-flex text-sm font-medium text-primary">
-          {lang === "mm" ? CTA.readMore.mm : CTA.readMore.en}
-        </span>
+        <div className="space-y-1">
+          <h2 lang="my" className="font-semibold text-foreground">{title}</h2>
+          {secondaryTitle ? <p className="text-sm text-muted-foreground">{secondaryTitle}</p> : null}
+        </div>
+        <div className="space-y-1">
+          <p lang={item.summaryMm ? "my" : undefined} className="line-clamp-3 text-sm text-muted-foreground">
+            {summary}
+          </p>
+          {secondarySummary ? <p className="line-clamp-2 text-xs text-muted-foreground/90">{secondarySummary}</p> : null}
+        </div>
+        <span className="inline-flex text-sm font-medium text-primary">{CTA.readMore.mm}</span>
       </div>
     </>
   );

@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listPressReleases } from "@/lib/site-content.functions";
-import { useLang, pick } from "@/lib/i18n";
 import { EMPTY, CTA } from "@/lib/strings";
 import { NoResultsYet } from "@/components/NoResultsYet";
 
@@ -32,44 +31,51 @@ export const Route = createFileRoute("/media/press")({
 });
 
 function PressList() {
-  const { lang } = useLang();
   const press = useSuspenseQuery(pressQO).data;
   if (press.length === 0)
     return <NoResultsYet message={EMPTY.noPressReleases} />;
   return (
     <ul className="space-y-3">
-      {press.map((p) => (
-        <li key={p.id}>
-          <Link
-            to="/media/press/$slug"
-            params={{ slug: p.slug }}
-            className="block overflow-hidden rounded-lg border border-border hover:bg-muted"
-          >
-            {p.cover_url ? (
-              <img
-                src={p.cover_url}
-                alt={pick(p, "title", lang) || p.slug}
-                className="aspect-[16/9] w-full object-cover"
-                loading="lazy"
-              />
-            ) : null}
-            <div className="space-y-3 p-4">
-              <p className="text-xs text-muted-foreground">
-                {p.published_at ? new Date(p.published_at).toLocaleDateString() : ""}
-              </p>
-              <h2 className="font-semibold text-foreground">
-                {pick(p, "title", lang) || p.slug}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {pick(p, "summary", lang)}
-              </p>
-              <span className="inline-flex text-sm font-medium text-primary">
-                {lang === "mm" ? CTA.readMore.mm : CTA.readMore.en}
-              </span>
-            </div>
-          </Link>
-        </li>
-      ))}
+      {press.map((p) => {
+        const title = p.title_mm || p.title_en || p.slug;
+        const secondaryTitle = p.title_mm && p.title_en && p.title_en !== p.title_mm ? p.title_en : null;
+        const summary = p.summary_mm || p.summary_en || "";
+        const secondarySummary = p.summary_mm && p.summary_en && p.summary_en !== p.summary_mm ? p.summary_en : null;
+        return (
+          <li key={p.id}>
+            <Link
+              to="/media/press/$slug"
+              params={{ slug: p.slug }}
+              className="block overflow-hidden rounded-lg border border-border hover:bg-muted"
+            >
+              {p.cover_url ? (
+                <img
+                  src={p.cover_url}
+                  alt={title}
+                  className="aspect-[16/9] w-full object-cover"
+                  loading="lazy"
+                />
+              ) : null}
+              <div className="space-y-3 p-4">
+                <p className="text-xs text-muted-foreground">
+                  {p.published_at ? new Date(p.published_at).toLocaleDateString() : ""}
+                </p>
+                <div className="space-y-1">
+                  <h2 lang="my" className="font-semibold text-foreground">{title}</h2>
+                  {secondaryTitle ? <p className="text-sm text-muted-foreground">{secondaryTitle}</p> : null}
+                </div>
+                <div className="space-y-1">
+                  <p lang={p.summary_mm ? "my" : undefined} className="text-sm text-muted-foreground">
+                    {summary}
+                  </p>
+                  {secondarySummary ? <p className="text-xs text-muted-foreground/90">{secondarySummary}</p> : null}
+                </div>
+                <span className="inline-flex text-sm font-medium text-primary">{CTA.readMore.mm}</span>
+              </div>
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 }
