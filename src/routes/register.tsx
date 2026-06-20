@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, AlertTriangle } from "lucide-react";
 import { submitRegistration } from "@/lib/registration-submit.functions";
+import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +14,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
+
 
 export const Route = createFileRoute("/register")({
   head: () => ({
