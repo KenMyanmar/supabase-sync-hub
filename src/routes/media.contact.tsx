@@ -22,10 +22,10 @@ function MediaContact() {
       </p>
       <p>
         <a
-          href="mailto:mcf@cyclings.live"
+          href="mailto:pyiwatun@gmail.com"
           className="text-primary underline"
         >
-          mcf@cyclings.live
+          pyiwatun@gmail.com
         </a>
       </p>
     </div>
