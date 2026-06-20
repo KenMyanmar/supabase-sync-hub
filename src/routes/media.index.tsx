@@ -70,6 +70,7 @@ function inferTags(...parts: Array<string | null | undefined>) {
   if (/sponsor|partner|champion|msp|vittoria/.test(text)) tags.add("Sponsor");
   if (/event|programme|ပြိုင်ပွဲ|လမ်းကြောင်း|အချက်အလက်/.test(text)) tags.add("Event Info");
   if (/announcement|notice|ကြေညာ|အသိပေး/.test(text)) tags.add("Announcement");
+  if (/နောက်ဆုံးနေ့|final day|deadline/.test(text)) tags.add("Archived");
   return Array.from(tags);
 }
 
@@ -91,44 +92,95 @@ function MediaNews() {
   return (
     <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {items.map((item) => {
-        const title = lang === "mm" && item.title.mm ? item.title.mm : item.title.en || item.title.mm || "Media item";
-        const summary = lang === "mm" && item.summary.mm ? item.summary.mm : item.summary.en || item.summary.mm || "";
-        const to = item.kind === "press" ? "/media/press/$slug" : "/media/notices/$refNo";
-        const params = item.kind === "press" ? { slug: item.slug } : { refNo: item.refNo ?? item.id };
+        const title =
+          (lang === "mm" && item.title.mm ? item.title.mm : item.title.en) ||
+          item.title.mm ||
+          "Media item";
+        const summary =
+          (lang === "mm" && item.summary.mm ? item.summary.mm : item.summary.en) ||
+          item.summary.mm ||
+          "";
+
         return (
           <li key={`${item.kind}-${item.id}`}>
-            <Link
-              to={to}
-              params={params as never}
-              className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
-            >
-              {item.imageUrl ? (
-                <img
-                  src={item.imageUrl}
-                  alt={title}
-                  className="aspect-[16/9] w-full object-cover"
-                  loading="lazy"
+            {item.kind === "press" ? (
+              <Link
+                to="/media/press/$slug"
+                params={{ slug: item.slug }}
+                className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
+              >
+                <MediaCardContent
+                  title={title}
+                  summary={summary}
+                  imageUrl={item.imageUrl}
+                  publishedAt={item.publishedAt}
+                  tags={item.tags}
+                  lang={lang}
                 />
-              ) : null}
-              <div className="space-y-3 p-4">
-                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <span>{item.publishedAt ? new Date(item.publishedAt).toLocaleDateString() : ""}</span>
-                  {item.tags.map((tag) => (
-                    <span key={tag} className="rounded border border-border px-2 py-0.5">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <h2 className="font-semibold text-foreground">{title}</h2>
-                <p className="line-clamp-3 text-sm text-muted-foreground">{summary}</p>
-                <span className="inline-flex text-sm font-medium text-primary">
-                  {lang === "mm" ? CTA.readMore.mm : CTA.readMore.en}
-                </span>
-              </div>
-            </Link>
+              </Link>
+            ) : (
+              <Link
+                to="/media/notices/$refNo"
+                params={{ refNo: item.refNo ?? item.id }}
+                className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
+              >
+                <MediaCardContent
+                  title={title}
+                  summary={summary}
+                  imageUrl={item.imageUrl}
+                  publishedAt={item.publishedAt}
+                  tags={item.tags}
+                  lang={lang}
+                />
+              </Link>
+            )}
           </li>
         );
       })}
     </ul>
+  );
+}
+
+function MediaCardContent({
+  title,
+  summary,
+  imageUrl,
+  publishedAt,
+  tags,
+  lang,
+}: {
+  title: string;
+  summary: string;
+  imageUrl: string | null;
+  publishedAt: string | null;
+  tags: string[];
+  lang: "en" | "mm";
+}) {
+  return (
+    <>
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={title}
+          className="aspect-[16/9] w-full object-cover"
+          loading="lazy"
+        />
+      ) : null}
+      <div className="space-y-3 p-4">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+          <span>{publishedAt ? new Date(publishedAt).toLocaleDateString() : ""}</span>
+          {tags.map((tag) => (
+            <span key={tag} className="rounded border border-border px-2 py-0.5">
+              {tag}
+            </span>
+          ))}
+        </div>
+        <h2 className="font-semibold text-foreground">{title}</h2>
+        <p className="line-clamp-3 text-sm text-muted-foreground">{summary}</p>
+        <span className="inline-flex text-sm font-medium text-primary">
+          {lang === "mm" ? CTA.readMore.mm : CTA.readMore.en}
+        </span>
+      </div>
+    </>
   );
 }

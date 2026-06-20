@@ -5,10 +5,11 @@ type Props = {
   className?: string;
 };
 
-const URL_RE = /(https?:\/\/[^\s]+)/g;
+const URL_RE = /^https?:\/\/[^\s]+$/;
+const SPLIT_URL_RE = /(https?:\/\/[^\s]+)/g;
 
 function renderInline(text: string) {
-  const parts = text.split(URL_RE);
+  const parts = text.split(SPLIT_URL_RE);
   return parts.map((part, index) => {
     if (URL_RE.test(part)) {
       return (
