@@ -15,6 +15,7 @@ const HIDE_ON: string[] = ["/register"];
 export function SiteHeader() {
   const { lang } = useLang();
   const { loading: regLoading, open: regOpen } = useRegistrationOpen();
+  const { hasLive } = useLivePill();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mediaOpen, setMediaOpen] = useState(false);
