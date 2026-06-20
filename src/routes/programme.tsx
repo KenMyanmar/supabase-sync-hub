@@ -195,6 +195,10 @@ function typeBadgeClass(t: Item["type"]) {
       return "bg-primary/10 text-primary";
     case "Meeting":
       return "bg-muted text-muted-foreground";
+    case "Exhibition":
+      return "bg-amber-500/15 text-amber-700 dark:text-amber-400";
+    case "Transition":
+      return "bg-muted/60 text-muted-foreground";
   }
 }
 
