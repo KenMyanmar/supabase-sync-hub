@@ -30,7 +30,9 @@ import {
   type PublicCounts,
 
 } from "@/lib/registrations.functions";
+import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
 import heroAsset from "@/assets/mcf-mdyrr.jpg.asset.json";
+
 import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
 import imgRoadRace from "@/assets/mcf-rr.jpg.asset.json";
 import imgCriterium from "@/assets/mcf-criterium.png.asset.json";
