@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { listPressReleases } from "@/lib/site-content.functions";
 import { useLang, pick } from "@/lib/i18n";
-import { EMPTY } from "@/lib/strings";
+import { EMPTY, CTA } from "@/lib/strings";
 import { NoResultsYet } from "@/components/NoResultsYet";
 
 const pressQO = queryOptions({
@@ -43,17 +43,30 @@ function PressList() {
           <Link
             to="/media/press/$slug"
             params={{ slug: p.slug }}
-            className="block rounded-lg border border-border p-4 hover:bg-muted"
+            className="block overflow-hidden rounded-lg border border-border hover:bg-muted"
           >
-            <p className="text-xs text-muted-foreground">
-              {p.published_at ? new Date(p.published_at).toLocaleDateString() : ""}
-            </p>
-            <h3 className="mt-1 font-semibold text-foreground">
-              {pick(p, "title", lang) || p.slug}
-            </h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {pick(p, "summary", lang)}
-            </p>
+            {p.cover_url ? (
+              <img
+                src={p.cover_url}
+                alt={pick(p, "title", lang) || p.slug}
+                className="aspect-[16/9] w-full object-cover"
+                loading="lazy"
+              />
+            ) : null}
+            <div className="space-y-3 p-4">
+              <p className="text-xs text-muted-foreground">
+                {p.published_at ? new Date(p.published_at).toLocaleDateString() : ""}
+              </p>
+              <h2 className="font-semibold text-foreground">
+                {pick(p, "title", lang) || p.slug}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {pick(p, "summary", lang)}
+              </p>
+              <span className="inline-flex text-sm font-medium text-primary">
+                {lang === "mm" ? CTA.readMore.mm : CTA.readMore.en}
+              </span>
+            </div>
           </Link>
         </li>
       ))}

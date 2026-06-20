@@ -3,6 +3,7 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { getPressRelease } from "@/lib/site-content.functions";
 import { useLang, pick, t } from "@/lib/i18n";
 import { CTA } from "@/lib/strings";
+import { RichTextContent } from "@/components/RichTextContent";
 
 const pressQO = (slug: string) =>
   queryOptions({
@@ -33,30 +34,28 @@ function PressDetail() {
   const { lang } = useLang();
   const { slug } = Route.useParams();
   const row = useSuspenseQuery(pressQO(slug)).data!;
+  const title = pick(row, "title", lang);
+  const summary = pick(row, "summary", lang);
+  const body = pick(row, "body", lang);
   return (
-    <article className="prose prose-sm max-w-3xl">
+    <article className="max-w-3xl space-y-4">
       <Link to="/media/press" className="text-xs text-primary underline">
         ← {t(CTA.back, lang)}
       </Link>
-      <p className="mt-2 text-xs text-muted-foreground">
+      <p className="text-xs text-muted-foreground">
         {row.published_at ? new Date(row.published_at).toLocaleDateString() : ""}
       </p>
-      <h1 className="text-2xl font-bold sm:text-3xl text-primary">
-        {pick(row, "title", lang)}
-      </h1>
+      <h1 className="text-2xl font-bold text-primary sm:text-3xl">{title}</h1>
       {row.cover_url ? (
         <img
           src={row.cover_url}
-          alt=""
-          className="my-4 w-full rounded-lg border border-border"
+          alt={title}
+          className="w-full rounded-lg border border-border"
+          loading="lazy"
         />
       ) : null}
-      <p className="text-base text-foreground/90 whitespace-pre-line">
-        {pick(row, "summary", lang)}
-      </p>
-      <div className="mt-4 whitespace-pre-line text-base text-foreground/90">
-        {pick(row, "body", lang)}
-      </div>
+      {summary ? <p className="text-base text-foreground/90">{summary}</p> : null}
+      <RichTextContent className="space-y-4 text-base text-foreground/90" text={body} />
     </article>
   );
 }

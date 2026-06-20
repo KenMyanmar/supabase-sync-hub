@@ -24,6 +24,7 @@ import { Route as MediaPressRouteImport } from './routes/media.press'
 import { Route as MediaGalleryRouteImport } from './routes/media.gallery'
 import { Route as MediaContactRouteImport } from './routes/media.contact'
 import { Route as MediaPressSlugRouteImport } from './routes/media.press.$slug'
+import { Route as MediaNoticesRefNoRouteImport } from './routes/media.notices.$refNo'
 
 const TechnicalGuideRoute = TechnicalGuideRouteImport.update({
   id: '/technical-guide',
@@ -100,6 +101,11 @@ const MediaPressSlugRoute = MediaPressSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => MediaPressRoute,
 } as any)
+const MediaNoticesRefNoRoute = MediaNoticesRefNoRouteImport.update({
+  id: '/notices/$refNo',
+  path: '/notices/$refNo',
+  getParentRoute: () => MediaRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/media/gallery': typeof MediaGalleryRoute
   '/media/press': typeof MediaPressRouteWithChildren
   '/media/': typeof MediaIndexRoute
+  '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
 }
 export interface FileRoutesByTo {
@@ -132,6 +139,7 @@ export interface FileRoutesByTo {
   '/media/gallery': typeof MediaGalleryRoute
   '/media/press': typeof MediaPressRouteWithChildren
   '/media': typeof MediaIndexRoute
+  '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
 }
 export interface FileRoutesById {
@@ -150,6 +158,7 @@ export interface FileRoutesById {
   '/media/gallery': typeof MediaGalleryRoute
   '/media/press': typeof MediaPressRouteWithChildren
   '/media/': typeof MediaIndexRoute
+  '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
 }
 export interface FileRouteTypes {
@@ -169,6 +178,7 @@ export interface FileRouteTypes {
     | '/media/gallery'
     | '/media/press'
     | '/media/'
+    | '/media/notices/$refNo'
     | '/media/press/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/media/gallery'
     | '/media/press'
     | '/media'
+    | '/media/notices/$refNo'
     | '/media/press/$slug'
   id:
     | '__root__'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/media/gallery'
     | '/media/press'
     | '/media/'
+    | '/media/notices/$refNo'
     | '/media/press/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -325,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MediaPressSlugRouteImport
       parentRoute: typeof MediaPressRoute
     }
+    '/media/notices/$refNo': {
+      id: '/media/notices/$refNo'
+      path: '/notices/$refNo'
+      fullPath: '/media/notices/$refNo'
+      preLoaderRoute: typeof MediaNoticesRefNoRouteImport
+      parentRoute: typeof MediaRoute
+    }
   }
 }
 
@@ -345,6 +364,7 @@ interface MediaRouteChildren {
   MediaGalleryRoute: typeof MediaGalleryRoute
   MediaPressRoute: typeof MediaPressRouteWithChildren
   MediaIndexRoute: typeof MediaIndexRoute
+  MediaNoticesRefNoRoute: typeof MediaNoticesRefNoRoute
 }
 
 const MediaRouteChildren: MediaRouteChildren = {
@@ -352,6 +372,7 @@ const MediaRouteChildren: MediaRouteChildren = {
   MediaGalleryRoute: MediaGalleryRoute,
   MediaPressRoute: MediaPressRouteWithChildren,
   MediaIndexRoute: MediaIndexRoute,
+  MediaNoticesRefNoRoute: MediaNoticesRefNoRoute,
 }
 
 const MediaRouteWithChildren = MediaRoute._addFileChildren(MediaRouteChildren)
