@@ -48,14 +48,14 @@ const DAYS: Array<{
     heading: "Road Race — Hlegu 11 Hills Round ",
     items: [
       {
-        time: "07:00",
+        time: "08:00",
         event: "Road Race",
         category: "Men Elite — 100 km",
         venue: "Hlegu 11 Hills Round  → Phukyi roundabout (out / back)",
         type: "Points",
       },
       {
-        time: "07:00",
+        time: "08:00",
         event: "Road Race",
         category:
           "Men Junior — 100 km (paired start with Men Elite, separate classification)",
@@ -63,7 +63,7 @@ const DAYS: Array<{
         type: "Points",
       },
       {
-        time: "07:15",
+        time: "08:15",
         event: "Road Race",
         category: "Women Elite / Open — 60 km",
         venue: "Hlegu 11 Hills Round  → Milestone 14/1 (out / back)",
@@ -77,7 +77,7 @@ const DAYS: Array<{
     heading: "MTB XCO — Taikkyi Mirror Mountains",
     items: [
       {
-        time: "07:00",
+        time: "08:00",
         event: "MTB XCO",
         category: "Men Open",
         venue: "We Love Taikkyi → Mirror Mountains",
