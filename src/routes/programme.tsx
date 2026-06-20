@@ -354,7 +354,7 @@ const AWARD_ORDER: Array<{ en: string; mm: string }> = [
 const SPECTATOR_NOTES_EN = [
   "Sign-on closes 15 minutes before each start.",
   "Times are based on a 1.3 km circuit and may be adjusted by officials.",
-  "Award ceremony begins after the final Criterium and stage preparation.",
+  "Winners are announced/confirmed after the 45-minute Open Criterium; the award ceremony begins after stage preparation.",
   "Spectators must follow marshals, police, and MCF officials.",
 ];
 
