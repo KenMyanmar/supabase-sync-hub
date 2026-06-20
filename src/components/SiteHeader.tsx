@@ -105,6 +105,15 @@ export function SiteHeader() {
                 </Link>
               );
             })}
+            {hasLive && (
+              <Link
+                to="/live"
+                className="ml-1 inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow hover:bg-red-700"
+              >
+                <Radio className="h-3 w-3 animate-pulse" />
+                Live
+              </Link>
+            )}
             {!regLoading && regOpen && (
               <Link
                 to="/register"
