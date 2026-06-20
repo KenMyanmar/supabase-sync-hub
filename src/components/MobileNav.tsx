@@ -1,16 +1,18 @@
 import { Link } from "@tanstack/react-router";
-import { X } from "lucide-react";
+import { X, Radio } from "lucide-react";
 import { useEffect } from "react";
 import { useLang, t } from "@/lib/i18n";
 import { MOBILE_NAV, MEDIA_SUBNAV, CTA } from "@/lib/strings";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
+import { useLivePill } from "@/lib/useLivePill";
 
 type Props = { open: boolean; onClose: () => void };
 
 export function MobileNav({ open, onClose }: Props) {
   const { lang } = useLang();
   const { loading: regLoading, open: regOpen } = useRegistrationOpen();
+  const { hasLive } = useLivePill();
 
 
   useEffect(() => {
