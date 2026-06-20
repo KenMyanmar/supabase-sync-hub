@@ -245,3 +245,68 @@ export const getSiteSettings = createServerFn({ method: "GET" }).handler(
   },
 );
 
+// ─── Live Updates ──────────────────────────────────────────────────────────
+export type LiveUpdate = {
+  id: string;
+  posted_at: string;
+  category: "road_race" | "women" | "mtb" | "criterium" | "general";
+  title_en: string | null;
+  title_mm: string | null;
+  body_en: string | null;
+  body_mm: string | null;
+  link_url: string | null;
+};
+
+export const getLiveUpdates = createServerFn({ method: "GET" })
+  .inputValidator((raw: unknown) =>
+    z.object({ limit: z.number().int().positive().max(200).optional() }).parse(raw ?? {}),
+  )
+  .handler(async ({ data }) =>
+    safeSelect<LiveUpdate>("live_updates", (q) =>
+      q
+        .eq("is_published", true)
+        .order("posted_at", { ascending: false })
+        .limit(data.limit ?? 50),
+    ),
+  );
+
+export const getRecentLiveUpdates = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const since = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
+    return safeSelect<LiveUpdate>("live_updates", (q) =>
+      q
+        .eq("is_published", true)
+        .gte("posted_at", since)
+        .order("posted_at", { ascending: false })
+        .limit(3),
+    );
+  },
+);
+
+// ─── Riders to Watch ───────────────────────────────────────────────────────
+export type RiderToWatch = {
+  id: string;
+  slug: string;
+  category: "men_elite" | "women" | "junior" | "past_champion" | "sea_games";
+  display_order: number;
+  name_en: string | null;
+  name_mm: string | null;
+  team_club: string | null;
+  photo_url: string | null;
+  bio_en: string | null;
+  bio_mm: string | null;
+  palmares_en: string[] | null;
+  palmares_mm: string[] | null;
+};
+
+export const getRidersToWatch = createServerFn({ method: "GET" }).handler(
+  async () =>
+    safeSelect<RiderToWatch>("riders_to_watch", (q) =>
+      q
+        .eq("is_published", true)
+        .order("category", { ascending: true })
+        .order("display_order", { ascending: true })
+        .order("name_en", { ascending: true }),
+    ),
+);
+

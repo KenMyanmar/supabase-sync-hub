@@ -1,12 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown, Menu, Radio } from "lucide-react";
 import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
 import { useLang, t } from "@/lib/i18n";
 import { NAV, MEDIA_SUBNAV, CTA } from "@/lib/strings";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MobileNav } from "@/components/MobileNav";
 import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
+import { useLivePill } from "@/lib/useLivePill";
 import { cn } from "@/lib/utils";
 
 const HIDE_ON: string[] = ["/register"];
@@ -14,6 +15,7 @@ const HIDE_ON: string[] = ["/register"];
 export function SiteHeader() {
   const { lang } = useLang();
   const { loading: regLoading, open: regOpen } = useRegistrationOpen();
+  const { hasLive } = useLivePill();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mediaOpen, setMediaOpen] = useState(false);
@@ -103,6 +105,15 @@ export function SiteHeader() {
                 </Link>
               );
             })}
+            {hasLive && (
+              <Link
+                to="/live"
+                className="ml-1 inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow hover:bg-red-700"
+              >
+                <Radio className="h-3 w-3 animate-pulse" />
+                Live
+              </Link>
+            )}
             {!regLoading && regOpen && (
               <Link
                 to="/register"

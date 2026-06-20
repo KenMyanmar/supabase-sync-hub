@@ -1,16 +1,18 @@
 import { Link } from "@tanstack/react-router";
-import { X } from "lucide-react";
+import { X, Radio } from "lucide-react";
 import { useEffect } from "react";
 import { useLang, t } from "@/lib/i18n";
 import { MOBILE_NAV, MEDIA_SUBNAV, CTA } from "@/lib/strings";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
+import { useLivePill } from "@/lib/useLivePill";
 
 type Props = { open: boolean; onClose: () => void };
 
 export function MobileNav({ open, onClose }: Props) {
   const { lang } = useLang();
   const { loading: regLoading, open: regOpen } = useRegistrationOpen();
+  const { hasLive } = useLivePill();
 
 
   useEffect(() => {
@@ -44,6 +46,16 @@ export function MobileNav({ open, onClose }: Props) {
         </div>
 
         <div className="flex-1 overflow-y-auto px-3 py-4">
+          {hasLive && (
+            <Link
+              to="/live"
+              onClick={onClose}
+              className="mb-3 inline-flex w-full items-center justify-center gap-1 rounded-md bg-red-600 px-3 py-2 text-sm font-bold uppercase tracking-wider text-white"
+            >
+              <Radio className="h-4 w-4 animate-pulse" />
+              {lang === "mm" ? "တိုက်ရိုက်" : "Live"}
+            </Link>
+          )}
           {/* Register first */}
           {!regLoading && regOpen && (
             <Link
@@ -54,6 +66,7 @@ export function MobileNav({ open, onClose }: Props) {
               {t(CTA.register, lang)}
             </Link>
           )}
+
 
 
           <nav className="flex flex-col">
