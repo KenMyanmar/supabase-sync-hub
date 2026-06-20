@@ -1,88 +1,126 @@
-# NC2026: Registration Closed Gate (driven by `site_settings`)
+## Scope
 
-Make the public Register page and Register CTAs respect a remote on/off switch in the external Supabase `site_settings` table. Fail closed.
+Move cyclings.live from a registration portal to a fan-facing event site. Ship the 4 new pages and polish 4 existing ones. Preserve current design, bilingual EN/MM, no admin UI this pass.
 
 ## Assumptions
 
-- `site_settings` lives on the **external** Supabase project (same one as `press_releases`, `registrations`, etc.), since that is also where registration data is written. The MCF team will create/seed the row there.
-- Schema per prompt: `id boolean primary key (=true)`, `registration_open boolean`, `registration_closed_message_en text`, `registration_closed_message_mm text`.
-- Public read access is/will be granted on `site_settings` (RLS + `GRANT SELECT TO anon`). If not, the gate degrades to **closed** (fail-closed), matching the spec.
-- I will NOT create or alter the table from Lovable — the user's separate Supabase workflow owns SQL.
+- `live_updates` and `riders_to_watch` are added to the external Supabase project via the user's `NC2026_fan_event_upgrade_migration.sql` (run outside Lovable). Lovable code does not create the tables; queries degrade to empty arrays via existing `safeSelect` if missing.
+- Reuse `src/integrations/ext-supabase/admin.server.ts` and `safeSelect` in `src/lib/site-content.functions.ts`.
+- GPX files dropped into `public/routes/<slug>.gpx` later. Until present, detail pages show "GPX pending in Final Team Version".
+- Award ceremony time = "After Criterium races" (no fixed time exists in codebase).
 
-## Data layer
+## Data layer (`src/lib/site-content.functions.ts`)
 
-Add a new server function `getSiteSettings` in `src/lib/site-content.functions.ts` (reuses `extAdmin` like the other site-content reads, swallows missing-table/permission errors and returns `{ registration_open: false, ... }` so we fail closed):
+Add types + server fns:
 
-```ts
-export type SiteSettings = {
-  registration_open: boolean;
-  registration_closed_message_en: string;
-  registration_closed_message_mm: string;
-};
+- `getLiveUpdates({ limit = 50 })` — `is_published=true`, order `posted_at desc`.
+- `getRecentLiveUpdates()` — `is_published=true`, `posted_at >= now()-6h`, limit 3.
+- `getRidersToWatch()` — `is_published=true`, order by `category, display_order, name_en`.
 
-export const getSiteSettings = createServerFn({ method: "GET" }).handler(
-  async (): Promise<SiteSettings> => { /* read row id=true; on any error → closed */ },
-);
-```
+All return `[]` on missing-table / permission errors.
 
-## Hook
+## New strings (`src/lib/strings.ts`)
 
-New `src/lib/useRegistrationOpen.ts`:
+Bilingual blocks for `fansPage`, `routeDetails` (3 routes), `sponsorEventVillage`, `liveCategoryLabels`, `liveEmpty`, `ridersWatchEmpty`, `gpxPending`.
 
-```ts
-export function useRegistrationOpen() {
-  const fn = useServerFn(getSiteSettings);
-  const { data, isLoading } = useQuery({
-    queryKey: ["site_settings"],
-    queryFn: () => fn(),
-    staleTime: 60_000,
-  });
-  return {
-    loading: isLoading,
-    open: data?.registration_open === true,           // fail-closed default
-    messageMm: data?.registration_closed_message_mm || FALLBACK_MM,
-    messageEn: data?.registration_closed_message_en || FALLBACK_EN,
-  };
-}
-```
+## New routes
 
-Fallback constants live in the same file (exact strings from the prompt).
+### `/fans` (`src/routes/fans.tsx`)
+Static bilingual page with sections: Hero, Race Day Guide (3 days), Best Places to Watch, Thuwunna Criterium Viewing Guide, Arrival & Parking, Race-Day Safety, Award Ceremony, CTA row → /programme, /routes, /media.
 
-## Register page guard — `src/routes/register.tsx`
+### `/live` (`src/routes/live.tsx`)
+Reverse-chronological feed via `useQuery({ refetchInterval: 30_000 })`. Card: timestamp + category badge + bilingual title/body + optional link. Empty state bilingual.
 
-At the top of `RegisterPage()`, before any form state is rendered:
+### `/routes` (`src/routes/routes.index.tsx`) + layout (`src/routes/routes.tsx`)
+Index lists three route cards: Road Race, MTB XCO, Criterium — date, distance, elevation, type, race character, GPX button (or pending), link to detail.
 
-```tsx
-const { loading, open, messageMm, messageEn } = useRegistrationOpen();
-if (loading) return null;
-if (!open) return <RegistrationClosed mm={messageMm} en={messageEn} />;
-```
+### `/routes/$slug` (`src/routes/routes.$slug.tsx`)
+Three slugs: `road-race-hlegu-11-hills`, `mtb-xco-mirror-mountains`, `thuwunna-criterium`. Content authored in strings using known values:
+- Road Race: 100.98 km, 806 m gain, ~11 climbs, M Elite/Junior 100, W Elite/Open 60.
+- Criterium: 1.3 km/lap, M Junior 15, W 16, M Elite 20, Special Open 15.
+- MTB XCO: distance/elevation marked pending.
 
-`RegistrationClosed` = the exact bilingual block from the prompt (heading + Myanmar primary + English secondary, centered card).
+404 via `notFound()` for unknown slug.
 
-The existing multi-step form stays untouched below the guard.
+### `/riders/watch` (`src/routes/riders.watch.tsx`)
+Reads `getRidersToWatch`, groups by category in fixed order (Men Elite, Women, Junior, Past Champions, SEA Games). Card: photo or initials, bilingual name, team/club, category badge, short bio, palmarès bullets. Click → dialog (existing `ui/dialog`) with full bio + palmarès. Empty state bilingual.
 
-## CTA hiding
+`/riders` stays a layout-able parent: convert `riders.tsx` into a layout with `<Outlet />`, move existing body into `riders.index.tsx`. New leaf is `riders.watch.tsx`.
 
-Use the same hook to hide/disable Register entry points when `!open` (and render nothing while `loading` to avoid flicker of the wrong state):
+## Header LIVE pill
 
-1. **`src/components/SiteHeader.tsx`** — desktop header Register button (line ~104). Hide when closed.
-2. **`src/components/MobileNav.tsx`** — mobile sheet Register link (line ~46). Hide when closed.
-3. **`src/routes/index.tsx`**:
-   - Hero "Register Now" link (~line 200) → hide when closed.
-   - Footer "Open Registration Form" link (~line 1285) → replace with a small bilingual "Registration closed" note when closed.
+New `src/lib/useLivePill.ts` hook using `getRecentLiveUpdates`, `refetchInterval: 30_000`. Renders a compact red pill linking to `/live` in `SiteHeader.tsx` and `MobileNav.tsx` when ≥1 recent row. Hidden on error/empty. Reserve space so layout doesn't jump.
 
-The hook is cheap (single cached query, `staleTime: 60s`), so calling it in 3–4 components is fine. No prop drilling.
+## Existing-page upgrades
+
+### `/media` (`media.index.tsx`)
+Add a top "Latest Updates" strip pulling 3 newest `live_updates`. Each links to `/live`. Hide strip when none. Keep existing posts feed untouched.
+
+### `/media/gallery`
+Replace placeholder with grouped sections: 26 June Road Race, 27 June MTB XCO, 28 June Criterium + Awards, Archive. Each empty group shows clean coming-soon tile. Images sourced from existing `src/assets/*` plus future uploads (placeholder map for now).
+
+### `/results`
+Add missing tabs to `RESULTS_TABS`: Start Lists, Provisional Results, Official Results, Points Standing, Team Standing, Medal Table, Official Notices. Build `RidersResultsTable` reusable component:
+- Props: rows, columns config, search keys, sortable columns, category + team filters.
+- Search across name, name_mm, bib, registration_no.
+- Used by Start Lists, Results, Standings tabs.
+Keep official-confirmation empty state when no rows.
+
+### `/partners`
+Restructure into sections: Main Sponsor (MSP/CAT), Partner Sponsors (existing assets), Champion Bonus Award (3 lines crediting Sport Gear Trading), Event Village / Booth Info (28 June Thuwunna), Become a Partner CTA — `mailto:pyiwatun@gmail.com` (already in project as media contact) labelled "Partnership enquiries: MCF Media".
+
+## Navigation
+
+Extend `NAV` and `MOBILE_NAV` in `strings.ts`:
+Overview, Programme, Results, Riders, **Fans**, **Live**, **Routes**, Media, Guide, Partners.
+
+If desktop overflow occurs at common widths, condense via dropdowns:
+- Race: Programme, Routes, Guide, Results
+- Community: Fans, Riders (Confirmed + Riders to Watch), Media
+- Partners (top-level)
+
+Mobile nav lists all pages flat.
+
+## SEO
+
+Per-route `head()` for all new routes with bilingual-aware title + description + `og:title` + `og:url` + leaf `canonical`. `/routes/$slug` derives title from loader data.
+
+## Quiet fix
+
+Hydration mismatch on `/media` from `toLocaleDateString()` server vs client: switch press/notice cards to a stable `formatISODateUTC` helper (YYYY-MM-DD or fixed `en-US` with `timeZone: "UTC"`). Apply to `MediaCardContent` and any other date renders on the feed.
 
 ## Out of scope
 
-- SQL / table creation / RLS for `site_settings` (user owns that).
-- Admin UI to toggle the flag.
-- Changes to the registration form itself, submit flow, or any other public content page.
+- GPS live tracking, fantasy games, video production.
+- Admin UI for posting live updates / managing riders (you post via SQL).
+- Schema changes beyond the supplied migration.
+- Editing or rewriting the existing Technical Guide body — only add links from its route cards to the new `/routes/$slug` pages.
 
 ## Verification
 
-1. With `registration_open = true` (or row reachable & true): form renders, all CTAs visible — unchanged behavior.
-2. With `registration_open = false`: `/register` shows the bilingual closed card, form not in DOM, header/mobile/hero CTAs hidden, footer shows closed note.
-3. With table missing or permission denied: same as (2) — fail closed.
-4. Build + route-tree generation succeed (no new routes, only new lib files + edits to existing routes/components).
+- Build + route-tree generation succeed.
+- Visit: `/fans`, `/live`, `/routes`, all three `/routes/$slug`, `/riders/watch`, `/media`, `/media/gallery`, `/results`, `/partners`, plus desktop header and mobile nav.
+- LIVE pill appears only when a published `live_updates` row exists within last 6h (seed a test row via SQL to confirm, then unpublish).
+- With both new tables missing/empty: every page renders empty states; no crash.
+- GPX buttons show pending state until files dropped under `public/routes/`.
+- `/media` hydration warning is gone after the date-format fix.
+
+## Build order
+
+1. Add types + 3 server fns in `site-content.functions.ts`.
+2. Add bilingual strings.
+3. New routes: `/fans`, `/live`, `/routes`, `/routes/$slug`, `/riders/watch` (convert `/riders` to layout).
+4. `useLivePill` hook + header/mobile integration.
+5. Media `Latest Updates` strip + Gallery grouping.
+6. Results tabs + reusable searchable/sortable table.
+7. Partners restructure.
+8. Nav extension (+ optional dropdown collapse).
+9. Date hydration fix on media feed.
+10. SEO `head()` per new route.
+
+## What I need from you to fill content later (non-blocking)
+
+- GPX files per route (drop into `public/routes/`).
+- Initial `riders_to_watch` rows (you'll insert via SQL).
+- Gallery images per race day (upload when available).
+- Confirmation of MTB XCO distance/elevation when finalized.
