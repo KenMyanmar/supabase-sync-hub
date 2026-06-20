@@ -260,6 +260,11 @@ function SchedulePage() {
                       <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" />
                       <span className="break-words">{it.venue}</span>
                     </p>
+                    {it.notes ? (
+                      <p className="mt-1.5 text-xs text-muted-foreground/90 italic">
+                        {it.notes}
+                      </p>
+                    ) : null}
                   </li>
                 ))}
               </ul>
