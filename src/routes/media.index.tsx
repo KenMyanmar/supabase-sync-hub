@@ -1,7 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
-import { listPressReleases, listNotices } from "@/lib/site-content.functions";
-import { EMPTY, CTA } from "@/lib/strings";
+import { useSuspenseQuery, queryOptions, useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { Radio } from "lucide-react";
+import {
+  listPressReleases,
+  listNotices,
+  getLiveUpdates,
+  type LiveUpdate,
+} from "@/lib/site-content.functions";
+import { EMPTY, CTA, formatIsoDate, LIVE_CATEGORY, formatIsoDateTime } from "@/lib/strings";
+import { useLang, t } from "@/lib/i18n";
 import { NoResultsYet } from "@/components/NoResultsYet";
 
 type MediaEntry =
@@ -89,33 +97,84 @@ export const Route = createFileRoute("/media/")({
   notFoundComponent: () => <NoResultsYet message={EMPTY.noNews} />,
 });
 
+function LatestUpdatesStrip() {
+  const { lang } = useLang();
+  const fn = useServerFn(getLiveUpdates);
+  const { data } = useQuery({
+    queryKey: ["site", "live-updates", "strip"],
+    queryFn: () => fn({ data: { limit: 3 } }),
+    refetchInterval: 30_000,
+    staleTime: 25_000,
+  });
+  const items = (data ?? []) as LiveUpdate[];
+  if (items.length === 0) return null;
+  return (
+    <section className="mb-6 rounded-lg border border-accent/40 bg-accent/5 p-4">
+      <div className="mb-2 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm font-semibold text-accent">
+          <Radio className="h-4 w-4" />
+          {lang === "mm" ? "နောက်ဆုံးအပ်ဒိတ်များ" : "Latest Updates"}
+        </div>
+        <Link to="/live" className="text-xs text-primary underline">
+          {lang === "mm" ? "အားလုံးကြည့်ရန်" : "View all"} →
+        </Link>
+      </div>
+      <ul className="space-y-2">
+        {items.map((u) => {
+          const cat = LIVE_CATEGORY[u.category] ?? LIVE_CATEGORY.general;
+          const title = lang === "mm" ? u.title_mm || u.title_en : u.title_en || u.title_mm;
+          return (
+            <li key={u.id} className="flex flex-wrap items-baseline gap-2 text-sm">
+              <span className="font-mono text-xs text-muted-foreground">
+                {formatIsoDateTime(u.posted_at)}
+              </span>
+              <span className="rounded border border-border bg-background px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
+                {t(cat, lang)}
+              </span>
+              <Link to="/live" className="text-foreground/90 hover:text-foreground">
+                {title || (lang === "mm" ? "(ခေါင်းစဉ်မရှိ)" : "(no title)")}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
 function MediaNews() {
   const items = useSuspenseQuery(mediaQO).data;
-  if (items.length === 0) return <NoResultsYet message={EMPTY.noNews} />;
   return (
-    <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
-      {items.map((item) => (
-        <li key={`${item.kind}-${item.id}`}>
-          {item.kind === "press" ? (
-            <Link
-              to="/media/press/$slug"
-              params={{ slug: item.slug }}
-              className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
-            >
-              <MediaCardContent item={item} />
-            </Link>
-          ) : (
-            <Link
-              to="/media/notices/$refNo"
-              params={{ refNo: item.refNo ?? item.id }}
-              className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
-            >
-              <MediaCardContent item={item} />
-            </Link>
-          )}
-        </li>
-      ))}
-    </ul>
+    <>
+      <LatestUpdatesStrip />
+      {items.length === 0 ? (
+        <NoResultsYet message={EMPTY.noNews} />
+      ) : (
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {items.map((item) => (
+            <li key={`${item.kind}-${item.id}`}>
+              {item.kind === "press" ? (
+                <Link
+                  to="/media/press/$slug"
+                  params={{ slug: item.slug }}
+                  className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
+                >
+                  <MediaCardContent item={item} />
+                </Link>
+              ) : (
+                <Link
+                  to="/media/notices/$refNo"
+                  params={{ refNo: item.refNo ?? item.id }}
+                  className="block overflow-hidden rounded-lg border border-border transition-colors hover:bg-muted"
+                >
+                  <MediaCardContent item={item} />
+                </Link>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 }
 
@@ -137,7 +196,7 @@ function MediaCardContent({ item }: { item: MediaEntry }) {
       ) : null}
       <div className="space-y-3 p-4">
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <span>{item.publishedAt ? new Date(item.publishedAt).toLocaleDateString() : ""}</span>
+          <span>{formatIsoDate(item.publishedAt)}</span>
           {item.tags.map((tag) => (
             <span key={tag} className="rounded border border-border px-2 py-0.5">
               {tag}
