@@ -97,18 +97,13 @@ function RouteDetail() {
               {lang === "mm" ? "မြင့်တက်မှု" : "Elevation"}
             </dt>
             <dd className="col-span-2 font-mono">{r.elevation}</dd>
-            {r.sections.map((s) => (
-              <>
-                <dt
-                  key={`dt-${s.label.en}`}
-                  className="text-xs uppercase tracking-wide text-muted-foreground"
-                >
+            {r.sections.map((s: { label: { en: string; mm: string }; value: { en: string; mm: string } }) => (
+              <div key={s.label.en} className="contents">
+                <dt className="text-xs uppercase tracking-wide text-muted-foreground">
                   {t(s.label, lang)}
                 </dt>
-                <dd key={`dd-${s.label.en}`} className="col-span-2">
-                  {t(s.value, lang)}
-                </dd>
-              </>
+                <dd className="col-span-2">{t(s.value, lang)}</dd>
+              </div>
             ))}
           </dl>
         </section>
