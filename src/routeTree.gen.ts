@@ -11,15 +11,21 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TechnicalGuideRouteImport } from './routes/technical-guide'
 import { Route as ScheduleRouteImport } from './routes/schedule'
+import { Route as RoutesRouteImport } from './routes/routes'
 import { Route as RidersRouteImport } from './routes/riders'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProgrammeRouteImport } from './routes/programme'
 import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as MediaRouteImport } from './routes/media'
+import { Route as LiveRouteImport } from './routes/live'
 import { Route as GuideRouteImport } from './routes/guide'
+import { Route as FansRouteImport } from './routes/fans'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RoutesIndexRouteImport } from './routes/routes.index'
 import { Route as MediaIndexRouteImport } from './routes/media.index'
+import { Route as RoutesSlugRouteImport } from './routes/routes.$slug'
+import { Route as RidersWatchRouteImport } from './routes/riders.watch'
 import { Route as MediaPressRouteImport } from './routes/media.press'
 import { Route as MediaGalleryRouteImport } from './routes/media.gallery'
 import { Route as MediaContactRouteImport } from './routes/media.contact'
@@ -35,6 +41,11 @@ const TechnicalGuideRoute = TechnicalGuideRouteImport.update({
 const ScheduleRoute = ScheduleRouteImport.update({
   id: '/schedule',
   path: '/schedule',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoutesRoute = RoutesRouteImport.update({
+  id: '/routes',
+  path: '/routes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RidersRoute = RidersRouteImport.update({
@@ -67,9 +78,19 @@ const MediaRoute = MediaRouteImport.update({
   path: '/media',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LiveRoute = LiveRouteImport.update({
+  id: '/live',
+  path: '/live',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuideRoute = GuideRouteImport.update({
   id: '/guide',
   path: '/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FansRoute = FansRouteImport.update({
+  id: '/fans',
+  path: '/fans',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -77,10 +98,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoutesIndexRoute = RoutesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RoutesRoute,
+} as any)
 const MediaIndexRoute = MediaIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MediaRoute,
+} as any)
+const RoutesSlugRoute = RoutesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => RoutesRoute,
+} as any)
+const RidersWatchRoute = RidersWatchRouteImport.update({
+  id: '/watch',
+  path: '/watch',
+  getParentRoute: () => RidersRoute,
 } as any)
 const MediaPressRoute = MediaPressRouteImport.update({
   id: '/press',
@@ -115,36 +151,47 @@ const MediaNoticesRefNoRoute = MediaNoticesRefNoRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/fans': typeof FansRoute
   '/guide': typeof GuideRoute
+  '/live': typeof LiveRoute
   '/media': typeof MediaRouteWithChildren
   '/partners': typeof PartnersRoute
   '/programme': typeof ProgrammeRoute
   '/register': typeof RegisterRoute
   '/results': typeof ResultsRoute
-  '/riders': typeof RidersRoute
+  '/riders': typeof RidersRouteWithChildren
+  '/routes': typeof RoutesRouteWithChildren
   '/schedule': typeof ScheduleRoute
   '/technical-guide': typeof TechnicalGuideRoute
   '/media/contact': typeof MediaContactRoute
   '/media/gallery': typeof MediaGalleryRoute
   '/media/press': typeof MediaPressRouteWithChildren
+  '/riders/watch': typeof RidersWatchRoute
+  '/routes/$slug': typeof RoutesSlugRoute
   '/media/': typeof MediaIndexRoute
+  '/routes/': typeof RoutesIndexRoute
   '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
   '/media/press/': typeof MediaPressIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/fans': typeof FansRoute
   '/guide': typeof GuideRoute
+  '/live': typeof LiveRoute
   '/partners': typeof PartnersRoute
   '/programme': typeof ProgrammeRoute
   '/register': typeof RegisterRoute
   '/results': typeof ResultsRoute
-  '/riders': typeof RidersRoute
+  '/riders': typeof RidersRouteWithChildren
   '/schedule': typeof ScheduleRoute
   '/technical-guide': typeof TechnicalGuideRoute
   '/media/contact': typeof MediaContactRoute
   '/media/gallery': typeof MediaGalleryRoute
+  '/riders/watch': typeof RidersWatchRoute
+  '/routes/$slug': typeof RoutesSlugRoute
   '/media': typeof MediaIndexRoute
+  '/routes': typeof RoutesIndexRoute
   '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
   '/media/press': typeof MediaPressIndexRoute
@@ -152,19 +199,25 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/fans': typeof FansRoute
   '/guide': typeof GuideRoute
+  '/live': typeof LiveRoute
   '/media': typeof MediaRouteWithChildren
   '/partners': typeof PartnersRoute
   '/programme': typeof ProgrammeRoute
   '/register': typeof RegisterRoute
   '/results': typeof ResultsRoute
-  '/riders': typeof RidersRoute
+  '/riders': typeof RidersRouteWithChildren
+  '/routes': typeof RoutesRouteWithChildren
   '/schedule': typeof ScheduleRoute
   '/technical-guide': typeof TechnicalGuideRoute
   '/media/contact': typeof MediaContactRoute
   '/media/gallery': typeof MediaGalleryRoute
   '/media/press': typeof MediaPressRouteWithChildren
+  '/riders/watch': typeof RidersWatchRoute
+  '/routes/$slug': typeof RoutesSlugRoute
   '/media/': typeof MediaIndexRoute
+  '/routes/': typeof RoutesIndexRoute
   '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
   '/media/press/': typeof MediaPressIndexRoute
@@ -173,26 +226,34 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/fans'
     | '/guide'
+    | '/live'
     | '/media'
     | '/partners'
     | '/programme'
     | '/register'
     | '/results'
     | '/riders'
+    | '/routes'
     | '/schedule'
     | '/technical-guide'
     | '/media/contact'
     | '/media/gallery'
     | '/media/press'
+    | '/riders/watch'
+    | '/routes/$slug'
     | '/media/'
+    | '/routes/'
     | '/media/notices/$refNo'
     | '/media/press/$slug'
     | '/media/press/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/fans'
     | '/guide'
+    | '/live'
     | '/partners'
     | '/programme'
     | '/register'
@@ -202,26 +263,35 @@ export interface FileRouteTypes {
     | '/technical-guide'
     | '/media/contact'
     | '/media/gallery'
+    | '/riders/watch'
+    | '/routes/$slug'
     | '/media'
+    | '/routes'
     | '/media/notices/$refNo'
     | '/media/press/$slug'
     | '/media/press'
   id:
     | '__root__'
     | '/'
+    | '/fans'
     | '/guide'
+    | '/live'
     | '/media'
     | '/partners'
     | '/programme'
     | '/register'
     | '/results'
     | '/riders'
+    | '/routes'
     | '/schedule'
     | '/technical-guide'
     | '/media/contact'
     | '/media/gallery'
     | '/media/press'
+    | '/riders/watch'
+    | '/routes/$slug'
     | '/media/'
+    | '/routes/'
     | '/media/notices/$refNo'
     | '/media/press/$slug'
     | '/media/press/'
@@ -229,13 +299,16 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FansRoute: typeof FansRoute
   GuideRoute: typeof GuideRoute
+  LiveRoute: typeof LiveRoute
   MediaRoute: typeof MediaRouteWithChildren
   PartnersRoute: typeof PartnersRoute
   ProgrammeRoute: typeof ProgrammeRoute
   RegisterRoute: typeof RegisterRoute
   ResultsRoute: typeof ResultsRoute
-  RidersRoute: typeof RidersRoute
+  RidersRoute: typeof RidersRouteWithChildren
+  RoutesRoute: typeof RoutesRouteWithChildren
   ScheduleRoute: typeof ScheduleRoute
   TechnicalGuideRoute: typeof TechnicalGuideRoute
 }
@@ -254,6 +327,13 @@ declare module '@tanstack/react-router' {
       path: '/schedule'
       fullPath: '/schedule'
       preLoaderRoute: typeof ScheduleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/routes': {
+      id: '/routes'
+      path: '/routes'
+      fullPath: '/routes'
+      preLoaderRoute: typeof RoutesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/riders': {
@@ -298,11 +378,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MediaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/live': {
+      id: '/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof LiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guide': {
       id: '/guide'
       path: '/guide'
       fullPath: '/guide'
       preLoaderRoute: typeof GuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fans': {
+      id: '/fans'
+      path: '/fans'
+      fullPath: '/fans'
+      preLoaderRoute: typeof FansRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -312,12 +406,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/routes/': {
+      id: '/routes/'
+      path: '/'
+      fullPath: '/routes/'
+      preLoaderRoute: typeof RoutesIndexRouteImport
+      parentRoute: typeof RoutesRoute
+    }
     '/media/': {
       id: '/media/'
       path: '/'
       fullPath: '/media/'
       preLoaderRoute: typeof MediaIndexRouteImport
       parentRoute: typeof MediaRoute
+    }
+    '/routes/$slug': {
+      id: '/routes/$slug'
+      path: '/$slug'
+      fullPath: '/routes/$slug'
+      preLoaderRoute: typeof RoutesSlugRouteImport
+      parentRoute: typeof RoutesRoute
+    }
+    '/riders/watch': {
+      id: '/riders/watch'
+      path: '/watch'
+      fullPath: '/riders/watch'
+      preLoaderRoute: typeof RidersWatchRouteImport
+      parentRoute: typeof RidersRoute
     }
     '/media/press': {
       id: '/media/press'
@@ -396,15 +511,42 @@ const MediaRouteChildren: MediaRouteChildren = {
 
 const MediaRouteWithChildren = MediaRoute._addFileChildren(MediaRouteChildren)
 
+interface RidersRouteChildren {
+  RidersWatchRoute: typeof RidersWatchRoute
+}
+
+const RidersRouteChildren: RidersRouteChildren = {
+  RidersWatchRoute: RidersWatchRoute,
+}
+
+const RidersRouteWithChildren =
+  RidersRoute._addFileChildren(RidersRouteChildren)
+
+interface RoutesRouteChildren {
+  RoutesSlugRoute: typeof RoutesSlugRoute
+  RoutesIndexRoute: typeof RoutesIndexRoute
+}
+
+const RoutesRouteChildren: RoutesRouteChildren = {
+  RoutesSlugRoute: RoutesSlugRoute,
+  RoutesIndexRoute: RoutesIndexRoute,
+}
+
+const RoutesRouteWithChildren =
+  RoutesRoute._addFileChildren(RoutesRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FansRoute: FansRoute,
   GuideRoute: GuideRoute,
+  LiveRoute: LiveRoute,
   MediaRoute: MediaRouteWithChildren,
   PartnersRoute: PartnersRoute,
   ProgrammeRoute: ProgrammeRoute,
   RegisterRoute: RegisterRoute,
   ResultsRoute: ResultsRoute,
-  RidersRoute: RidersRoute,
+  RidersRoute: RidersRouteWithChildren,
+  RoutesRoute: RoutesRouteWithChildren,
   ScheduleRoute: ScheduleRoute,
   TechnicalGuideRoute: TechnicalGuideRoute,
 }
