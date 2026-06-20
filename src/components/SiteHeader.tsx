@@ -103,13 +103,16 @@ export function SiteHeader() {
                 </Link>
               );
             })}
-            <Link
-              to="/register"
-              className="ml-2 inline-flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground hover:opacity-90"
-            >
-              {t(CTA.register, lang)}
-            </Link>
+            {!regLoading && regOpen && (
+              <Link
+                to="/register"
+                className="ml-2 inline-flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground hover:opacity-90"
+              >
+                {t(CTA.register, lang)}
+              </Link>
+            )}
             <LanguageToggle className="ml-2" />
+
           </nav>
 
           {/* Mobile trigger */}
