@@ -1261,7 +1261,9 @@ function MediaSection() {
 /* ─── Footer ──────────────────────────────────────────────────────────────── */
 function SiteFooter() {
   const year = useMemo(() => new Date().getFullYear(), []);
+  const { loading: regLoading, open: regOpen, messageMm, messageEn } = useRegistrationOpen();
   return (
+
     <footer className="bg-[color:var(--mcf-navy-deep)] text-white/85">
       <div className="mx-auto max-w-6xl px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
