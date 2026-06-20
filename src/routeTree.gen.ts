@@ -23,6 +23,7 @@ import { Route as GuideRouteImport } from './routes/guide'
 import { Route as FansRouteImport } from './routes/fans'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RoutesIndexRouteImport } from './routes/routes.index'
+import { Route as RidersIndexRouteImport } from './routes/riders.index'
 import { Route as MediaIndexRouteImport } from './routes/media.index'
 import { Route as RoutesSlugRouteImport } from './routes/routes.$slug'
 import { Route as RidersWatchRouteImport } from './routes/riders.watch'
@@ -103,6 +104,11 @@ const RoutesIndexRoute = RoutesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => RoutesRoute,
 } as any)
+const RidersIndexRoute = RidersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RidersRoute,
+} as any)
 const MediaIndexRoute = MediaIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/riders/watch': typeof RidersWatchRoute
   '/routes/$slug': typeof RoutesSlugRoute
   '/media/': typeof MediaIndexRoute
+  '/riders/': typeof RidersIndexRoute
   '/routes/': typeof RoutesIndexRoute
   '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
@@ -183,7 +190,6 @@ export interface FileRoutesByTo {
   '/programme': typeof ProgrammeRoute
   '/register': typeof RegisterRoute
   '/results': typeof ResultsRoute
-  '/riders': typeof RidersRouteWithChildren
   '/schedule': typeof ScheduleRoute
   '/technical-guide': typeof TechnicalGuideRoute
   '/media/contact': typeof MediaContactRoute
@@ -191,6 +197,7 @@ export interface FileRoutesByTo {
   '/riders/watch': typeof RidersWatchRoute
   '/routes/$slug': typeof RoutesSlugRoute
   '/media': typeof MediaIndexRoute
+  '/riders': typeof RidersIndexRoute
   '/routes': typeof RoutesIndexRoute
   '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
@@ -217,6 +224,7 @@ export interface FileRoutesById {
   '/riders/watch': typeof RidersWatchRoute
   '/routes/$slug': typeof RoutesSlugRoute
   '/media/': typeof MediaIndexRoute
+  '/riders/': typeof RidersIndexRoute
   '/routes/': typeof RoutesIndexRoute
   '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
@@ -244,6 +252,7 @@ export interface FileRouteTypes {
     | '/riders/watch'
     | '/routes/$slug'
     | '/media/'
+    | '/riders/'
     | '/routes/'
     | '/media/notices/$refNo'
     | '/media/press/$slug'
@@ -258,7 +267,6 @@ export interface FileRouteTypes {
     | '/programme'
     | '/register'
     | '/results'
-    | '/riders'
     | '/schedule'
     | '/technical-guide'
     | '/media/contact'
@@ -266,6 +274,7 @@ export interface FileRouteTypes {
     | '/riders/watch'
     | '/routes/$slug'
     | '/media'
+    | '/riders'
     | '/routes'
     | '/media/notices/$refNo'
     | '/media/press/$slug'
@@ -291,6 +300,7 @@ export interface FileRouteTypes {
     | '/riders/watch'
     | '/routes/$slug'
     | '/media/'
+    | '/riders/'
     | '/routes/'
     | '/media/notices/$refNo'
     | '/media/press/$slug'
@@ -413,6 +423,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoutesIndexRouteImport
       parentRoute: typeof RoutesRoute
     }
+    '/riders/': {
+      id: '/riders/'
+      path: '/'
+      fullPath: '/riders/'
+      preLoaderRoute: typeof RidersIndexRouteImport
+      parentRoute: typeof RidersRoute
+    }
     '/media/': {
       id: '/media/'
       path: '/'
@@ -513,10 +530,12 @@ const MediaRouteWithChildren = MediaRoute._addFileChildren(MediaRouteChildren)
 
 interface RidersRouteChildren {
   RidersWatchRoute: typeof RidersWatchRoute
+  RidersIndexRoute: typeof RidersIndexRoute
 }
 
 const RidersRouteChildren: RidersRouteChildren = {
   RidersWatchRoute: RidersWatchRoute,
+  RidersIndexRoute: RidersIndexRoute,
 }
 
 const RidersRouteWithChildren =

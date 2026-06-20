@@ -1,12 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown, Menu, Radio } from "lucide-react";
 import mcfLogo from "@/assets/mcf-mcf-logo.png.asset.json";
 import { useLang, t } from "@/lib/i18n";
 import { NAV, MEDIA_SUBNAV, CTA } from "@/lib/strings";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MobileNav } from "@/components/MobileNav";
 import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
+import { useLivePill } from "@/lib/useLivePill";
 import { cn } from "@/lib/utils";
 
 const HIDE_ON: string[] = ["/register"];
