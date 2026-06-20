@@ -23,6 +23,7 @@ import { Route as MediaIndexRouteImport } from './routes/media.index'
 import { Route as MediaPressRouteImport } from './routes/media.press'
 import { Route as MediaGalleryRouteImport } from './routes/media.gallery'
 import { Route as MediaContactRouteImport } from './routes/media.contact'
+import { Route as MediaPressIndexRouteImport } from './routes/media.press.index'
 import { Route as MediaPressSlugRouteImport } from './routes/media.press.$slug'
 import { Route as MediaNoticesRefNoRouteImport } from './routes/media.notices.$refNo'
 
@@ -96,6 +97,11 @@ const MediaContactRoute = MediaContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => MediaRoute,
 } as any)
+const MediaPressIndexRoute = MediaPressIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MediaPressRoute,
+} as any)
 const MediaPressSlugRoute = MediaPressSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/media/': typeof MediaIndexRoute
   '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
+  '/media/press/': typeof MediaPressIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -137,10 +144,10 @@ export interface FileRoutesByTo {
   '/technical-guide': typeof TechnicalGuideRoute
   '/media/contact': typeof MediaContactRoute
   '/media/gallery': typeof MediaGalleryRoute
-  '/media/press': typeof MediaPressRouteWithChildren
   '/media': typeof MediaIndexRoute
   '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
+  '/media/press': typeof MediaPressIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -160,6 +167,7 @@ export interface FileRoutesById {
   '/media/': typeof MediaIndexRoute
   '/media/notices/$refNo': typeof MediaNoticesRefNoRoute
   '/media/press/$slug': typeof MediaPressSlugRoute
+  '/media/press/': typeof MediaPressIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -180,6 +188,7 @@ export interface FileRouteTypes {
     | '/media/'
     | '/media/notices/$refNo'
     | '/media/press/$slug'
+    | '/media/press/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -193,10 +202,10 @@ export interface FileRouteTypes {
     | '/technical-guide'
     | '/media/contact'
     | '/media/gallery'
-    | '/media/press'
     | '/media'
     | '/media/notices/$refNo'
     | '/media/press/$slug'
+    | '/media/press'
   id:
     | '__root__'
     | '/'
@@ -215,6 +224,7 @@ export interface FileRouteTypes {
     | '/media/'
     | '/media/notices/$refNo'
     | '/media/press/$slug'
+    | '/media/press/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -330,6 +340,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MediaContactRouteImport
       parentRoute: typeof MediaRoute
     }
+    '/media/press/': {
+      id: '/media/press/'
+      path: '/'
+      fullPath: '/media/press/'
+      preLoaderRoute: typeof MediaPressIndexRouteImport
+      parentRoute: typeof MediaPressRoute
+    }
     '/media/press/$slug': {
       id: '/media/press/$slug'
       path: '/$slug'
@@ -349,10 +366,12 @@ declare module '@tanstack/react-router' {
 
 interface MediaPressRouteChildren {
   MediaPressSlugRoute: typeof MediaPressSlugRoute
+  MediaPressIndexRoute: typeof MediaPressIndexRoute
 }
 
 const MediaPressRouteChildren: MediaPressRouteChildren = {
   MediaPressSlugRoute: MediaPressSlugRoute,
+  MediaPressIndexRoute: MediaPressIndexRoute,
 }
 
 const MediaPressRouteWithChildren = MediaPressRoute._addFileChildren(
