@@ -205,3 +205,43 @@ export const listConfirmedRiders = createServerFn({ method: "GET" }).handler(
     return rows;
   },
 );
+
+// ─── Site Settings (registration open switch) ──────────────────────────────
+// Single-row table keyed by id=true. Fail-closed: any error → registration
+// reported as closed so the form never accidentally renders.
+export type SiteSettings = {
+  registration_open: boolean;
+  registration_closed_message_en: string;
+  registration_closed_message_mm: string;
+};
+
+const CLOSED_DEFAULT: SiteSettings = {
+  registration_open: false,
+  registration_closed_message_en: "",
+  registration_closed_message_mm: "",
+};
+
+export const getSiteSettings = createServerFn({ method: "GET" }).handler(
+  async (): Promise<SiteSettings> => {
+    try {
+      const { extAdmin } = await import("@/integrations/ext-supabase/admin.server");
+      const { data, error } = await extAdmin()
+        .from("site_settings")
+        .select(
+          "registration_open, registration_closed_message_en, registration_closed_message_mm",
+        )
+        .eq("id", true)
+        .maybeSingle();
+      if (error || !data) return CLOSED_DEFAULT;
+      return {
+        registration_open: data.registration_open === true,
+        registration_closed_message_en: data.registration_closed_message_en ?? "",
+        registration_closed_message_mm: data.registration_closed_message_mm ?? "",
+      };
+    } catch (e) {
+      console.error("[site-content] site_settings threw", e);
+      return CLOSED_DEFAULT;
+    }
+  },
+);
+
