@@ -6,15 +6,18 @@ import { useLang, t } from "@/lib/i18n";
 import { NAV, MEDIA_SUBNAV, CTA } from "@/lib/strings";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { MobileNav } from "@/components/MobileNav";
+import { useRegistrationOpen } from "@/lib/useRegistrationOpen";
 import { cn } from "@/lib/utils";
 
 const HIDE_ON: string[] = ["/register"];
 
 export function SiteHeader() {
   const { lang } = useLang();
+  const { loading: regLoading, open: regOpen } = useRegistrationOpen();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mediaOpen, setMediaOpen] = useState(false);
+
 
   if (HIDE_ON.some((p) => pathname.startsWith(p))) return null;
 
