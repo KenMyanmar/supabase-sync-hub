@@ -32,7 +32,8 @@ type Item = {
   event: string;
   category: string;
   venue: string;
-  type: "Points" | "Separate" | "Ceremony" | "Meeting";
+  type: "Points" | "Separate" | "Ceremony" | "Meeting" | "Exhibition" | "Transition";
+  notes?: string;
 };
 
 const DAYS: Array<{
