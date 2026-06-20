@@ -139,7 +139,9 @@ function MicrositePage() {
 
 /* ─── Hero ─────────────────────────────────────────────────────────────────── */
 function Hero() {
+  const { loading: regLoading, open: regOpen } = useRegistrationOpen();
   return (
+
     <section
       id="overview"
       className="relative isolate min-h-[80svh] overflow-hidden text-white"
