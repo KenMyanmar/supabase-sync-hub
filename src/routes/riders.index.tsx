@@ -230,8 +230,14 @@ function RidersPage() {
           <TabsTrigger value="elite">{mm ? "အမျိုးသား Elite" : "Men Elite"}</TabsTrigger>
           <TabsTrigger value="women">{mm ? "အမျိုးသမီးတန်း" : "Women"}</TabsTrigger>
           <TabsTrigger value="junior">{mm ? "လူငယ်တန်း" : "Junior"}</TabsTrigger>
+          {derived.categoryToConfirm.length > 0 ? (
+            <TabsTrigger value="tbc">
+              {mm ? "အမျိုးအစား အတည်ပြုဆဲ" : "Category TBC"}
+            </TabsTrigger>
+          ) : null}
           <TabsTrigger value="mtb">MTB XCO</TabsTrigger>
         </TabsList>
+
 
         <TabsContent value="team" className="mt-6">
           <TeamSection mm={mm} />
