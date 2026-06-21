@@ -167,6 +167,9 @@ function RidersPage() {
       (r) => r.category === "Women" && r.in_road && r.in_crit,
     );
     const mtb = data.filter((r) => r.in_mtb);
+    const tbc = data.filter(
+      (r) => r.category === "Uncategorized" && r.in_road && r.in_crit,
+    );
 
     return {
       eliteConfirmed: sortByName(
@@ -192,7 +195,9 @@ function RidersPage() {
       mtbWomen: sortByName(
         mtb.filter((r) => r.category === "Women").map((r) => toRider(r, mm)),
       ),
+      categoryToConfirm: sortByName(tbc.map((r) => toRider(r, mm))),
     };
+
   }, [data, mm]);
 
   return (
@@ -225,8 +230,14 @@ function RidersPage() {
           <TabsTrigger value="elite">{mm ? "အမျိုးသား Elite" : "Men Elite"}</TabsTrigger>
           <TabsTrigger value="women">{mm ? "အမျိုးသမီးတန်း" : "Women"}</TabsTrigger>
           <TabsTrigger value="junior">{mm ? "လူငယ်တန်း" : "Junior"}</TabsTrigger>
+          {derived.categoryToConfirm.length > 0 ? (
+            <TabsTrigger value="tbc">
+              {mm ? "အမျိုးအစား အတည်ပြုဆဲ" : "Category TBC"}
+            </TabsTrigger>
+          ) : null}
           <TabsTrigger value="mtb">MTB XCO</TabsTrigger>
         </TabsList>
+
 
         <TabsContent value="team" className="mt-6">
           <TeamSection mm={mm} />
@@ -257,9 +268,16 @@ function RidersPage() {
           />
         </TabsContent>
 
+        {derived.categoryToConfirm.length > 0 ? (
+          <TabsContent value="tbc" className="mt-6">
+            <CategoryToConfirmCard mm={mm} riders={derived.categoryToConfirm} />
+          </TabsContent>
+        ) : null}
+
         <TabsContent value="mtb" className="mt-6">
           <MTBCard mm={mm} men={derived.mtbMen} women={derived.mtbWomen} />
         </TabsContent>
+
       </Tabs>
     </main>
   );
@@ -559,3 +577,24 @@ function MTBCard({ mm, men, women }: { mm: boolean; men: Rider[]; women: Rider[]
     </article>
   );
 }
+
+function CategoryToConfirmCard({ mm, riders }: { mm: boolean; riders: Rider[] }) {
+  return (
+    <article className="rounded-lg border border-border bg-muted/30 p-5 sm:p-6 shadow-sm">
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="text-xl font-bold text-primary">
+          {mm ? "အမျိုးအစား အတည်ပြုဆဲ" : "Category to be confirmed"}
+        </h2>
+        <NeutralBadge label={mm ? "အတည်ပြုဆဲ" : "Pending"} />
+      </div>
+      <p className="mt-3 text-base">
+        {mm
+          ? `Road Race နှင့် Criterium အတွက် စာရင်းသွင်းထားသူ ${riders.length} ဦး။ ပြိုင်ပွဲအမျိုးအစားကို MCF မှ စိစစ်အတည်ပြုဆဲဖြစ်ပါသည်။`
+          : `${riders.length} riders registered for Road Race + Criterium. MCF is verifying category before final classification.`}
+      </p>
+      <RegClarifier mm={mm} />
+      <RiderList riders={riders} mm={mm} />
+    </article>
+  );
+}
+
