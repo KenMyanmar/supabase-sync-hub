@@ -70,6 +70,7 @@ const MEN_ELITE_CONFIRMED: Rider[] = [
   { name: "Saw Jimmy", reg: "NC26-0019" },
   { name: "Saw Nay Kbaw Mue", reg: "NC26-0191" },
   { name: "Si Thu Khant Min", reg: "NC26-0074" },
+  { name: "Thi Ha Aung", reg: "NC26-0037" },
   { name: "Thura Aung", reg: "NC26-0033" },
   { name: "U Saw Than", reg: "NC26-0201" },
   { name: "Wai Hlyan Aung", reg: "NC26-0048" },
@@ -184,12 +185,66 @@ const TEAMS: Team[] = [
   },
 ];
 
-const JUNIOR_RIDERS: Rider[] = [
-  { name: "Bhone Pyae Paing", reg: "NC26-0131" },
-  { name: "AnttAwwAung", reg: "NC26-0143" },
-  { name: "Han Htoo Sat", reg: "NC26-0133" },
-  { name: "Khant Min Htet", reg: "NC26-0211" },
-  { name: "Jonathan / Khant Min Myat", reg: "NC26-0176" },
+const JUNIOR_CONFIRMED: Rider[] = [
+  { name: "Ye Yint Bo", reg: "NC26-0051" },
+  { name: "Ye Swan Htet", reg: "NC26-0059" },
+  { name: "Htet Wai Yan Kyaw", reg: "NC26-0061" },
+  { name: "Min Kaung Myat", reg: "NC26-0075" },
+  { name: "Hein Htet Aung", reg: "NC26-0068" },
+  { name: "Kyaw Phyo Khant", reg: "NC26-0123" },
+  { name: "Lin Htet", reg: "NC26-0142" },
+  { name: "Sai Thiha", reg: "NC26-0055" },
+  { name: "Thaw Tar Swe", reg: "NC26-0106" },
+  { name: "Myat Min Htut", reg: "NC26-0010" },
+  { name: "Sai Bhone Myat Han", reg: "NC26-0053" },
+  { name: "Thuya Linn", reg: "NC26-0050" },
+  { name: "Aung Ko Hein", reg: "NC26-0132" },
+  { name: "Zay Yar Lin", reg: "NC26-0115" },
+  { name: "Phone Thaw Khant", reg: "NC26-0175" },
+  { name: "Aung Khant Hein", reg: "NC26-0181" },
+  { name: "Si Thu Aung", reg: "NC26-0183" },
+  { name: "Win Min Tun", reg: "NC26-0117" },
+  { name: "Min Thurain Htun", reg: "NC26-0091" },
+  { name: "Khant Zay Ya", reg: "NC26-0086" },
+  { name: "Mg Thet Wai Lin", reg: "NC26-0177" },
+  { name: "Zin Lin Phyo", reg: "NC26-0238" },
+  { name: "Pyae Pyo Aung", reg: "NC26-0237" },
+  { name: "Kaung Myat Thu", reg: "NC26-0230" },
+  { name: "Mg Sein Thanlyin", reg: "NC26-0229" },
+  { name: "Bhone Thiha Naung", reg: "NC26-0184" },
+  { name: "Mg Shine Wai Yan", reg: "NC26-0244" },
+  { name: "Mg Hein Htet San", reg: "NC26-0198" },
+  { name: "Aung Khant Nyar Paing", reg: "NC26-0185" },
+  { name: "Ye Lin Naing", reg: "NC26-0020" },
+  { name: "Zaw Min Myat (Milo)", reg: "NC26-0169" },
+  { name: "Myat Min Hein", reg: "NC26-0180" },
+  { name: "Pyae Phyo Zaw", reg: "NC26-0224" },
+];
+
+const JUNIOR_PENDING: Rider[] = [
+  { name: "Mg Kaung Thu Ta", reg: "NC26-0065" },
+  { name: "Hpone Pyae Pai", reg: "NC26-0076" },
+  { name: "Mg Hpone Myat Thet Tun", reg: "NC26-0082" },
+  { name: "Sai Lyan Noom", reg: "NC26-0028" },
+  { name: "Mg Htet Oo Wai Yan", reg: "NC26-0029" },
+  { name: "Lin Wai Yan", reg: "NC26-0032" },
+  { name: "Mg Thwin Htoo Zaw", reg: "NC26-0036" },
+  { name: "Mg Htet Wai Aung", reg: "NC26-0105" },
+  { name: "Kaung Nyein Thant", reg: "NC26-0161" },
+  { name: "Paing Phoe Thu", reg: "NC26-0156" },
+  { name: "Myat Taw Thar", reg: "NC26-0164" },
+  { name: "Min Thu Khant", reg: "NC26-0127" },
+  { name: "Mg Moe Myint Thu", reg: "NC26-0080" },
+  { name: "Saw Min Thant Thu", reg: "NC26-0063" },
+  { name: "Thet Paing Hein", reg: "NC26-0041" },
+  { name: "Hein Tayza Aung", reg: "NC26-0174" },
+  { name: "Kyal Lay", reg: "NC26-0243" },
+  { name: "Pyae Phyo Thura", reg: "NC26-0241" },
+  { name: "Sit Nanda", reg: "NC26-0214" },
+  { name: "Thoon Nay Soe", reg: "NC26-0213" },
+  { name: "Aung Hein Sat Paing", reg: "NC26-0216" },
+  { name: "Kyal Sin Thwe", reg: "NC26-0250" },
+  { name: "Han Min Htut", reg: "NC26-0035" },
 ];
 
 const WOMEN_RIDERS: Rider[] = [
@@ -244,15 +299,9 @@ function RidersPage() {
         </TabsContent>
 
         <TabsContent value="junior" className="mt-6">
-          <SimpleRosterCard
-            mm={mm}
-            title={mm ? "လူငယ်တန်း" : "Junior"}
-            status="provisional"
-            riders={JUNIOR_RIDERS}
-            noteEn="Final age classification is being confirmed."
-            noteMm="အသက်အရွယ်သတ်မှတ်ချက်ကို နောက်ဆုံးအတည်ပြုဆဲဖြစ်ပါသည်။"
-          />
+          <JuniorCard mm={mm} />
         </TabsContent>
+
 
         <TabsContent value="women" className="mt-6">
           <SimpleRosterCard
@@ -325,8 +374,8 @@ function EliteMenCard({ mm }: { mm: boolean }) {
       </div>
       <p className="mt-3 text-base">
         {mm
-          ? "အမျိုးသား Elite တစ်ဦးချင်း — အသက်အရွယ်အတည်ပြုပြီး ၃၈ ဦး၊ အသက်စိစစ်ဆဲ ၁၅ ဦး။"
-          : "Men Elite individual — 38 age-confirmed, 15 pending age verification."}
+          ? "အမျိုးသား Elite တစ်ဦးချင်း — အသက်အရွယ်အတည်ပြုပြီး ၃၉ ဦး၊ အသက်စိစစ်ဆဲ ၁၅ ဦး။"
+          : "Men Elite individual — 39 age-confirmed, 15 pending age verification."}
       </p>
       <RegClarifier mm={mm} />
 
@@ -353,6 +402,48 @@ function EliteMenCard({ mm }: { mm: boolean }) {
         {mm
           ? "မှတ်ချက် — အသင်းစာရင်းပါ ပြိုင်ပွဲဝင်များသည် အမျိုးသား Elite တစ်ဦးချင်းတွင်လည်း ပြိုင်ဆိုင်ပါသည်။"
           : "Note: Riders on the team rosters also compete in Men Elite individual."}
+      </p>
+    </article>
+  );
+}
+
+function JuniorCard({ mm }: { mm: boolean }) {
+  return (
+    <article className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5 sm:p-6 shadow-sm">
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="text-xl font-bold text-primary">
+          {mm ? "လူငယ်တန်း (Junior)" : "Junior"}
+        </h2>
+        <StatusBadge status="confirmed" mm={mm} />
+      </div>
+      <p className="mt-3 text-base">
+        {mm
+          ? `လူငယ်တန်း (Junior) — အတည်ပြုပြီး ${JUNIOR_CONFIRMED.length} ဦး၊ စိစစ်ဆဲ ${JUNIOR_PENDING.length} ဦး။`
+          : `Junior — ${JUNIOR_CONFIRMED.length} confirmed, ${JUNIOR_PENDING.length} pending verification.`}
+      </p>
+      <RegClarifier mm={mm} />
+
+      <section className="mt-5">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          {mm ? `အတည်ပြုပြီး (${JUNIOR_CONFIRMED.length})` : `Confirmed (${JUNIOR_CONFIRMED.length})`}
+        </h3>
+        <RiderList riders={JUNIOR_CONFIRMED} mm={mm} />
+      </section>
+
+      <section className="mt-6">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {mm ? `စိစစ်ဆဲ (${JUNIOR_PENDING.length})` : `Pending verification (${JUNIOR_PENDING.length})`}
+          </h3>
+          <StatusBadge status="provisional" mm={mm} />
+        </div>
+        <RiderList riders={JUNIOR_PENDING} mm={mm} />
+      </section>
+
+      <p className="mt-4 rounded-md border-l-2 border-l-amber-500/60 bg-amber-500/5 px-3 py-2 text-xs text-amber-800 dark:text-amber-300">
+        {mm
+          ? "အသက်အရွယ်သတ်မှတ်ချက်နှင့် အချက်အလက်များကို နောက်ဆုံးအတည်ပြုဆဲဖြစ်ပါသည်။"
+          : "Age eligibility and details are being finalized for these riders."}
       </p>
     </article>
   );
