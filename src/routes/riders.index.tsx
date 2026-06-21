@@ -577,3 +577,24 @@ function MTBCard({ mm, men, women }: { mm: boolean; men: Rider[]; women: Rider[]
     </article>
   );
 }
+
+function CategoryToConfirmCard({ mm, riders }: { mm: boolean; riders: Rider[] }) {
+  return (
+    <article className="rounded-lg border border-border bg-muted/30 p-5 sm:p-6 shadow-sm">
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="text-xl font-bold text-primary">
+          {mm ? "အမျိုးအစား အတည်ပြုဆဲ" : "Category to be confirmed"}
+        </h2>
+        <NeutralBadge label={mm ? "အတည်ပြုဆဲ" : "Pending"} />
+      </div>
+      <p className="mt-3 text-base">
+        {mm
+          ? `Road Race နှင့် Criterium အတွက် စာရင်းသွင်းထားသူ ${riders.length} ဦး။ ပြိုင်ပွဲအမျိုးအစားကို MCF မှ စိစစ်အတည်ပြုဆဲဖြစ်ပါသည်။`
+          : `${riders.length} riders registered for Road Race + Criterium. MCF is verifying category before final classification.`}
+      </p>
+      <RegClarifier mm={mm} />
+      <RiderList riders={riders} mm={mm} />
+    </article>
+  );
+}
+
