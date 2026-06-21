@@ -70,6 +70,7 @@ const MEN_ELITE_CONFIRMED: Rider[] = [
   { name: "Saw Jimmy", reg: "NC26-0019" },
   { name: "Saw Nay Kbaw Mue", reg: "NC26-0191" },
   { name: "Si Thu Khant Min", reg: "NC26-0074" },
+  { name: "Thi Ha Aung", reg: "NC26-0037" },
   { name: "Thura Aung", reg: "NC26-0033" },
   { name: "U Saw Than", reg: "NC26-0201" },
   { name: "Wai Hlyan Aung", reg: "NC26-0048" },
