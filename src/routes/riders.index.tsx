@@ -407,6 +407,48 @@ function EliteMenCard({ mm }: { mm: boolean }) {
   );
 }
 
+function JuniorCard({ mm }: { mm: boolean }) {
+  return (
+    <article className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5 sm:p-6 shadow-sm">
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="text-xl font-bold text-primary">
+          {mm ? "လူငယ်တန်း (Junior)" : "Junior"}
+        </h2>
+        <StatusBadge status="confirmed" mm={mm} />
+      </div>
+      <p className="mt-3 text-base">
+        {mm
+          ? `လူငယ်တန်း (Junior) — အတည်ပြုပြီး ${JUNIOR_CONFIRMED.length} ဦး၊ စိစစ်ဆဲ ${JUNIOR_PENDING.length} ဦး။`
+          : `Junior — ${JUNIOR_CONFIRMED.length} confirmed, ${JUNIOR_PENDING.length} pending verification.`}
+      </p>
+      <RegClarifier mm={mm} />
+
+      <section className="mt-5">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          {mm ? `အတည်ပြုပြီး (${JUNIOR_CONFIRMED.length})` : `Confirmed (${JUNIOR_CONFIRMED.length})`}
+        </h3>
+        <RiderList riders={JUNIOR_CONFIRMED} mm={mm} />
+      </section>
+
+      <section className="mt-6">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {mm ? `စိစစ်ဆဲ (${JUNIOR_PENDING.length})` : `Pending verification (${JUNIOR_PENDING.length})`}
+          </h3>
+          <StatusBadge status="provisional" mm={mm} />
+        </div>
+        <RiderList riders={JUNIOR_PENDING} mm={mm} />
+      </section>
+
+      <p className="mt-4 rounded-md border-l-2 border-l-amber-500/60 bg-amber-500/5 px-3 py-2 text-xs text-amber-800 dark:text-amber-300">
+        {mm
+          ? "အသက်အရွယ်သတ်မှတ်ချက်နှင့် အချက်အလက်များကို နောက်ဆုံးအတည်ပြုဆဲဖြစ်ပါသည်။"
+          : "Age eligibility and details are being finalized for these riders."}
+      </p>
+    </article>
+  );
+}
+
 function TeamSection({ mm }: { mm: boolean }) {
   return (
     <div className="space-y-5">
