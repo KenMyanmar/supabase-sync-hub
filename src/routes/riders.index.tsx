@@ -167,6 +167,9 @@ function RidersPage() {
       (r) => r.category === "Women" && r.in_road && r.in_crit,
     );
     const mtb = data.filter((r) => r.in_mtb);
+    const tbc = data.filter(
+      (r) => r.category === "Uncategorized" && r.in_road && r.in_crit,
+    );
 
     return {
       eliteConfirmed: sortByName(
@@ -192,7 +195,9 @@ function RidersPage() {
       mtbWomen: sortByName(
         mtb.filter((r) => r.category === "Women").map((r) => toRider(r, mm)),
       ),
+      categoryToConfirm: sortByName(tbc.map((r) => toRider(r, mm))),
     };
+
   }, [data, mm]);
 
   return (
