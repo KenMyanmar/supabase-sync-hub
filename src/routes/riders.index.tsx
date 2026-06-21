@@ -174,7 +174,40 @@ function StatusBadge({ status, mm }: { status: TeamStatus; mm: boolean }) {
   );
 }
 
+const ELITE_MEN_RIDERS: Array<string | null> = [
+  "Ko Aye Min Hlaing",
+  "Kyaw Zin Latt",
+  null,
+  null,
+  null,
+  "Yair Man Aung",
+  null,
+  null,
+  "Ko Min Thant Oo",
+  "Han Htoo Sat",
+  "Htun Lin Aung",
+  null,
+  null, // Team Taunggyi rider — name not locked
+  null, // Team Taunggyi rider — name not locked
+  "Mg Shine Nanda",
+  null,
+  null,
+  "Thit Htoo Eain",
+  "Aung Myat Ko Ko",
+  "Mg Kaung Myat Khant",
+  null,
+  "Kaung Zaw Maung",
+  "U Than Naing Soe",
+  null,
+  "Pyae Phyo Aung",
+  "Mg Min Khant Ko",
+  "Khant Zaw Thi Ha",
+  "Khun Hein Htet Zan",
+];
+
 function EliteMenCard({ mm }: { mm: boolean }) {
+  const confirmedCount = ELITE_MEN_RIDERS.filter((n) => !!n).length;
+  const pendingCount = ELITE_MEN_RIDERS.length - confirmedCount;
   return (
     <article className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5 sm:p-6 shadow-sm">
       <div className="flex flex-wrap items-center gap-2">
@@ -194,10 +227,38 @@ function EliteMenCard({ mm }: { mm: boolean }) {
         <Stat label={mm ? "တစ်ဦးချင်း Elite" : "Unique Elite"} value="28" />
         <Stat label={mm ? "ပြိုင်ပွဲ ဝင်ရောက်မှု" : "Event entries"} value="56" />
       </dl>
+
+      <div className="mt-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {mm ? "ပြိုင်ပွဲဝင်စာရင်း" : "Rider List"}
+          </h3>
+          <span className="text-[11px] text-muted-foreground">
+            {mm
+              ? `အမည်ထုတ်ပြန် ${confirmedCount} · အတည်ပြုဆဲ ${pendingCount}`
+              : `${confirmedCount} named · ${pendingCount} pending`}
+          </span>
+        </div>
+        <ol className="mt-3 grid gap-1.5 sm:grid-cols-2 text-sm">
+          {ELITE_MEN_RIDERS.map((name, idx) => (
+            <li key={idx} className="flex gap-2">
+              <span className="w-6 shrink-0 text-muted-foreground tabular-nums">{idx + 1}.</span>
+              {name ? (
+                <span>{name}</span>
+              ) : (
+                <span className="italic text-muted-foreground">
+                  {mm ? "အမည် အတည်ပြုဆဲ" : "Name pending confirmation"}
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+
       <p className="mt-4 text-xs text-muted-foreground">
         {mm
-          ? "အမျိုးသား Elite တစ်ဦးချင်းပြိုင်ပွဲဝင်အမည်စာရင်းကို တရားဝင် Start List ထုတ်ပြန်ချိန်တွင် ဖော်ပြမည်ဖြစ်ပါသည်။"
-          : "Individual Elite rider names will be published with the official start list."}
+          ? "တရားဝင် Start List ထုတ်ပြန်ချိန်တွင် ပြိုင်ပွဲဝင်အမည်များကို နောက်ဆုံးအတည်ပြုဖော်ပြမည်။"
+          : "Names will be finalized when the official start list is published."}
       </p>
     </article>
   );
