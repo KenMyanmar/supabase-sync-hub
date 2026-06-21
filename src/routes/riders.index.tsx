@@ -299,15 +299,9 @@ function RidersPage() {
         </TabsContent>
 
         <TabsContent value="junior" className="mt-6">
-          <SimpleRosterCard
-            mm={mm}
-            title={mm ? "လူငယ်တန်း" : "Junior"}
-            status="provisional"
-            riders={JUNIOR_RIDERS}
-            noteEn="Final age classification is being confirmed."
-            noteMm="အသက်အရွယ်သတ်မှတ်ချက်ကို နောက်ဆုံးအတည်ပြုဆဲဖြစ်ပါသည်။"
-          />
+          <JuniorCard mm={mm} />
         </TabsContent>
+
 
         <TabsContent value="women" className="mt-6">
           <SimpleRosterCard
