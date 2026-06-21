@@ -683,3 +683,80 @@ function SimpleRosterCard({
     </article>
   );
 }
+
+function NeutralBadge({ label }: { label: string }) {
+  return (
+    <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      {label}
+    </span>
+  );
+}
+
+function MTBCard({ mm }: { mm: boolean }) {
+  const total =
+    MTB_MEN_ELITE.length +
+    MTB_MASTERS.length +
+    MTB_MEN_JUNIOR.length +
+    MTB_WOMEN.length +
+    MTB_CATEGORY_TBC.length;
+
+  return (
+    <article className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5 sm:p-6 shadow-sm">
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="text-xl font-bold text-primary">MTB XCO</h2>
+        <NeutralBadge label={mm ? "လူတိုင်းပါဝင်နိုင်" : "Open"} />
+      </div>
+      <p className="mt-3 text-base">
+        {mm
+          ? `MTB XCO — လူတိုင်းပါဝင်နိုင် · စာရင်းသွင်းပြီး ${total} ဦး။`
+          : `MTB XCO — open participation · ${total} registered riders.`}
+      </p>
+      <RegClarifier mm={mm} />
+
+      <section className="mt-5">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          {mm ? `အမျိုးသား Elite (${MTB_MEN_ELITE.length})` : `Men Elite (${MTB_MEN_ELITE.length})`}
+        </h3>
+        <RiderList riders={MTB_MEN_ELITE} mm={mm} />
+      </section>
+
+      <section className="mt-6">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          {mm ? `Masters 40+ (${MTB_MASTERS.length})` : `Masters 40+ (${MTB_MASTERS.length})`}
+        </h3>
+        <RiderList riders={MTB_MASTERS} mm={mm} />
+      </section>
+
+      <section className="mt-6">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          {mm ? `လူငယ်တန်း (${MTB_MEN_JUNIOR.length})` : `Men Junior (${MTB_MEN_JUNIOR.length})`}
+        </h3>
+        <RiderList riders={MTB_MEN_JUNIOR} mm={mm} />
+      </section>
+
+      <section className="mt-6">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          {mm ? `အမျိုးသမီးတန်း (${MTB_WOMEN.length})` : `Women (${MTB_WOMEN.length})`}
+        </h3>
+        <RiderList riders={MTB_WOMEN} mm={mm} />
+      </section>
+
+      <section className="mt-6">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {mm
+              ? `အမျိုးအစား သတ်မှတ်ဆဲ (${MTB_CATEGORY_TBC.length})`
+              : `Category to be confirmed (${MTB_CATEGORY_TBC.length})`}
+          </h3>
+          <NeutralBadge label={mm ? "TBC" : "TBC"} />
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">
+          {mm
+            ? "ပါဝင်သူအားလုံး အတည်ပြုပြီး — ပြိုင်ပွဲအမျိုးအစား သတ်မှတ်ဆဲ။"
+            : "All confirmed participants — race category being finalized."}
+        </p>
+        <RiderList riders={MTB_CATEGORY_TBC} mm={mm} />
+      </section>
+    </article>
+  );
+}
