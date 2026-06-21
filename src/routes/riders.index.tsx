@@ -268,9 +268,16 @@ function RidersPage() {
           />
         </TabsContent>
 
+        {derived.categoryToConfirm.length > 0 ? (
+          <TabsContent value="tbc" className="mt-6">
+            <CategoryToConfirmCard mm={mm} riders={derived.categoryToConfirm} />
+          </TabsContent>
+        ) : null}
+
         <TabsContent value="mtb" className="mt-6">
           <MTBCard mm={mm} men={derived.mtbMen} women={derived.mtbWomen} />
         </TabsContent>
+
       </Tabs>
     </main>
   );
