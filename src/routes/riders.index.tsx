@@ -254,6 +254,133 @@ const WOMEN_RIDERS: Rider[] = [
   { name: "Ko Lin Lin", reg: "NC26-0209" },
 ];
 
+const MTB_MEN_ELITE: Rider[] = [
+  { name: "Aung Kyaw Hein", reg: "NC26-0137" },
+  { name: "Aung Kyaw San", reg: "NC26-0119" },
+  { name: "Aung Myint Myat", reg: "NC26-0126" },
+  { name: "Aung Myo Kyaw", reg: "NC26-0071" },
+  { name: "Aung Phyo Min", reg: "NC26-0204" },
+  { name: "Aung Thu Hein", reg: "NC26-0167" },
+  { name: "Aye Chan Myint", reg: "NC26-0186" },
+  { name: "Bhone Pyae Zaw", reg: "NC26-0252" },
+  { name: "Htay Ko Ko", reg: "NC26-0206" },
+  { name: "Htein Linn", reg: "NC26-0008" },
+  { name: "Htet Arkar Lwin", reg: "NC26-0182" },
+  { name: "Htet Aung Soe", reg: "NC26-0099" },
+  { name: "Htoo Nay Aung", reg: "NC26-0017" },
+  { name: "Kaung Su Hein", reg: "NC26-0138" },
+  { name: "Kaung Zaw Maung", reg: "NC26-0083" },
+  { name: "Khun Maha Htoo", reg: "NC26-0031" },
+  { name: "Ko Maung Maung", reg: "NC26-0202" },
+  { name: "Kyaw Gyi", reg: "NC26-0239" },
+  { name: "Kyaw Htet Aung", reg: "NC26-0205" },
+  { name: "Kyaw Si Thu Aung", reg: "NC26-0009" },
+  { name: "Lu Htoo Han", reg: "NC26-0011" },
+  { name: "Mg Win Moe Oo", reg: "NC26-0171" },
+  { name: "Naing Lin Kyaw", reg: "NC26-0090" },
+  { name: "Nyi Nyi Aung", reg: "NC26-0210" },
+  { name: "Phyo Paing Thet", reg: "NC26-0089" },
+  { name: "Phyo Thit Han", reg: "NC26-0233" },
+  { name: "Pyae Phyo Aung", reg: "NC26-0057" },
+  { name: "Sa Min Oak Soe", reg: "NC26-0121" },
+  { name: "Sai Nauk", reg: "NC26-0130" },
+  { name: "Saw Alex", reg: "NC26-0240" },
+  { name: "Saw Jimmy", reg: "NC26-0019" },
+  { name: "Soe Thu Aung", reg: "NC26-0172" },
+  { name: "Thant Zin Myo Aung", reg: "NC26-0246" },
+  { name: "Thi Ha Aung", reg: "NC26-0037" },
+  { name: "Wai Hlyan Aung", reg: "NC26-0048" },
+  { name: "Win Tun Zaw", reg: "NC26-0189" },
+  { name: "Yan Naing Htet", reg: "NC26-0056" },
+  { name: "Zaw Toe Lwin", reg: "NC26-0144" },
+  { name: "Maung Khant Win", reg: "NC26-0218" },
+];
+
+const MTB_MASTERS: Rider[] = [
+  { name: "Aung Myint Swe", reg: "NC26-0208" },
+  { name: "Hla Myo Naing", reg: "NC26-0228" },
+  { name: "Hla Win", reg: "NC26-0005" },
+  { name: "Htet Thu", reg: "NC26-0193" },
+  { name: "Khin Soe", reg: "NC26-0199" },
+  { name: "Kyaw Min Thein", reg: "NC26-0207" },
+  { name: "Kyaw Min Thu", reg: "NC26-0004" },
+  { name: "Phyo Maung Maung", reg: "NC26-0072" },
+  { name: "Sai Monk Tip", reg: "NC26-0104" },
+  { name: "Than Soe Oo", reg: "NC26-0168" },
+  { name: "Tint Zaw", reg: "NC26-0022" },
+  { name: "U San Win", reg: "NC26-0215" },
+  { name: "U Saw Than", reg: "NC26-0201" },
+  { name: "Win Zaw Tun", reg: "NC26-0220" },
+  { name: "Ye Myanmar Aung", reg: "NC26-0249" },
+  { name: "Ye Myint", reg: "NC26-0085" },
+];
+
+const MTB_MEN_JUNIOR: Rider[] = [
+  { name: "AnttAwwAung", reg: "NC26-0143" },
+  { name: "Aung Khant Hein", reg: "NC26-0181" },
+  { name: "Aung Khant Nyar Paing", reg: "NC26-0185" },
+  { name: "Hein Htet Zaw", reg: "NC26-0236" },
+  { name: "Htet Wai Yan", reg: "NC26-0232" },
+  { name: "Kaung Myat Thu", reg: "NC26-0230" },
+  { name: "Khant Min Htet", reg: "NC26-0211" },
+  { name: "Khant Zay Ya", reg: "NC26-0086" },
+  { name: "Khant Zin Thu", reg: "NC26-0064" },
+  { name: "Lin Htet", reg: "NC26-0142" },
+  { name: "Zaw Min Myat (Milo)", reg: "NC26-0169" },
+  { name: "Sai Min Aung", reg: "NC26-0222" },
+  { name: "Si Thu Aung", reg: "NC26-0183" },
+  { name: "Tun Lin Aung", reg: "NC26-0073" },
+  { name: "Ye Yint Bo", reg: "NC26-0051" },
+  { name: "Ye Yint Myo", reg: "NC26-0170" },
+  { name: "Zay Yar Kyaw", reg: "NC26-0173" },
+  { name: "Zay Yar Lin", reg: "NC26-0115" },
+];
+
+const MTB_WOMEN: Rider[] = [
+  { name: "Ko Lin Lin", reg: "NC26-0209" },
+];
+
+const MTB_CATEGORY_TBC: Rider[] = [
+  { name: "Aung Chan Phyo", reg: "NC26-0129" },
+  { name: "Aung Myat Ko Ko", reg: "NC26-0045" },
+  { name: "Bhone Pyae Sone Thant", reg: "NC26-0003" },
+  { name: "Htein Linn Dawei", reg: "NC26-0098" },
+  { name: "Htin", reg: "NC26-0100" },
+  { name: "Kaung Nyein Thant", reg: "NC26-0161" },
+  { name: "Ko Aye Min Hlaing", reg: "NC26-0006" },
+  { name: "Ko Min Thant Oo", reg: "NC26-0128" },
+  { name: "Mg Hpone Myat Thet Tun", reg: "NC26-0082" },
+  { name: "Mg Htet Wai Aung", reg: "NC26-0105" },
+  { name: "Mg Kaung Myat Khant", reg: "NC26-0024" },
+  { name: "Mg Than Myint Khing", reg: "NC26-0163" },
+  { name: "Mg Thwin Htoo Zaw", reg: "NC26-0036" },
+  { name: "Mg Wai Yan Lin Zaw", reg: "NC26-0030" },
+  { name: "Nay Myo Win", reg: "NC26-0152" },
+  { name: "Oakkar Thway", reg: "NC26-0066" },
+  { name: "Phoo Pyae Thazin", reg: "NC26-0139" },
+  { name: "Phyo Zayar Lwin", reg: "NC26-0110" },
+  { name: "Thant Swe", reg: "NC26-0154" },
+  { name: "Thant Zaw", reg: "NC26-0153" },
+  { name: "Thet May Moe Oo", reg: "NC26-0125" },
+  { name: "U Nay Linn Oo", reg: "NC26-0093" },
+  { name: "U Than Naing Soe", reg: "NC26-0149" },
+  { name: "U Than Oo", reg: "NC26-0095" },
+  { name: "U Tin Soe Yu", reg: "NC26-0092" },
+  { name: "U Zaw Naing", reg: "NC26-0124" },
+  { name: "Wai Lin Maung", reg: "NC26-0084" },
+  { name: "Zaw Htet Naing", reg: "NC26-0151" },
+  { name: "Zay Yar Myo", reg: "NC26-0122" },
+  { name: "Bhone Swam Htet", reg: "NC26-0196" },
+  { name: "Han Min Htut", reg: "NC26-0035" },
+  { name: "Han Min Naing", reg: "NC26-0166" },
+  { name: "Hein Hlyan Htoo", reg: "NC26-0039" },
+  { name: "Pyae Phyo Thura", reg: "NC26-0241" },
+  { name: "Saw Min Thant Thu", reg: "NC26-0063" },
+  { name: "Thet Paing Hein", reg: "NC26-0041" },
+  { name: "Zay Htut Moe Myint", reg: "NC26-0034" },
+  { name: "Maung Lin Yaung Phyar", reg: "NC26-0219" },
+];
+
 function RidersPage() {
   const { lang } = useLang();
   const mm = lang === "mm";
@@ -288,6 +415,7 @@ function RidersPage() {
           <TabsTrigger value="team">{mm ? "အသင်းလိုက်" : "Team"}</TabsTrigger>
           <TabsTrigger value="junior">{mm ? "လူငယ်တန်း" : "Junior"}</TabsTrigger>
           <TabsTrigger value="women">{mm ? "အမျိုးသမီးတန်း" : "Women"}</TabsTrigger>
+          <TabsTrigger value="mtb">MTB XCO</TabsTrigger>
         </TabsList>
 
         <TabsContent value="elite" className="mt-6">
@@ -310,6 +438,10 @@ function RidersPage() {
             status="provisional"
             riders={WOMEN_RIDERS}
           />
+        </TabsContent>
+
+        <TabsContent value="mtb" className="mt-6">
+          <MTBCard mm={mm} />
         </TabsContent>
       </Tabs>
     </main>
@@ -548,6 +680,83 @@ function SimpleRosterCard({
           {note}
         </p>
       ) : null}
+    </article>
+  );
+}
+
+function NeutralBadge({ label }: { label: string }) {
+  return (
+    <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      {label}
+    </span>
+  );
+}
+
+function MTBCard({ mm }: { mm: boolean }) {
+  const total =
+    MTB_MEN_ELITE.length +
+    MTB_MASTERS.length +
+    MTB_MEN_JUNIOR.length +
+    MTB_WOMEN.length +
+    MTB_CATEGORY_TBC.length;
+
+  return (
+    <article className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5 sm:p-6 shadow-sm">
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="text-xl font-bold text-primary">MTB XCO</h2>
+        <NeutralBadge label={mm ? "လူတိုင်းပါဝင်နိုင်" : "Open"} />
+      </div>
+      <p className="mt-3 text-base">
+        {mm
+          ? `MTB XCO — လူတိုင်းပါဝင်နိုင် · စာရင်းသွင်းပြီး ${total} ဦး။`
+          : `MTB XCO — open participation · ${total} registered riders.`}
+      </p>
+      <RegClarifier mm={mm} />
+
+      <section className="mt-5">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          {mm ? `အမျိုးသား Elite (${MTB_MEN_ELITE.length})` : `Men Elite (${MTB_MEN_ELITE.length})`}
+        </h3>
+        <RiderList riders={MTB_MEN_ELITE} mm={mm} />
+      </section>
+
+      <section className="mt-6">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          {mm ? `Masters 40+ (${MTB_MASTERS.length})` : `Masters 40+ (${MTB_MASTERS.length})`}
+        </h3>
+        <RiderList riders={MTB_MASTERS} mm={mm} />
+      </section>
+
+      <section className="mt-6">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          {mm ? `လူငယ်တန်း (${MTB_MEN_JUNIOR.length})` : `Men Junior (${MTB_MEN_JUNIOR.length})`}
+        </h3>
+        <RiderList riders={MTB_MEN_JUNIOR} mm={mm} />
+      </section>
+
+      <section className="mt-6">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          {mm ? `အမျိုးသမီးတန်း (${MTB_WOMEN.length})` : `Women (${MTB_WOMEN.length})`}
+        </h3>
+        <RiderList riders={MTB_WOMEN} mm={mm} />
+      </section>
+
+      <section className="mt-6">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {mm
+              ? `အမျိုးအစား သတ်မှတ်ဆဲ (${MTB_CATEGORY_TBC.length})`
+              : `Category to be confirmed (${MTB_CATEGORY_TBC.length})`}
+          </h3>
+          <NeutralBadge label={mm ? "TBC" : "TBC"} />
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">
+          {mm
+            ? "ပါဝင်သူအားလုံး အတည်ပြုပြီး — ပြိုင်ပွဲအမျိုးအစား သတ်မှတ်ဆဲ။"
+            : "All confirmed participants — race category being finalized."}
+        </p>
+        <RiderList riders={MTB_CATEGORY_TBC} mm={mm} />
+      </section>
     </article>
   );
 }
