@@ -1,7 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useLang } from "@/lib/i18n";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NoResultsYet } from "@/components/NoResultsYet";
+import { getPublicRiders, type PublicRider } from "@/lib/public-riders.functions";
+
+const publicRidersQO = queryOptions({
+  queryKey: ["public-riders"],
+  queryFn: () => getPublicRiders(),
+});
 
 export const Route = createFileRoute("/riders/")({
   head: () => ({
@@ -20,7 +28,13 @@ export const Route = createFileRoute("/riders/")({
       },
     ],
   }),
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(publicRidersQO);
+  },
   component: RidersPage,
+  errorComponent: ({ error }) => (
+    <p className="mx-auto max-w-3xl px-4 py-10 text-sm text-destructive">{error.message}</p>
+  ),
   notFoundComponent: () => <NoResultsYet />,
 });
 
@@ -32,70 +46,9 @@ type Team = {
   name: string;
   status: TeamStatus;
   riders: Rider[];
-  noteEn?: string;
-  noteMm?: string;
 };
 
-const MEN_ELITE_CONFIRMED: Rider[] = [
-  { name: "Aung Kyaw Hein", reg: "NC26-0137" },
-  { name: "Aung Myint Myat", reg: "NC26-0126" },
-  { name: "Aung Myint Swe", reg: "NC26-0208" },
-  { name: "Aung Phyo Min", reg: "NC26-0204" },
-  { name: "Htay Ko Ko", reg: "NC26-0206" },
-  { name: "Htein Linn", reg: "NC26-0008", provisional: true },
-  { name: "Htet Arkar Lwin", reg: "NC26-0182" },
-  { name: "Htet Aung Soe", reg: "NC26-0099" },
-  { name: "Htet Hlaing Phyo", reg: "NC26-0225" },
-  { name: "Htet Kyaw Thu", reg: "NC26-0002" },
-  { name: "Kaung Htet Linn", reg: "NC26-0007" },
-  { name: "Kaung Zaw Maung", reg: "NC26-0083" },
-  { name: "Khant Zaw Thi Ha", reg: "NC26-0231" },
-  { name: "Khun Hein Htet Zan", reg: "NC26-0188" },
-  { name: "Khun Kham Htoo Paing", reg: "NC26-0023" },
-  { name: "Ko Maung Maung", reg: "NC26-0202" },
-  { name: "Ko Thet Lwin Oo", reg: "NC26-0203" },
-  { name: "Kyaw Htet Aung", reg: "NC26-0205" },
-  { name: "Kyaw Min Thein", reg: "NC26-0207" },
-  { name: "Kyaw Za Ya Nyein", reg: "NC26-0114" },
-  { name: "Kyaw Zin Latt", reg: "NC26-0001" },
-  { name: "Lu Htoo Han", reg: "NC26-0011" },
-  { name: "Mg Min Khant Ko", reg: "NC26-0245" },
-  { name: "Mg Nang Win Htet", reg: "NC26-0235" },
-  { name: "Min Min", reg: "NC26-0070" },
-  { name: "Nyi Nyi Aung", reg: "NC26-0210" },
-  { name: "Paing Soe Oo", reg: "NC26-0212" },
-  { name: "Pyae Phyo Aung", reg: "NC26-0057" },
-  { name: "Pyae Sone Thant", reg: "NC26-0223" },
-  { name: "Saw Alex", reg: "NC26-0240", provisional: true },
-  { name: "Saw Jimmy", reg: "NC26-0019" },
-  { name: "Saw Nay Kbaw Mue", reg: "NC26-0191" },
-  { name: "Si Thu Khant Min", reg: "NC26-0074" },
-  { name: "Thi Ha Aung", reg: "NC26-0037" },
-  { name: "Thura Aung", reg: "NC26-0033" },
-  { name: "U Saw Than", reg: "NC26-0201" },
-  { name: "Wai Hlyan Aung", reg: "NC26-0048" },
-  { name: "Yair Man Aung", reg: "NC26-0079" },
-  { name: "Ye Myat Kyaw", reg: "NC26-0102" },
-];
-
-const MEN_ELITE_PENDING: Rider[] = [
-  { name: "Aung Myat Ko Ko", reg: "NC26-0045" },
-  { name: "Bhone Pyae Sone Thant", reg: "NC26-0003" },
-  { name: "Htun Lin Aung", reg: "NC26-0155" },
-  { name: "Ko Aye Min Hlaing", reg: "NC26-0006" },
-  { name: "Ko Min Thant Oo", reg: "NC26-0128" },
-  { name: "Mg Aung Thiha Phyo", reg: "NC26-0021" },
-  { name: "Mg Kaung Myat Khant", reg: "NC26-0024" },
-  { name: "Mg Shine Nanda", reg: "NC26-0027" },
-  { name: "Mg Than Myint Khing", reg: "NC26-0163" },
-  { name: "Mg Wai Yan Min Zaw", reg: "NC26-0026" },
-  { name: "Pyae Sone", reg: "NC26-0103" },
-  { name: "Thit Htoo Eain", reg: "NC26-0040" },
-  { name: "U Nay Moe", reg: "NC26-0148" },
-  { name: "U Than Naing Soe", reg: "NC26-0149" },
-  { name: "Wai Lin Maung", reg: "NC26-0084" },
-];
-
+// Team rosters remain hardcoded: the team→rider mapping is not modeled in the DB yet.
 const TEAMS: Team[] = [
   {
     name: "RCC",
@@ -185,205 +138,62 @@ const TEAMS: Team[] = [
   },
 ];
 
-const JUNIOR_CONFIRMED: Rider[] = [
-  { name: "Ye Yint Bo", reg: "NC26-0051" },
-  { name: "Ye Swan Htet", reg: "NC26-0059" },
-  { name: "Htet Wai Yan Kyaw", reg: "NC26-0061" },
-  { name: "Min Kaung Myat", reg: "NC26-0075" },
-  { name: "Hein Htet Aung", reg: "NC26-0068" },
-  { name: "Kyaw Phyo Khant", reg: "NC26-0123" },
-  { name: "Lin Htet", reg: "NC26-0142" },
-  { name: "Sai Thiha", reg: "NC26-0055" },
-  { name: "Thaw Tar Swe", reg: "NC26-0106" },
-  { name: "Myat Min Htut", reg: "NC26-0010" },
-  { name: "Sai Bhone Myat Han", reg: "NC26-0053" },
-  { name: "Thuya Linn", reg: "NC26-0050" },
-  { name: "Aung Ko Hein", reg: "NC26-0132" },
-  { name: "Zay Yar Lin", reg: "NC26-0115" },
-  { name: "Phone Thaw Khant", reg: "NC26-0175" },
-  { name: "Aung Khant Hein", reg: "NC26-0181" },
-  { name: "Si Thu Aung", reg: "NC26-0183" },
-  { name: "Win Min Tun", reg: "NC26-0117" },
-  { name: "Min Thurain Htun", reg: "NC26-0091" },
-  { name: "Khant Zay Ya", reg: "NC26-0086" },
-  { name: "Mg Thet Wai Lin", reg: "NC26-0177" },
-  { name: "Zin Lin Phyo", reg: "NC26-0238" },
-  { name: "Pyae Pyo Aung", reg: "NC26-0237" },
-  { name: "Kaung Myat Thu", reg: "NC26-0230" },
-  { name: "Mg Sein Thanlyin", reg: "NC26-0229" },
-  { name: "Bhone Thiha Naung", reg: "NC26-0184" },
-  { name: "Mg Shine Wai Yan", reg: "NC26-0244" },
-  { name: "Mg Hein Htet San", reg: "NC26-0198" },
-  { name: "Aung Khant Nyar Paing", reg: "NC26-0185" },
-  { name: "Ye Lin Naing", reg: "NC26-0020" },
-  { name: "Zaw Min Myat (Milo)", reg: "NC26-0169" },
-  { name: "Myat Min Hein", reg: "NC26-0180" },
-  { name: "Pyae Phyo Zaw", reg: "NC26-0224" },
-];
+function displayName(r: PublicRider, mm: boolean): string {
+  const primary = mm ? r.name_my || r.name_en : r.name_en || r.name_my;
+  return (primary ?? "").trim() || r.registration_no;
+}
 
-const JUNIOR_PENDING: Rider[] = [
-  { name: "Mg Kaung Thu Ta", reg: "NC26-0065" },
-  { name: "Hpone Pyae Pai", reg: "NC26-0076" },
-  { name: "Mg Hpone Myat Thet Tun", reg: "NC26-0082" },
-  { name: "Sai Lyan Noom", reg: "NC26-0028" },
-  { name: "Mg Htet Oo Wai Yan", reg: "NC26-0029" },
-  { name: "Lin Wai Yan", reg: "NC26-0032" },
-  { name: "Mg Thwin Htoo Zaw", reg: "NC26-0036" },
-  { name: "Mg Htet Wai Aung", reg: "NC26-0105" },
-  { name: "Kaung Nyein Thant", reg: "NC26-0161" },
-  { name: "Paing Phoe Thu", reg: "NC26-0156" },
-  { name: "Myat Taw Thar", reg: "NC26-0164" },
-  { name: "Min Thu Khant", reg: "NC26-0127" },
-  { name: "Mg Moe Myint Thu", reg: "NC26-0080" },
-  { name: "Saw Min Thant Thu", reg: "NC26-0063" },
-  { name: "Thet Paing Hein", reg: "NC26-0041" },
-  { name: "Hein Tayza Aung", reg: "NC26-0174" },
-  { name: "Kyal Lay", reg: "NC26-0243" },
-  { name: "Pyae Phyo Thura", reg: "NC26-0241" },
-  { name: "Sit Nanda", reg: "NC26-0214" },
-  { name: "Thoon Nay Soe", reg: "NC26-0213" },
-  { name: "Aung Hein Sat Paing", reg: "NC26-0216" },
-  { name: "Kyal Sin Thwe", reg: "NC26-0250" },
-  { name: "Han Min Htut", reg: "NC26-0035" },
-];
+function toRider(r: PublicRider, mm: boolean, provisional = false): Rider {
+  return { name: displayName(r, mm), reg: r.registration_no, provisional };
+}
 
-const WOMEN_RIDERS: Rider[] = [
-  { name: "Chaw Ei Ei Thu", reg: "NC26-0242" },
-  { name: "Moe Pyae Pyae Kyaw", reg: "NC26-0179" },
-  { name: "Nang Tharaphe Lin", reg: "NC26-0217" },
-  { name: "Ko Lin Lin", reg: "NC26-0209" },
-];
-
-const MTB_MEN_ELITE: Rider[] = [
-  { name: "Aung Kyaw Hein", reg: "NC26-0137" },
-  { name: "Aung Kyaw San", reg: "NC26-0119" },
-  { name: "Aung Myint Myat", reg: "NC26-0126" },
-  { name: "Aung Myo Kyaw", reg: "NC26-0071" },
-  { name: "Aung Phyo Min", reg: "NC26-0204" },
-  { name: "Aung Thu Hein", reg: "NC26-0167" },
-  { name: "Aye Chan Myint", reg: "NC26-0186" },
-  { name: "Bhone Pyae Zaw", reg: "NC26-0252" },
-  { name: "Htay Ko Ko", reg: "NC26-0206" },
-  { name: "Htein Linn", reg: "NC26-0008" },
-  { name: "Htet Arkar Lwin", reg: "NC26-0182" },
-  { name: "Htet Aung Soe", reg: "NC26-0099" },
-  { name: "Htoo Nay Aung", reg: "NC26-0017" },
-  { name: "Kaung Su Hein", reg: "NC26-0138" },
-  { name: "Kaung Zaw Maung", reg: "NC26-0083" },
-  { name: "Khun Maha Htoo", reg: "NC26-0031" },
-  { name: "Ko Maung Maung", reg: "NC26-0202" },
-  { name: "Kyaw Gyi", reg: "NC26-0239" },
-  { name: "Kyaw Htet Aung", reg: "NC26-0205" },
-  { name: "Kyaw Si Thu Aung", reg: "NC26-0009" },
-  { name: "Lu Htoo Han", reg: "NC26-0011" },
-  { name: "Mg Win Moe Oo", reg: "NC26-0171" },
-  { name: "Naing Lin Kyaw", reg: "NC26-0090" },
-  { name: "Nyi Nyi Aung", reg: "NC26-0210" },
-  { name: "Phyo Paing Thet", reg: "NC26-0089" },
-  { name: "Phyo Thit Han", reg: "NC26-0233" },
-  { name: "Pyae Phyo Aung", reg: "NC26-0057" },
-  { name: "Sa Min Oak Soe", reg: "NC26-0121" },
-  { name: "Sai Nauk", reg: "NC26-0130" },
-  { name: "Saw Alex", reg: "NC26-0240" },
-  { name: "Saw Jimmy", reg: "NC26-0019" },
-  { name: "Soe Thu Aung", reg: "NC26-0172" },
-  { name: "Thant Zin Myo Aung", reg: "NC26-0246" },
-  { name: "Thi Ha Aung", reg: "NC26-0037" },
-  { name: "Wai Hlyan Aung", reg: "NC26-0048" },
-  { name: "Win Tun Zaw", reg: "NC26-0189" },
-  { name: "Yan Naing Htet", reg: "NC26-0056" },
-  { name: "Zaw Toe Lwin", reg: "NC26-0144" },
-  { name: "Maung Khant Win", reg: "NC26-0218" },
-];
-
-const MTB_MASTERS: Rider[] = [
-  { name: "Aung Myint Swe", reg: "NC26-0208" },
-  { name: "Hla Myo Naing", reg: "NC26-0228" },
-  { name: "Hla Win", reg: "NC26-0005" },
-  { name: "Htet Thu", reg: "NC26-0193" },
-  { name: "Khin Soe", reg: "NC26-0199" },
-  { name: "Kyaw Min Thein", reg: "NC26-0207" },
-  { name: "Kyaw Min Thu", reg: "NC26-0004" },
-  { name: "Phyo Maung Maung", reg: "NC26-0072" },
-  { name: "Sai Monk Tip", reg: "NC26-0104" },
-  { name: "Than Soe Oo", reg: "NC26-0168" },
-  { name: "Tint Zaw", reg: "NC26-0022" },
-  { name: "U San Win", reg: "NC26-0215" },
-  { name: "U Saw Than", reg: "NC26-0201" },
-  { name: "Win Zaw Tun", reg: "NC26-0220" },
-  { name: "Ye Myanmar Aung", reg: "NC26-0249" },
-  { name: "Ye Myint", reg: "NC26-0085" },
-];
-
-const MTB_MEN_JUNIOR: Rider[] = [
-  { name: "AnttAwwAung", reg: "NC26-0143" },
-  { name: "Aung Khant Hein", reg: "NC26-0181" },
-  { name: "Aung Khant Nyar Paing", reg: "NC26-0185" },
-  { name: "Hein Htet Zaw", reg: "NC26-0236" },
-  { name: "Htet Wai Yan", reg: "NC26-0232" },
-  { name: "Kaung Myat Thu", reg: "NC26-0230" },
-  { name: "Khant Min Htet", reg: "NC26-0211" },
-  { name: "Khant Zay Ya", reg: "NC26-0086" },
-  { name: "Khant Zin Thu", reg: "NC26-0064" },
-  { name: "Lin Htet", reg: "NC26-0142" },
-  { name: "Zaw Min Myat (Milo)", reg: "NC26-0169" },
-  { name: "Sai Min Aung", reg: "NC26-0222" },
-  { name: "Si Thu Aung", reg: "NC26-0183" },
-  { name: "Tun Lin Aung", reg: "NC26-0073" },
-  { name: "Ye Yint Bo", reg: "NC26-0051" },
-  { name: "Ye Yint Myo", reg: "NC26-0170" },
-  { name: "Zay Yar Kyaw", reg: "NC26-0173" },
-  { name: "Zay Yar Lin", reg: "NC26-0115" },
-];
-
-const MTB_WOMEN: Rider[] = [
-  { name: "Ko Lin Lin", reg: "NC26-0209" },
-];
-
-const MTB_CATEGORY_TBC: Rider[] = [
-  { name: "Aung Chan Phyo", reg: "NC26-0129" },
-  { name: "Aung Myat Ko Ko", reg: "NC26-0045" },
-  { name: "Bhone Pyae Sone Thant", reg: "NC26-0003" },
-  { name: "Htein Linn Dawei", reg: "NC26-0098" },
-  { name: "Htin", reg: "NC26-0100" },
-  { name: "Kaung Nyein Thant", reg: "NC26-0161" },
-  { name: "Ko Aye Min Hlaing", reg: "NC26-0006" },
-  { name: "Ko Min Thant Oo", reg: "NC26-0128" },
-  { name: "Mg Hpone Myat Thet Tun", reg: "NC26-0082" },
-  { name: "Mg Htet Wai Aung", reg: "NC26-0105" },
-  { name: "Mg Kaung Myat Khant", reg: "NC26-0024" },
-  { name: "Mg Than Myint Khing", reg: "NC26-0163" },
-  { name: "Mg Thwin Htoo Zaw", reg: "NC26-0036" },
-  { name: "Mg Wai Yan Lin Zaw", reg: "NC26-0030" },
-  { name: "Nay Myo Win", reg: "NC26-0152" },
-  { name: "Oakkar Thway", reg: "NC26-0066" },
-  { name: "Phoo Pyae Thazin", reg: "NC26-0139" },
-  { name: "Phyo Zayar Lwin", reg: "NC26-0110" },
-  { name: "Thant Swe", reg: "NC26-0154" },
-  { name: "Thant Zaw", reg: "NC26-0153" },
-  { name: "Thet May Moe Oo", reg: "NC26-0125" },
-  { name: "U Nay Linn Oo", reg: "NC26-0093" },
-  { name: "U Than Naing Soe", reg: "NC26-0149" },
-  { name: "U Than Oo", reg: "NC26-0095" },
-  { name: "U Tin Soe Yu", reg: "NC26-0092" },
-  { name: "U Zaw Naing", reg: "NC26-0124" },
-  { name: "Wai Lin Maung", reg: "NC26-0084" },
-  { name: "Zaw Htet Naing", reg: "NC26-0151" },
-  { name: "Zay Yar Myo", reg: "NC26-0122" },
-  { name: "Bhone Swam Htet", reg: "NC26-0196" },
-  { name: "Han Min Htut", reg: "NC26-0035" },
-  { name: "Han Min Naing", reg: "NC26-0166" },
-  { name: "Hein Hlyan Htoo", reg: "NC26-0039" },
-  { name: "Pyae Phyo Thura", reg: "NC26-0241" },
-  { name: "Saw Min Thant Thu", reg: "NC26-0063" },
-  { name: "Thet Paing Hein", reg: "NC26-0041" },
-  { name: "Zay Htut Moe Myint", reg: "NC26-0034" },
-  { name: "Maung Lin Yaung Phyar", reg: "NC26-0219" },
-];
+function sortByName(rs: Rider[]): Rider[] {
+  return [...rs].sort((a, b) => a.name.localeCompare(b.name));
+}
 
 function RidersPage() {
   const { lang } = useLang();
   const mm = lang === "mm";
+  const { data } = useSuspenseQuery(publicRidersQO);
+
+  const derived = useMemo(() => {
+    const eliteRoad = data.filter(
+      (r) => r.category === "Men Elite" && r.in_road && r.in_crit,
+    );
+    const juniorRoad = data.filter(
+      (r) => r.category === "Men Junior" && r.in_road && r.in_crit,
+    );
+    const womenRoad = data.filter(
+      (r) => r.category === "Women" && r.in_road && r.in_crit,
+    );
+    const mtb = data.filter((r) => r.in_mtb);
+
+    return {
+      eliteConfirmed: sortByName(
+        eliteRoad.filter((r) => r.status === "confirmed").map((r) => toRider(r, mm)),
+      ),
+      eliteProvisional: sortByName(
+        eliteRoad
+          .filter((r) => r.status === "provisional")
+          .map((r) => toRider(r, mm, true)),
+      ),
+      juniorConfirmed: sortByName(
+        juniorRoad.filter((r) => r.status === "confirmed").map((r) => toRider(r, mm)),
+      ),
+      juniorProvisional: sortByName(
+        juniorRoad
+          .filter((r) => r.status === "provisional")
+          .map((r) => toRider(r, mm, true)),
+      ),
+      women: sortByName(womenRoad.map((r) => toRider(r, mm))),
+      mtbMen: sortByName(
+        mtb.filter((r) => r.category !== "Women").map((r) => toRider(r, mm)),
+      ),
+      mtbWomen: sortByName(
+        mtb.filter((r) => r.category === "Women").map((r) => toRider(r, mm)),
+      ),
+    };
+  }, [data, mm]);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8 sm:py-12">
@@ -423,24 +233,32 @@ function RidersPage() {
         </TabsContent>
 
         <TabsContent value="elite" className="mt-6">
-          <EliteMenCard mm={mm} />
+          <EliteMenCard
+            mm={mm}
+            confirmed={derived.eliteConfirmed}
+            provisional={derived.eliteProvisional}
+          />
         </TabsContent>
 
         <TabsContent value="women" className="mt-6">
           <SimpleRosterCard
             mm={mm}
             title={mm ? "အမျိုးသမီးတန်း" : "Women"}
-            status="provisional"
-            riders={WOMEN_RIDERS}
+            status="confirmed"
+            riders={derived.women}
           />
         </TabsContent>
 
         <TabsContent value="junior" className="mt-6">
-          <JuniorCard mm={mm} />
+          <JuniorCard
+            mm={mm}
+            confirmed={derived.juniorConfirmed}
+            provisional={derived.juniorProvisional}
+          />
         </TabsContent>
 
         <TabsContent value="mtb" className="mt-6">
-          <MTBCard mm={mm} />
+          <MTBCard mm={mm} men={derived.mtbMen} women={derived.mtbWomen} />
         </TabsContent>
       </Tabs>
     </main>
@@ -473,6 +291,13 @@ function RegClarifier({ mm }: { mm: boolean }) {
 }
 
 function RiderList({ riders, mm }: { riders: Rider[]; mm: boolean }) {
+  if (riders.length === 0) {
+    return (
+      <p className="mt-3 text-sm text-muted-foreground">
+        {mm ? "စာရင်း မရှိသေးပါ။" : "No riders yet."}
+      </p>
+    );
+  }
   return (
     <ol className="mt-3 grid gap-1.5 sm:grid-cols-2 text-sm">
       {riders.map((r, idx) => (
@@ -494,7 +319,15 @@ function RiderList({ riders, mm }: { riders: Rider[]; mm: boolean }) {
   );
 }
 
-function EliteMenCard({ mm }: { mm: boolean }) {
+function EliteMenCard({
+  mm,
+  confirmed,
+  provisional,
+}: {
+  mm: boolean;
+  confirmed: Rider[];
+  provisional: Rider[];
+}) {
   return (
     <article className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5 sm:p-6 shadow-sm">
       <div className="flex flex-wrap items-center gap-2">
@@ -505,29 +338,31 @@ function EliteMenCard({ mm }: { mm: boolean }) {
       </div>
       <p className="mt-3 text-base">
         {mm
-          ? "အမျိုးသား Elite တစ်ဦးချင်း — အသက်အရွယ်အတည်ပြုပြီး ၃၉ ဦး၊ အသက်စိစစ်ဆဲ ၁၅ ဦး။"
-          : "Men Elite individual — 39 age-confirmed, 15 pending age verification."}
+          ? `အမျိုးသား Elite တစ်ဦးချင်း — အသက်အရွယ်အတည်ပြုပြီး ${confirmed.length} ဦး၊ အသက်စိစစ်ဆဲ ${provisional.length} ဦး။`
+          : `Men Elite individual — ${confirmed.length} age-confirmed, ${provisional.length} pending age verification.`}
       </p>
       <RegClarifier mm={mm} />
 
       <section className="mt-5">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-          {mm ? `အတည်ပြုပြီး (${MEN_ELITE_CONFIRMED.length})` : `Confirmed (${MEN_ELITE_CONFIRMED.length})`}
+          {mm ? `အတည်ပြုပြီး (${confirmed.length})` : `Confirmed (${confirmed.length})`}
         </h3>
-        <RiderList riders={MEN_ELITE_CONFIRMED} mm={mm} />
+        <RiderList riders={confirmed} mm={mm} />
       </section>
 
-      <section className="mt-6">
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            {mm
-              ? `အသက်စိစစ်ဆဲ (${MEN_ELITE_PENDING.length})`
-              : `Pending age verification (${MEN_ELITE_PENDING.length})`}
-          </h3>
-          <StatusBadge status="provisional" mm={mm} />
-        </div>
-        <RiderList riders={MEN_ELITE_PENDING} mm={mm} />
-      </section>
+      {provisional.length > 0 ? (
+        <section className="mt-6">
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              {mm
+                ? `အသက်စိစစ်ဆဲ (${provisional.length})`
+                : `Pending age verification (${provisional.length})`}
+            </h3>
+            <StatusBadge status="provisional" mm={mm} />
+          </div>
+          <RiderList riders={provisional} mm={mm} />
+        </section>
+      ) : null}
 
       <p className="mt-5 text-xs text-muted-foreground">
         {mm
@@ -538,7 +373,15 @@ function EliteMenCard({ mm }: { mm: boolean }) {
   );
 }
 
-function JuniorCard({ mm }: { mm: boolean }) {
+function JuniorCard({
+  mm,
+  confirmed,
+  provisional,
+}: {
+  mm: boolean;
+  confirmed: Rider[];
+  provisional: Rider[];
+}) {
   return (
     <article className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5 sm:p-6 shadow-sm">
       <div className="flex flex-wrap items-center gap-2">
@@ -549,27 +392,29 @@ function JuniorCard({ mm }: { mm: boolean }) {
       </div>
       <p className="mt-3 text-base">
         {mm
-          ? `လူငယ်တန်း (Junior) — အတည်ပြုပြီး ${JUNIOR_CONFIRMED.length} ဦး၊ စိစစ်ဆဲ ${JUNIOR_PENDING.length} ဦး။`
-          : `Junior — ${JUNIOR_CONFIRMED.length} confirmed, ${JUNIOR_PENDING.length} pending verification.`}
+          ? `လူငယ်တန်း (Junior) — အတည်ပြုပြီး ${confirmed.length} ဦး၊ စိစစ်ဆဲ ${provisional.length} ဦး။`
+          : `Junior — ${confirmed.length} confirmed, ${provisional.length} pending verification.`}
       </p>
       <RegClarifier mm={mm} />
 
       <section className="mt-5">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-          {mm ? `အတည်ပြုပြီး (${JUNIOR_CONFIRMED.length})` : `Confirmed (${JUNIOR_CONFIRMED.length})`}
+          {mm ? `အတည်ပြုပြီး (${confirmed.length})` : `Confirmed (${confirmed.length})`}
         </h3>
-        <RiderList riders={JUNIOR_CONFIRMED} mm={mm} />
+        <RiderList riders={confirmed} mm={mm} />
       </section>
 
-      <section className="mt-6">
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            {mm ? `စိစစ်ဆဲ (${JUNIOR_PENDING.length})` : `Pending verification (${JUNIOR_PENDING.length})`}
-          </h3>
-          <StatusBadge status="provisional" mm={mm} />
-        </div>
-        <RiderList riders={JUNIOR_PENDING} mm={mm} />
-      </section>
+      {provisional.length > 0 ? (
+        <section className="mt-6">
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              {mm ? `စိစစ်ဆဲ (${provisional.length})` : `Pending verification (${provisional.length})`}
+            </h3>
+            <StatusBadge status="provisional" mm={mm} />
+          </div>
+          <RiderList riders={provisional} mm={mm} />
+        </section>
+      ) : null}
 
       <p className="mt-4 rounded-md border-l-2 border-l-amber-500/60 bg-amber-500/5 px-3 py-2 text-xs text-amber-800 dark:text-amber-300">
         {mm
@@ -592,8 +437,8 @@ function TeamSection({ mm }: { mm: boolean }) {
         </div>
         <p className="mt-3 text-base">
           {mm
-            ? "အသင်းလိုက်ပြိုင်ပွဲအတွက် အသင်း ၉ သင်း အတည်ပြုပြီးပါသည်။"
-            : "9 teams are confirmed for the team classification."}
+            ? `အသင်းလိုက်ပြိုင်ပွဲအတွက် အသင်း ${TEAMS.length} သင်း အတည်ပြုပြီးပါသည်။`
+            : `${TEAMS.length} teams are confirmed for the team classification.`}
         </p>
         <RegClarifier mm={mm} />
       </article>
@@ -650,35 +495,27 @@ function SimpleRosterCard({
   title,
   status,
   riders,
-  noteEn,
-  noteMm,
 }: {
   mm: boolean;
   title: string;
   status: TeamStatus;
   riders: Rider[];
-  noteEn?: string;
-  noteMm?: string;
 }) {
   const isConfirmed = status === "confirmed";
   const borderClass = isConfirmed
     ? "border-emerald-500/30 bg-emerald-500/5"
     : "border-amber-500/30 bg-amber-500/5";
-  const note = mm ? noteMm : noteEn;
 
   return (
     <article className={`rounded-lg border ${borderClass} p-5 sm:p-6 shadow-sm`}>
       <div className="flex flex-wrap items-center gap-2">
-        <h2 className="text-xl font-bold text-primary">{title}</h2>
+        <h2 className="text-xl font-bold text-primary">
+          {title} ({riders.length})
+        </h2>
         <StatusBadge status={status} mm={mm} />
       </div>
       <RegClarifier mm={mm} />
       <RiderList riders={riders} mm={mm} />
-      {note ? (
-        <p className="mt-4 rounded-md border-l-2 border-l-amber-500/60 bg-amber-500/5 px-3 py-2 text-xs text-amber-800 dark:text-amber-300">
-          {note}
-        </p>
-      ) : null}
     </article>
   );
 }
@@ -691,14 +528,8 @@ function NeutralBadge({ label }: { label: string }) {
   );
 }
 
-function MTBCard({ mm }: { mm: boolean }) {
-  const total =
-    MTB_MEN_ELITE.length +
-    MTB_MASTERS.length +
-    MTB_MEN_JUNIOR.length +
-    MTB_WOMEN.length +
-    MTB_CATEGORY_TBC.length;
-
+function MTBCard({ mm, men, women }: { mm: boolean; men: Rider[]; women: Rider[] }) {
+  const total = men.length + women.length;
   return (
     <article className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-5 sm:p-6 shadow-sm">
       <div className="flex flex-wrap items-center gap-2">
@@ -714,47 +545,16 @@ function MTBCard({ mm }: { mm: boolean }) {
 
       <section className="mt-5">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-          {mm ? `အမျိုးသား Elite (${MTB_MEN_ELITE.length})` : `Men Elite (${MTB_MEN_ELITE.length})`}
+          {mm ? `အမျိုးသား (${men.length})` : `Men (${men.length})`}
         </h3>
-        <RiderList riders={MTB_MEN_ELITE} mm={mm} />
+        <RiderList riders={men} mm={mm} />
       </section>
 
       <section className="mt-6">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-          {mm ? `Masters 40+ (${MTB_MASTERS.length})` : `Masters 40+ (${MTB_MASTERS.length})`}
+          {mm ? `အမျိုးသမီး (${women.length})` : `Women (${women.length})`}
         </h3>
-        <RiderList riders={MTB_MASTERS} mm={mm} />
-      </section>
-
-      <section className="mt-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-          {mm ? `လူငယ်တန်း (${MTB_MEN_JUNIOR.length})` : `Men Junior (${MTB_MEN_JUNIOR.length})`}
-        </h3>
-        <RiderList riders={MTB_MEN_JUNIOR} mm={mm} />
-      </section>
-
-      <section className="mt-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-          {mm ? `အမျိုးသမီးတန်း (${MTB_WOMEN.length})` : `Women (${MTB_WOMEN.length})`}
-        </h3>
-        <RiderList riders={MTB_WOMEN} mm={mm} />
-      </section>
-
-      <section className="mt-6">
-        <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            {mm
-              ? `အမျိုးအစား သတ်မှတ်ဆဲ (${MTB_CATEGORY_TBC.length})`
-              : `Category to be confirmed (${MTB_CATEGORY_TBC.length})`}
-          </h3>
-          <NeutralBadge label={mm ? "TBC" : "TBC"} />
-        </div>
-        <p className="mt-2 text-xs text-muted-foreground">
-          {mm
-            ? "ပါဝင်သူအားလုံး အတည်ပြုပြီး — ပြိုင်ပွဲအမျိုးအစား သတ်မှတ်ဆဲ။"
-            : "All confirmed participants — race category being finalized."}
-        </p>
-        <RiderList riders={MTB_CATEGORY_TBC} mm={mm} />
+        <RiderList riders={women} mm={mm} />
       </section>
     </article>
   );
