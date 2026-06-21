@@ -415,6 +415,7 @@ function RidersPage() {
           <TabsTrigger value="team">{mm ? "အသင်းလိုက်" : "Team"}</TabsTrigger>
           <TabsTrigger value="junior">{mm ? "လူငယ်တန်း" : "Junior"}</TabsTrigger>
           <TabsTrigger value="women">{mm ? "အမျိုးသမီးတန်း" : "Women"}</TabsTrigger>
+          <TabsTrigger value="mtb">MTB XCO</TabsTrigger>
         </TabsList>
 
         <TabsContent value="elite" className="mt-6">
@@ -437,6 +438,10 @@ function RidersPage() {
             status="provisional"
             riders={WOMEN_RIDERS}
           />
+        </TabsContent>
+
+        <TabsContent value="mtb" className="mt-6">
+          <MTBCard mm={mm} />
         </TabsContent>
       </Tabs>
     </main>
