@@ -409,27 +409,22 @@ function RidersPage() {
         </div>
       </header>
 
-      <Tabs defaultValue="elite" className="mt-8">
+      <Tabs defaultValue="team" className="mt-8">
         <TabsList className="flex flex-wrap h-auto">
-          <TabsTrigger value="elite">{mm ? "အမျိုးသား Elite" : "Men Elite"}</TabsTrigger>
           <TabsTrigger value="team">{mm ? "အသင်းလိုက်" : "Team"}</TabsTrigger>
-          <TabsTrigger value="junior">{mm ? "လူငယ်တန်း" : "Junior"}</TabsTrigger>
+          <TabsTrigger value="elite">{mm ? "အမျိုးသား Elite" : "Men Elite"}</TabsTrigger>
           <TabsTrigger value="women">{mm ? "အမျိုးသမီးတန်း" : "Women"}</TabsTrigger>
+          <TabsTrigger value="junior">{mm ? "လူငယ်တန်း" : "Junior"}</TabsTrigger>
           <TabsTrigger value="mtb">MTB XCO</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="elite" className="mt-6">
-          <EliteMenCard mm={mm} />
-        </TabsContent>
 
         <TabsContent value="team" className="mt-6">
           <TeamSection mm={mm} />
         </TabsContent>
 
-        <TabsContent value="junior" className="mt-6">
-          <JuniorCard mm={mm} />
+        <TabsContent value="elite" className="mt-6">
+          <EliteMenCard mm={mm} />
         </TabsContent>
-
 
         <TabsContent value="women" className="mt-6">
           <SimpleRosterCard
@@ -438,6 +433,10 @@ function RidersPage() {
             status="provisional"
             riders={WOMEN_RIDERS}
           />
+        </TabsContent>
+
+        <TabsContent value="junior" className="mt-6">
+          <JuniorCard mm={mm} />
         </TabsContent>
 
         <TabsContent value="mtb" className="mt-6">
