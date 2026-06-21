@@ -374,8 +374,8 @@ function EliteMenCard({ mm }: { mm: boolean }) {
       </div>
       <p className="mt-3 text-base">
         {mm
-          ? "အမျိုးသား Elite တစ်ဦးချင်း — အသက်အရွယ်အတည်ပြုပြီး ၃၈ ဦး၊ အသက်စိစစ်ဆဲ ၁၅ ဦး။"
-          : "Men Elite individual — 38 age-confirmed, 15 pending age verification."}
+          ? "အမျိုးသား Elite တစ်ဦးချင်း — အသက်အရွယ်အတည်ပြုပြီး ၃၉ ဦး၊ အသက်စိစစ်ဆဲ ၁၅ ဦး။"
+          : "Men Elite individual — 39 age-confirmed, 15 pending age verification."}
       </p>
       <RegClarifier mm={mm} />
 
