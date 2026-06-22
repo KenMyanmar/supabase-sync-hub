@@ -39,6 +39,8 @@ export type PublicCounts = {
   criterium: number;
   mtbXco: number;
   pending: number;
+  verified: number;
+  withdrawn: number;
 };
 
 
@@ -135,7 +137,7 @@ export const lookupRegistration = createServerFn({ method: "POST" })
     let counts: PublicCounts | null = null;
     if (data.withCounts) {
       const headOpts = { count: "exact" as const, head: true };
-      const [tot, rr, cr, mtb, pend] = await Promise.all([
+      const [tot, rr, cr, mtb, pend, ver, wd] = await Promise.all([
         sb.from("registrations").select("registration_no", headOpts),
         sb.from("registrations").select("registration_no", headOpts).contains("events", ["Road Race"]),
         sb.from("registrations").select("registration_no", headOpts).contains("events", ["Criterium"]),
@@ -144,6 +146,8 @@ export const lookupRegistration = createServerFn({ method: "POST" })
           .from("registrations")
           .select("registration_no", headOpts)
           .in("status", ["Registration received - pending MCF verification", "Pending"]),
+        sb.from("registrations").select("registration_no", headOpts).eq("status", "Confirmed - MCF verified"),
+        sb.from("registrations").select("registration_no", headOpts).eq("status", "Withdrawn"),
       ]);
       counts = {
         total: tot.count ?? 0,
@@ -151,6 +155,8 @@ export const lookupRegistration = createServerFn({ method: "POST" })
         criterium: cr.count ?? 0,
         mtbXco: mtb.count ?? 0,
         pending: pend.count ?? 0,
+        verified: ver.count ?? 0,
+        withdrawn: wd.count ?? 0,
       };
     }
 

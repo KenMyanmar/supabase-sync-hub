@@ -73,7 +73,9 @@ const EVENTS = ["all", "Road Race", "Criterium", "MTB XCO"];
 const STATUSES = [
   "all",
   "Registration received - pending MCF verification",
+  "Confirmed - MCF verified",
   "Pending",
+  "Withdrawn",
   "Needs correction",
   "Duplicate / under review",
   "Confirmed for provisional start list",
@@ -82,7 +84,9 @@ const STATUSES = [
 const STATUS_LABEL: Record<string, string> = {
   all: "အားလုံး / All statuses",
   "Registration received - pending MCF verification": "လက်ခံပြီး — MCF စိစစ်ဆဲ",
-  Pending: "စောင့်ဆိုင်းဆဲ",
+  "Confirmed - MCF verified": "Confirmed",
+  Pending: "Pending",
+  Withdrawn: "Withdrawn",
   "Needs correction": "ပြင်ဆင်ရန် လိုအပ်",
   "Duplicate / under review": "ထပ်နေသည် / ပြန်စစ်ဆဲ",
   "Confirmed for provisional start list": "ယာယီ Start List အတည်ပြုပြီး",
@@ -108,6 +112,12 @@ const NAV = [
 
 function statusBadgeClass(status: string | null): string {
   if (!status) return "bg-muted text-muted-foreground";
+  if (status === "Confirmed - MCF verified")
+    return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200";
+  if (status === "Withdrawn")
+    return "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200";
+  if (status === "Registration received - pending MCF verification")
+    return "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200";
   if (status.startsWith("Confirmed")) return "bg-primary/15 text-primary";
   if (status === "Needs correction" || status.startsWith("Duplicate"))
     return "bg-destructive/15 text-destructive";
@@ -468,15 +478,17 @@ function RegistrationStatus() {
         />
 
         {/* Summary cards */}
-        <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-3">
           <StatCard label="Total" my="စုစုပေါင်း" value={counts?.total} accent />
           <StatCard label="Road Race" my="Road Race" value={counts?.roadRace} />
           <StatCard label="Criterium" my="Criterium" value={counts?.criterium} />
           <StatCard label="MTB XCO" my="MTB XCO" value={counts?.mtbXco} />
+          <StatCard label="Pending" my="စိစစ်ဆဲ" value={counts?.pending} />
+          <StatCard label="Verified" my="အတည်ပြုပြီး" value={counts?.verified} />
           <StatCard
-            label="Pending"
-            my="စိစစ်ဆဲ"
-            value={counts?.pending}
+            label="Withdrawn"
+            my="ရုပ်သိမ်း"
+            value={counts?.withdrawn}
             className="col-span-2 sm:col-span-1"
           />
         </div>
