@@ -11,7 +11,7 @@ export type PublicRider = {
   status: "confirmed" | "provisional";
 };
 
-export const getPublicRiders = createServerFn({ method: "GET" }).handler(
+export const getPublicRiders = createServerFn({ method: "POST" }).handler(
   async (): Promise<PublicRider[]> => {
     try {
       const { extAdmin } = await import("@/integrations/ext-supabase/admin.server");
