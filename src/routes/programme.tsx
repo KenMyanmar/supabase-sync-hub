@@ -86,6 +86,15 @@ const DAYS: Array<{
     heading: "MTB XCO — Taikkyi Mirror Mountains",
     items: [
       {
+        time: "05:00",
+        event: "Rider Transport / ပြိုင်ပွဲဝင် သယ်ယူပို့ဆောင်ရေး",
+        category: "Two trucks depart MCF Center",
+        venue: "MCF Center → Taikkyi Mirror Mountains",
+        type: "Meeting",
+        notes:
+          "Two trucks leave MCF Center at 05:00 sharp — riders must be on board on time. To confirm please call U Nyein at 09772344256. / ထရပ်ကား ၂ စီး MCF Center မှ နံနက် ၅:၀၀ တွင် ထွက်ခွာမည်။ ပြိုင်ပွဲဝင်များ အချိန်မီ ရောက်ရှိပါရန်။",
+      },
+      {
         time: "08:00",
         event: "MTB XCO",
         category: "Men Open",
