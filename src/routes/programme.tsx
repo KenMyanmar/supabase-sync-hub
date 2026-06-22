@@ -48,6 +48,15 @@ const DAYS: Array<{
     heading: "Road Race — Hlegu 11 Hills Round ",
     items: [
       {
+        time: "05:00",
+        event: "Rider Transport / ပြိုင်ပွဲဝင် သယ်ယူပို့ဆောင်ရေး",
+        category: "Two trucks depart MCF Center",
+        venue: "MCF Center → Hlegu",
+        type: "Meeting",
+        notes:
+          "Two trucks leave MCF Center at 05:00 sharp — riders must be on board on time. / ထရပ်ကား ၂ စီး MCF Center မှ နံနက် ၅:၀၀ တွင် ထွက်ခွာမည်။ ပြိုင်ပွဲဝင်များ အချိန်မီ ရောက်ရှိပါရန်။",
+      },
+      {
         time: "08:00",
         event: "Road Race",
         category: "Men Elite — 100 km",
