@@ -112,6 +112,12 @@ const NAV = [
 
 function statusBadgeClass(status: string | null): string {
   if (!status) return "bg-muted text-muted-foreground";
+  if (status === "Confirmed - MCF verified")
+    return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200";
+  if (status === "Withdrawn")
+    return "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200";
+  if (status === "Registration received - pending MCF verification")
+    return "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200";
   if (status.startsWith("Confirmed")) return "bg-primary/15 text-primary";
   if (status === "Needs correction" || status.startsWith("Duplicate"))
     return "bg-destructive/15 text-destructive";
