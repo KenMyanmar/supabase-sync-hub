@@ -39,6 +39,8 @@ export type PublicCounts = {
   criterium: number;
   mtbXco: number;
   pending: number;
+  verified: number;
+  withdrawn: number;
 };
 
 
