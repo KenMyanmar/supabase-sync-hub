@@ -73,7 +73,9 @@ const EVENTS = ["all", "Road Race", "Criterium", "MTB XCO"];
 const STATUSES = [
   "all",
   "Registration received - pending MCF verification",
+  "Confirmed - MCF verified",
   "Pending",
+  "Withdrawn",
   "Needs correction",
   "Duplicate / under review",
   "Confirmed for provisional start list",
@@ -82,7 +84,9 @@ const STATUSES = [
 const STATUS_LABEL: Record<string, string> = {
   all: "အားလုံး / All statuses",
   "Registration received - pending MCF verification": "လက်ခံပြီး — MCF စိစစ်ဆဲ",
-  Pending: "စောင့်ဆိုင်းဆဲ",
+  "Confirmed - MCF verified": "Confirmed",
+  Pending: "Pending",
+  Withdrawn: "Withdrawn",
   "Needs correction": "ပြင်ဆင်ရန် လိုအပ်",
   "Duplicate / under review": "ထပ်နေသည် / ပြန်စစ်ဆဲ",
   "Confirmed for provisional start list": "ယာယီ Start List အတည်ပြုပြီး",
