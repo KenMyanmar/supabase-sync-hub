@@ -48,6 +48,15 @@ const DAYS: Array<{
     heading: "Road Race — Hlegu 11 Hills Round ",
     items: [
       {
+        time: "05:00",
+        event: "Rider Transport / ပြိုင်ပွဲဝင် သယ်ယူပို့ဆောင်ရေး",
+        category: "Two trucks depart MCF Center",
+        venue: "MCF Center → Hlegu",
+        type: "Meeting",
+        notes:
+          "Two trucks leave MCF Center at 05:00 sharp — riders must be on board on time. / ထရပ်ကား ၂ စီး MCF Center မှ နံနက် ၅:၀၀ တွင် ထွက်ခွာမည်။ ပြိုင်ပွဲဝင်များ အချိန်မီ ရောက်ရှိပါရန်။",
+      },
+      {
         time: "08:00",
         event: "Road Race",
         category: "Men Elite — 100 km",
@@ -76,6 +85,15 @@ const DAYS: Array<{
     my: "ဇွန် ၂၇",
     heading: "MTB XCO — Taikkyi Mirror Mountains",
     items: [
+      {
+        time: "05:00",
+        event: "Rider Transport / ပြိုင်ပွဲဝင် သယ်ယူပို့ဆောင်ရေး",
+        category: "Two trucks depart MCF Center",
+        venue: "MCF Center → Taikkyi Mirror Mountains",
+        type: "Meeting",
+        notes:
+          "Two trucks leave MCF Center at 05:00 sharp — riders must be on board on time. To confirm please call U Nyein at 09772344256. / ထရပ်ကား ၂ စီး MCF Center မှ နံနက် ၅:၀၀ တွင် ထွက်ခွာမည်။ ပြိုင်ပွဲဝင်များ အချိန်မီ ရောက်ရှိပါရန်။",
+      },
       {
         time: "08:00",
         event: "MTB XCO",
@@ -342,7 +360,8 @@ function SchedulePage() {
 }
 
 const AWARD_ORDER: Array<{ en: string; mm: string }> = [
-  { en: "Open Category — Top 10", mm: "Open တန်း အကောင်းဆုံး ၁၀ ဦး" },
+  { en: "Open Criterium (All) — Top 10", mm: "Open (လူတိုင်းပါဝင်) Criterium — အကောင်းဆုံး ၁၀ ဦး" },
+  { en: "MTB XCO — Gold / Silver / Bronze", mm: "MTB XCO — ပထမဆု / ဒုတိယဆု / တတိယဆု" },
   { en: "Junior — Gold / Silver / Bronze", mm: "လူငယ်တန်း ပထမဆု / ဒုတိယဆု / တတိယဆု" },
   { en: "Women — Gold / Silver / Bronze", mm: "အမျိုးသမီးတန်း ပထမဆု / ဒုတိယဆု / တတိယဆု" },
   { en: "Men Elite — Gold / Silver / Bronze", mm: "အမျိုးသား Elite တန်း ပထမဆု / ဒုတိယဆု / တတိယဆု" },
