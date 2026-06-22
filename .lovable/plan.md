@@ -1,30 +1,26 @@
-Add a "Category TBC" tab to `/riders` for championship-registered riders whose category is not yet classified. Single file edit: `src/routes/riders.index.tsx`.
+## Edits to `src/routes/programme.tsx`
 
-## Changes (4 edits, exactly as specified)
+### A) AWARD_ORDER — add MTB, clarify Open
+Replace the first item and insert MTB as the second item. Final order:
+1. Open Criterium (All) — Top 10
+2. MTB XCO — Gold / Silver / Bronze
+3. Junior — Gold / Silver / Bronze
+4. Women — Gold / Silver / Bronze
+5. Men Elite — Gold / Silver / Bronze
+6. Team Classification — Top 3
+7. Recognition — BMX Demonstration Team
+8. Recognition — Fixie Demonstration Team
 
-1. **`derived` useMemo** — after `const mtb = …`, add:
-   ```ts
-   const tbc = data.filter(
-     (r) => r.category === "Uncategorized" && r.in_road && r.in_crit,
-   );
-   ```
-   And add `categoryToConfirm: sortByName(tbc.map((r) => toRider(r, mm)))` to the returned object.
+### B) DAYS — add 05:00 truck departure as first item
 
-2. **`TabsList`** — between Junior and MTB triggers, insert auto-hiding trigger:
-   ```tsx
-   {derived.categoryToConfirm.length > 0 ? (
-     <TabsTrigger value="tbc">
-       {mm ? "အမျိုးအစား အတည်ပြုဆဲ" : "Category TBC"}
-     </TabsTrigger>
-   ) : null}
-   ```
+**26 June** — prepend:
+- 05:00 · Rider Transport / ပြိုင်ပွဲဝင် သယ်ယူပို့ဆောင်ရေး
+- Category: "Two trucks depart MCF Center"
+- Venue: "MCF Center → Hlegu"
+- Type: "Meeting"
+- Notes: bilingual on-time warning
 
-3. **`TabsContent`** — before MTB TabsContent, insert matching content panel rendering `<CategoryToConfirmCard />`.
+**27 June** — prepend the same with venue "MCF Center → Taikkyi Mirror Mountains" and a contact line appended to the notes: "To confirm please call U Nyein at 09772344256."
 
-4. **New `CategoryToConfirmCard` component** — neutral muted styling (not green/amber), uses existing `NeutralBadge`, `RegClarifier`, `RiderList`. Bilingual headline explaining MCF is verifying category.
-
-## Scope guardrails
-- Filter stays narrow: `Uncategorized && in_road && in_crit` (≈22 riders), not the wider ~72 uncategorized — MTB-only uncategorized stay inside the open MTB tab.
-- Tab auto-hides when count = 0 (disappears as DOB pass classifies riders).
-- No changes to other tabs, server function, or DB.
-- No new imports needed — all helpers (`NeutralBadge`, `RegClarifier`, `RiderList`, `sortByName`, `toRider`) already exist in the file.
+### Out of scope
+No other changes to DAYS, day headings, badges, or styling.

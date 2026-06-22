@@ -342,7 +342,8 @@ function SchedulePage() {
 }
 
 const AWARD_ORDER: Array<{ en: string; mm: string }> = [
-  { en: "Open Category — Top 10", mm: "Open တန်း အကောင်းဆုံး ၁၀ ဦး" },
+  { en: "Open Criterium (All) — Top 10", mm: "Open (လူတိုင်းပါဝင်) Criterium — အကောင်းဆုံး ၁၀ ဦး" },
+  { en: "MTB XCO — Gold / Silver / Bronze", mm: "MTB XCO — ပထမဆု / ဒုတိယဆု / တတိယဆု" },
   { en: "Junior — Gold / Silver / Bronze", mm: "လူငယ်တန်း ပထမဆု / ဒုတိယဆု / တတိယဆု" },
   { en: "Women — Gold / Silver / Bronze", mm: "အမျိုးသမီးတန်း ပထမဆု / ဒုတိယဆု / တတိယဆု" },
   { en: "Men Elite — Gold / Silver / Bronze", mm: "အမျိုးသား Elite တန်း ပထမဆု / ဒုတိယဆု / တတိယဆု" },
