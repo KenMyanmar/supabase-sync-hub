@@ -478,15 +478,17 @@ function RegistrationStatus() {
         />
 
         {/* Summary cards */}
-        <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-3">
           <StatCard label="Total" my="စုစုပေါင်း" value={counts?.total} accent />
           <StatCard label="Road Race" my="Road Race" value={counts?.roadRace} />
           <StatCard label="Criterium" my="Criterium" value={counts?.criterium} />
           <StatCard label="MTB XCO" my="MTB XCO" value={counts?.mtbXco} />
+          <StatCard label="Pending" my="စိစစ်ဆဲ" value={counts?.pending} />
+          <StatCard label="Verified" my="အတည်ပြုပြီး" value={counts?.verified} />
           <StatCard
-            label="Pending"
-            my="စိစစ်ဆဲ"
-            value={counts?.pending}
+            label="Withdrawn"
+            my="ရုပ်သိမ်း"
+            value={counts?.withdrawn}
             className="col-span-2 sm:col-span-1"
           />
         </div>
