@@ -9,6 +9,9 @@ import { getPublicRiders, type PublicRider } from "@/lib/public-riders.functions
 const publicRidersQO = queryOptions({
   queryKey: ["public-riders"],
   queryFn: () => getPublicRiders(),
+  staleTime: 0,
+  refetchOnMount: "always",
+  refetchOnWindowFocus: true,
 });
 
 export const Route = createFileRoute("/riders/")({
