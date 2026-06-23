@@ -27,17 +27,17 @@ export const Route = createFileRoute("/guide")({
       {
         name: "description",
         content:
-          "Working Draft v1 of the Technical Guide for the 2026 64th MCF National Cycling Event — overview, routes, categories, points, prize money, officials, procedures, protests. Final Team Version pending.",
+          "Working Draft v4 of the Technical Guide for the 2026 64th MCF National Cycling Event — overview, routes, categories, points, prize money, officials, procedures, protests. Final Team Version pending.",
       },
       {
         property: "og:title",
         content:
-          "Technical Guide — MCF National Cycling Event 2026 (Working Draft v1)",
+          "Technical Guide — MCF National Cycling Event 2026 (Working Draft v4)",
       },
       {
         property: "og:description",
         content:
-          "နည်းပညာလမ်းညွှန် — Working Draft v1. Final Team Version pending.",
+          "နည်းပညာလမ်းညွှန် — Working Draft v4. Final Team Version pending.",
       },
     ],
   }),
@@ -153,7 +153,7 @@ function TechnicalGuidePage() {
                 <DayCard
                   date="26 June 2026"
                   my="ဇွန် ၂၆"
-                  time="07:00"
+                  time="08:00"
                   title="Road Race"
                   venue="Hlegu 11 Hills Round "
                   type="Points event"
@@ -161,7 +161,7 @@ function TechnicalGuidePage() {
                 <DayCard
                   date="27 June 2026"
                   my="ဇွန် ၂၇"
-                  time="07:00"
+                  time="08:00"
                   title="MTB XCO"
                   venue="Taikkyi Mirror Mountains"
                   type="Separate event"
@@ -169,7 +169,7 @@ function TechnicalGuidePage() {
                 <DayCard
                   date="28 June 2026"
                   my="ဇွန် ၂၈"
-                  time="06:30 onward"
+                  time="06:45 onward"
                   title="Criterium + Awards"
                   venue="Thuwunna"
                   type="Points event + Ceremony"
@@ -198,10 +198,10 @@ function TechnicalGuidePage() {
                   details={[
                     "Circuit: 1.3 km / lap",
                     "Closed circuit, mass start",
-                    "Men Junior: 15 laps / ~20 km",
-                    "Women Elite/Open: 16 laps / ~21 km",
-                    "Men Elite: 20 laps / ~26 km",
-                    "Special Open: 15 laps (separate)",
+                    "Men Elite: 15 laps / ~19.5 km",
+                    "Women Elite/Open: 15 laps / ~19.5 km",
+                    "Men Junior: 15 laps / ~19.5 km",
+                    "Special Open: 5 laps / ~6.5 km (separate)",
                   ]}
                 />
                 <RouteCard
@@ -258,7 +258,7 @@ function TechnicalGuidePage() {
                     <tr className="border-t border-border">
                       <td className="px-3 py-2 font-medium">Men Elite</td>
                       <td className="px-3 py-2">Age 19+</td>
-                      <td className="px-3 py-2">100 km (Road) · 20 laps (Crit)</td>
+                      <td className="px-3 py-2">100 km (Road) · 15 laps (Crit)</td>
                     </tr>
                     <tr className="border-t border-border bg-muted/20">
                       <td className="px-3 py-2 font-medium">Men Junior</td>
@@ -270,7 +270,7 @@ function TechnicalGuidePage() {
                     <tr className="border-t border-border">
                       <td className="px-3 py-2 font-medium">Women Elite / Open</td>
                       <td className="px-3 py-2">Women — Elite / Open</td>
-                      <td className="px-3 py-2">60 km (Road) · 16 laps (Crit)</td>
+                      <td className="px-3 py-2">60 km (Road) · 15 laps (Crit)</td>
                     </tr>
                   </tbody>
                 </table>
@@ -335,12 +335,17 @@ function TechnicalGuidePage() {
                 <ul className="mt-2 text-sm space-y-1.5">
                   <li>• Up to 4 riders per team may enter.</li>
                   <li>
-                    • Team Classification is calculated from the top 3 riders'
-                    finishing positions.
+                    • Team race ranking is the finishing position of the team's
+                    3rd classified rider; the lowest 3rd-rider placing ranks
+                    highest.
                   </li>
                   <li>
                     • Road Race ties are broken by the team's highest-placed
                     rider's finishing position.
+                  </li>
+                  <li>
+                    • Individual points — Road Race and Criterium each:
+                    positions 1–6 score 7, 5, 4, 3, 2, 1.
                   </li>
                 </ul>
 
@@ -349,21 +354,33 @@ function TechnicalGuidePage() {
                     <thead className="bg-muted/60 text-left">
                       <tr>
                         <th className="px-3 py-2 font-semibold">Team Rank</th>
-                        <th className="px-3 py-2 font-semibold">Bonus Points</th>
+                        <th className="px-3 py-2 font-semibold">Points</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr className="border-t border-border">
                         <td className="px-3 py-2">1st / ပထမ</td>
-                        <td className="px-3 py-2 font-semibold">10</td>
+                        <td className="px-3 py-2 font-semibold">7</td>
                       </tr>
                       <tr className="border-t border-border bg-muted/20">
                         <td className="px-3 py-2">2nd / ဒုတိယ</td>
-                        <td className="px-3 py-2 font-semibold">6</td>
+                        <td className="px-3 py-2 font-semibold">5</td>
                       </tr>
                       <tr className="border-t border-border">
                         <td className="px-3 py-2">3rd / တတိယ</td>
                         <td className="px-3 py-2 font-semibold">4</td>
+                      </tr>
+                      <tr className="border-t border-border bg-muted/20">
+                        <td className="px-3 py-2">4th / စတုတ္ထ</td>
+                        <td className="px-3 py-2 font-semibold">3</td>
+                      </tr>
+                      <tr className="border-t border-border">
+                        <td className="px-3 py-2">5th / ပဉ္စမ</td>
+                        <td className="px-3 py-2 font-semibold">2</td>
+                      </tr>
+                      <tr className="border-t border-border bg-muted/20">
+                        <td className="px-3 py-2">6th / ဆဋ္ဌမ</td>
+                        <td className="px-3 py-2 font-semibold">1</td>
                       </tr>
                     </tbody>
                   </table>
@@ -598,7 +615,7 @@ function GuideFooter() {
           မြန်မာနိုင်ငံ စက်ဘီးအဖွဲ့ချုပ်
         </p>
         <p className="mt-3 text-xs text-white/60">
-          Technical Guide — Working Draft v1. Final Team Version pending.
+          Technical Guide — Working Draft v4. Final Team Version pending.
         </p>
         <p className="mt-2">
           <Link to="/" className="underline text-white/80 hover:text-white">
@@ -653,7 +670,7 @@ function DraftBanner({ large = false }: { large?: boolean }) {
     >
       <FileWarning className={`${large ? "h-4 w-4 mt-0.5" : "h-3.5 w-3.5 mt-0.5"} text-accent shrink-0`} />
       <span>
-        <span className="font-semibold">Working Draft v1</span>
+        <span className="font-semibold">Working Draft v4</span>
         <span className="text-muted-foreground">
           {" "}
           — Final Team Version pending. /{" "}
