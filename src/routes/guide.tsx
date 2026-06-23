@@ -335,12 +335,17 @@ function TechnicalGuidePage() {
                 <ul className="mt-2 text-sm space-y-1.5">
                   <li>• Up to 4 riders per team may enter.</li>
                   <li>
-                    • Team Classification is calculated from the top 3 riders'
-                    finishing positions.
+                    • Team race ranking is the finishing position of the team's
+                    3rd classified rider; the lowest 3rd-rider placing ranks
+                    highest.
                   </li>
                   <li>
                     • Road Race ties are broken by the team's highest-placed
                     rider's finishing position.
+                  </li>
+                  <li>
+                    • Individual points — Road Race and Criterium each:
+                    positions 1–6 score 7, 5, 4, 3, 2, 1.
                   </li>
                 </ul>
 
@@ -349,21 +354,33 @@ function TechnicalGuidePage() {
                     <thead className="bg-muted/60 text-left">
                       <tr>
                         <th className="px-3 py-2 font-semibold">Team Rank</th>
-                        <th className="px-3 py-2 font-semibold">Bonus Points</th>
+                        <th className="px-3 py-2 font-semibold">Points</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr className="border-t border-border">
                         <td className="px-3 py-2">1st / ပထမ</td>
-                        <td className="px-3 py-2 font-semibold">10</td>
+                        <td className="px-3 py-2 font-semibold">7</td>
                       </tr>
                       <tr className="border-t border-border bg-muted/20">
                         <td className="px-3 py-2">2nd / ဒုတိယ</td>
-                        <td className="px-3 py-2 font-semibold">6</td>
+                        <td className="px-3 py-2 font-semibold">5</td>
                       </tr>
                       <tr className="border-t border-border">
                         <td className="px-3 py-2">3rd / တတိယ</td>
                         <td className="px-3 py-2 font-semibold">4</td>
+                      </tr>
+                      <tr className="border-t border-border bg-muted/20">
+                        <td className="px-3 py-2">4th / စတုတ္ထ</td>
+                        <td className="px-3 py-2 font-semibold">3</td>
+                      </tr>
+                      <tr className="border-t border-border">
+                        <td className="px-3 py-2">5th / ပဉ္စမ</td>
+                        <td className="px-3 py-2 font-semibold">2</td>
+                      </tr>
+                      <tr className="border-t border-border bg-muted/20">
+                        <td className="px-3 py-2">6th / ဆဋ္ဌမ</td>
+                        <td className="px-3 py-2 font-semibold">1</td>
                       </tr>
                     </tbody>
                   </table>
