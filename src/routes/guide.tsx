@@ -198,10 +198,10 @@ function TechnicalGuidePage() {
                   details={[
                     "Circuit: 1.3 km / lap",
                     "Closed circuit, mass start",
-                    "Men Junior: 15 laps / ~20 km",
-                    "Women Elite/Open: 16 laps / ~21 km",
-                    "Men Elite: 20 laps / ~26 km",
-                    "Special Open: 15 laps (separate)",
+                    "Men Elite: 15 laps / ~19.5 km",
+                    "Women Elite/Open: 15 laps / ~19.5 km",
+                    "Men Junior: 15 laps / ~19.5 km",
+                    "Special Open: 5 laps / ~6.5 km (separate)",
                   ]}
                 />
                 <RouteCard
