@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Download, ChevronLeft } from "lucide-react";
 import routeHlegu from "@/assets/mcf-route-hlegu.png.asset.json";
 import routeCriterium from "@/assets/mcf-route-criterium.png.asset.json";
-import routeMtb from "@/assets/mcf-route-mtb-mirror-mountains.png.asset.json";
+import routeMtb from "@/assets/mcf-route-mtb-strava.png.asset.json";
 import { useLang, t } from "@/lib/i18n";
 import { ROUTES_CONTENT, CTA, GPX_PENDING } from "@/lib/strings";
 import { NoResultsYet } from "@/components/NoResultsYet";
