@@ -153,7 +153,7 @@ function TechnicalGuidePage() {
                 <DayCard
                   date="26 June 2026"
                   my="ဇွန် ၂၆"
-                  time="07:00"
+                  time="08:00"
                   title="Road Race"
                   venue="Hlegu 11 Hills Round "
                   type="Points event"
@@ -161,7 +161,7 @@ function TechnicalGuidePage() {
                 <DayCard
                   date="27 June 2026"
                   my="ဇွန် ၂၇"
-                  time="07:00"
+                  time="08:00"
                   title="MTB XCO"
                   venue="Taikkyi Mirror Mountains"
                   type="Separate event"
@@ -169,7 +169,7 @@ function TechnicalGuidePage() {
                 <DayCard
                   date="28 June 2026"
                   my="ဇွန် ၂၈"
-                  time="06:30 onward"
+                  time="06:45 onward"
                   title="Criterium + Awards"
                   venue="Thuwunna"
                   type="Points event + Ceremony"
