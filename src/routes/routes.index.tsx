@@ -2,12 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Download, MapPin } from "lucide-react";
 import routeHlegu from "@/assets/mcf-route-hlegu.png.asset.json";
 import routeCriterium from "@/assets/mcf-route-criterium.png.asset.json";
+import routeMtb from "@/assets/mcf-route-mtb-strava.png.asset.json";
 import { useLang, t } from "@/lib/i18n";
 import { SECTION, ROUTES_CONTENT, CTA, GPX_PENDING } from "@/lib/strings";
 
 const MAP_BY_ASSET: Record<string, string> = {
   "mcf-route-hlegu": routeHlegu.url,
   "mcf-route-criterium": routeCriterium.url,
+  "mcf-route-mtb-mirror-mountains": routeMtb.url,
 };
 
 export const Route = createFileRoute("/routes/")({
