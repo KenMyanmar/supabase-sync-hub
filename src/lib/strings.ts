@@ -273,13 +273,14 @@ export const ROUTES_CONTENT = [
     type: { en: "MTB XCO", mm: "တောင်တက်စက်ဘီး XCO" },
     name: { en: "Taikkyi / Mirror Mountains", mm: "တိုက်ကြီး / မှန်တောင်" },
     date: "27 June 2026",
-    distance: "Pending in Final Team Version",
-    elevation: "Pending in Final Team Version",
+    distance: "1.99 km climb · full loop pending",
+    elevation: "+132 m climb · loop pending",
     character: {
       en: "Technical cross-country circuit on mixed terrain. Repeated short laps reward bike-handling and punchy efforts.",
       mm: "ပေါင်းစပ်မြေပြင်ပေါ်တွင် နည်းပညာဆန်သော cross-country လမ်းကြောင်း။ ထပ်ခါထပ်ခါ တိုသောလမ်းပတ်များက bike-handling နှင့် ဖြတ်ဆတ်သော အားသွန်မှုကို ဆုချသည်။",
     },
     sections: [
+      { label: { en: "Signature climb", mm: "အဓိက တောင်တက်အပိုင်း" }, value: { en: "1.99 km · +132 m · avg 4.9% · Cat 4 (51 → 151 m). Gentle lower slopes, then a steep final wall to the line.", mm: "၁.၉၉ ကီလို · +၁၃၂ မီတာ · ပျမ်းမျှ ၄.၉% · Cat 4 (၅၁ → ၁၅၁ မီတာ)။ အောက်ပိုင်းညင်သာပြီး အဆုံးတွင် မတ်စောက်သော နံရံတက်တစ်ခု။" } },
       { label: { en: "Discipline", mm: "ပြိုင်ပွဲအမျိုးအစား" }, value: { en: "Cross-country Olympic (XCO)", mm: "Cross-country Olympic (XCO)" } },
       { label: { en: "Venue", mm: "ပြိုင်ပွဲနေရာ" }, value: { en: "Taikkyi / Mirror Mountains area", mm: "တိုက်ကြီး / မှန်တောင် နယ်ပယ်" } },
       { label: { en: "Terrain", mm: "မြေပြင်" }, value: { en: "Mixed singletrack, gravel and technical sections", mm: "singletrack၊ ကျောက်စရစ်ခဲနှင့် နည်းပညာဆန်သော အပိုင်းများ" } },
@@ -288,7 +289,14 @@ export const ROUTES_CONTENT = [
       en: "Pick a technical feature with a safe stand-off — riders pass on every lap. Carry water and sun protection.",
       mm: "လုံခြုံသော အကွာအဝေးတွင် နည်းပညာဆန်သော အပိုင်းတစ်ခုကို ရွေးပါ — တစ်ပတ်တိုင်း ဖြတ်သွားသည်။ ရေနှင့် နေပူကာကိရိယာ ယူဆောင်ပါ။",
     },
-    mapAsset: null,
+    mapAsset: "mcf-route-mtb-mirror-mountains",
+    profile: [
+      { d: 0, e: 51 }, { d: 0.15, e: 58 }, { d: 0.3, e: 64 }, { d: 0.45, e: 61 },
+      { d: 0.6, e: 70 }, { d: 0.8, e: 78 }, { d: 1.0, e: 84 }, { d: 1.2, e: 88 },
+      { d: 1.35, e: 92 }, { d: 1.5, e: 98 }, { d: 1.65, e: 113 }, { d: 1.8, e: 133 },
+      { d: 1.99, e: 151 },
+    ],
+
   },
   {
     slug: "thuwunna-criterium",
