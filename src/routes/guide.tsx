@@ -27,17 +27,17 @@ export const Route = createFileRoute("/guide")({
       {
         name: "description",
         content:
-          "Working Draft v1 of the Technical Guide for the 2026 64th MCF National Cycling Event — overview, routes, categories, points, prize money, officials, procedures, protests. Final Team Version pending.",
+          "Working Draft v4 of the Technical Guide for the 2026 64th MCF National Cycling Event — overview, routes, categories, points, prize money, officials, procedures, protests. Final Team Version pending.",
       },
       {
         property: "og:title",
         content:
-          "Technical Guide — MCF National Cycling Event 2026 (Working Draft v1)",
+          "Technical Guide — MCF National Cycling Event 2026 (Working Draft v4)",
       },
       {
         property: "og:description",
         content:
-          "နည်းပညာလမ်းညွှန် — Working Draft v1. Final Team Version pending.",
+          "နည်းပညာလမ်းညွှန် — Working Draft v4. Final Team Version pending.",
       },
     ],
   }),
@@ -598,7 +598,7 @@ function GuideFooter() {
           မြန်မာနိုင်ငံ စက်ဘီးအဖွဲ့ချုပ်
         </p>
         <p className="mt-3 text-xs text-white/60">
-          Technical Guide — Working Draft v1. Final Team Version pending.
+          Technical Guide — Working Draft v4. Final Team Version pending.
         </p>
         <p className="mt-2">
           <Link to="/" className="underline text-white/80 hover:text-white">
@@ -653,7 +653,7 @@ function DraftBanner({ large = false }: { large?: boolean }) {
     >
       <FileWarning className={`${large ? "h-4 w-4 mt-0.5" : "h-3.5 w-3.5 mt-0.5"} text-accent shrink-0`} />
       <span>
-        <span className="font-semibold">Working Draft v1</span>
+        <span className="font-semibold">Working Draft v4</span>
         <span className="text-muted-foreground">
           {" "}
           — Final Team Version pending. /{" "}
