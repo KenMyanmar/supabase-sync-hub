@@ -258,7 +258,7 @@ function TechnicalGuidePage() {
                     <tr className="border-t border-border">
                       <td className="px-3 py-2 font-medium">Men Elite</td>
                       <td className="px-3 py-2">Age 19+</td>
-                      <td className="px-3 py-2">100 km (Road) · 20 laps (Crit)</td>
+                      <td className="px-3 py-2">100 km (Road) · 15 laps (Crit)</td>
                     </tr>
                     <tr className="border-t border-border bg-muted/20">
                       <td className="px-3 py-2 font-medium">Men Junior</td>
@@ -270,7 +270,7 @@ function TechnicalGuidePage() {
                     <tr className="border-t border-border">
                       <td className="px-3 py-2 font-medium">Women Elite / Open</td>
                       <td className="px-3 py-2">Women — Elite / Open</td>
-                      <td className="px-3 py-2">60 km (Road) · 16 laps (Crit)</td>
+                      <td className="px-3 py-2">60 km (Road) · 15 laps (Crit)</td>
                     </tr>
                   </tbody>
                 </table>
