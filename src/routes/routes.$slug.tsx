@@ -2,14 +2,18 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Download, ChevronLeft } from "lucide-react";
 import routeHlegu from "@/assets/mcf-route-hlegu.png.asset.json";
 import routeCriterium from "@/assets/mcf-route-criterium.png.asset.json";
+import routeMtb from "@/assets/mcf-route-mtb-mirror-mountains.png.asset.json";
 import { useLang, t } from "@/lib/i18n";
 import { ROUTES_CONTENT, CTA, GPX_PENDING } from "@/lib/strings";
 import { NoResultsYet } from "@/components/NoResultsYet";
+import { ElevationProfile } from "@/components/ElevationProfile";
 
 const MAP_BY_ASSET: Record<string, string> = {
   "mcf-route-hlegu": routeHlegu.url,
   "mcf-route-criterium": routeCriterium.url,
+  "mcf-route-mtb-mirror-mountains": routeMtb.url,
 };
+
 
 export const Route = createFileRoute("/routes/$slug")({
   loader: ({ params }) => {
@@ -45,6 +49,7 @@ function RouteDetail() {
   const { lang } = useLang();
   const r = Route.useLoaderData();
   const mapUrl = r.mapAsset ? MAP_BY_ASSET[r.mapAsset] : null;
+  const profile = "profile" in r ? (r as { profile?: readonly { d: number; e: number }[] }).profile : null;
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-8 sm:py-12">
@@ -72,17 +77,21 @@ function RouteDetail() {
       </header>
 
       <div className="mt-6 grid gap-5 md:grid-cols-2">
-        {mapUrl ? (
-          <img
-            src={mapUrl}
-            alt={`${t(r.name, lang)} route map`}
-            className="aspect-[16/10] w-full rounded-lg border border-border object-cover"
-          />
-        ) : (
-          <div className="flex aspect-[16/10] w-full items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
-            {lang === "mm" ? "မြေပုံကို Final Team Version တွင် ထုတ်ပြန်ပါမည်" : "Map pending in Final Team Version"}
-          </div>
-        )}
+        <div className="space-y-4">
+          {mapUrl ? (
+            <img
+              src={mapUrl}
+              alt={`${t(r.name, lang)} route map`}
+              className="aspect-[16/10] w-full rounded-lg border border-border object-cover"
+            />
+          ) : !profile ? (
+            <div className="flex aspect-[16/10] w-full items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
+              {lang === "mm" ? "မြေပုံကို Final Team Version တွင် ထုတ်ပြန်ပါမည်" : "Map pending in Final Team Version"}
+            </div>
+          ) : null}
+          {profile && profile.length >= 2 ? <ElevationProfile points={profile} /> : null}
+        </div>
+
 
         <section className="rounded-lg border border-border p-5">
           <h2 className="mb-3 font-semibold text-foreground">
