@@ -2,14 +2,18 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Download, ChevronLeft } from "lucide-react";
 import routeHlegu from "@/assets/mcf-route-hlegu.png.asset.json";
 import routeCriterium from "@/assets/mcf-route-criterium.png.asset.json";
+import routeMtb from "@/assets/mcf-route-mtb-mirror-mountains.png.asset.json";
 import { useLang, t } from "@/lib/i18n";
 import { ROUTES_CONTENT, CTA, GPX_PENDING } from "@/lib/strings";
 import { NoResultsYet } from "@/components/NoResultsYet";
+import { ElevationProfile } from "@/components/ElevationProfile";
 
 const MAP_BY_ASSET: Record<string, string> = {
   "mcf-route-hlegu": routeHlegu.url,
   "mcf-route-criterium": routeCriterium.url,
+  "mcf-route-mtb-mirror-mountains": routeMtb.url,
 };
+
 
 export const Route = createFileRoute("/routes/$slug")({
   loader: ({ params }) => {
