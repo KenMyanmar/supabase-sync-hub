@@ -310,3 +310,97 @@ export const getRidersToWatch = createServerFn({ method: "GET" }).handler(
     ),
 );
 
+// ─── Result Comments (per-stage Facebook-style threads) ────────────────────
+export type ResultComment = {
+  id: string;
+  created_at: string;
+  category: string;
+  parent_id: string | null;
+  author_name: string;
+  body: string;
+  likes: number;
+  is_hidden: boolean;
+};
+
+export const listResultComments = createServerFn({ method: "GET" })
+  .inputValidator((raw: unknown) =>
+    z.object({ category: z.string().min(1).max(120) }).parse(raw),
+  )
+  .handler(async ({ data }) =>
+    safeSelect<ResultComment>("result_comments", (q) =>
+      q
+        .eq("category", data.category)
+        .eq("is_hidden", false)
+        .order("created_at", { ascending: true }),
+    ),
+  );
+
+export const postResultComment = createServerFn({ method: "POST" })
+  .inputValidator((raw: unknown) =>
+    z
+      .object({
+        category: z.string().min(1).max(120),
+        author_name: z.string().trim().min(1).max(60),
+        body: z.string().trim().min(1).max(1000),
+        parent_id: z.string().uuid().nullable().optional(),
+      })
+      .parse(raw),
+  )
+  .handler(async ({ data }) => {
+    try {
+      const { extAdmin } = await import("@/integrations/ext-supabase/admin.server");
+      const { data: row, error } = await extAdmin()
+        .from("result_comments")
+        .insert({
+          category: data.category,
+          author_name: data.author_name,
+          body: data.body,
+          parent_id: data.parent_id ?? null,
+        })
+        .select("id")
+        .single();
+      if (error) {
+        console.error("[result_comments] insert", error);
+        return { ok: false as const, error: error.message };
+      }
+      return { ok: true as const, id: (row as { id: string }).id };
+    } catch (e) {
+      console.error("[result_comments] insert threw", e);
+      return { ok: false as const, error: "Could not post comment." };
+    }
+  });
+
+export const likeResultComment = createServerFn({ method: "POST" })
+  .inputValidator((raw: unknown) =>
+    z.object({ id: z.string().uuid() }).parse(raw),
+  )
+  .handler(async ({ data }) => {
+    try {
+      const { extAdmin } = await import("@/integrations/ext-supabase/admin.server");
+      const client = extAdmin();
+      const { data: cur, error: readErr } = await client
+        .from("result_comments")
+        .select("likes")
+        .eq("id", data.id)
+        .maybeSingle();
+      if (readErr || !cur) {
+        return { ok: false as const, likes: 0 };
+      }
+      const next = ((cur as { likes: number | null }).likes ?? 0) + 1;
+      const { error: updErr } = await client
+        .from("result_comments")
+        .update({ likes: next })
+        .eq("id", data.id);
+      if (updErr)
+        return {
+          ok: false as const,
+          likes: (cur as { likes: number | null }).likes ?? 0,
+        };
+      return { ok: true as const, likes: next };
+    } catch (e) {
+      console.error("[result_comments] like threw", e);
+      return { ok: false as const, likes: 0 };
+    }
+  });
+
+
