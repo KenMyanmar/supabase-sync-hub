@@ -118,3 +118,98 @@ export function TeamStandingTable({ rows }: { rows: StandingRow[]; lang: Lang })
     </div>
   );
 }
+
+export function MedalTable({ rows, lang }: { rows: StandingRow[]; lang: Lang }) {
+  const sorted = [...rows].sort(
+    (a, b) => (a.position ?? 999) - (b.position ?? 999),
+  );
+  const isUnranked = (r: StandingRow) =>
+    (r.position ?? 999) >= 99 || r.name_en === "Unattached / Independent";
+  const ranked = sorted.filter((r) => !isUnranked(r));
+  const unranked = sorted.filter(isUnranked);
+  const caption =
+    lang === "mm"
+      ? "ယာယီ — ပြိုင်ပွဲများပြီးတိုင်း မွမ်းမံပါမည်။"
+      : "Provisional — updated as events finish.";
+  const outsideLabel =
+    lang === "mm" ? "ကလပ်အဆင့်သတ်မှတ်မှု ပြင်ပ" : "outside club ranking";
+
+  const total = (r: StandingRow) =>
+    r.points_or_time_ms ?? (r.gold ?? 0) + (r.silver ?? 0) + (r.bronze ?? 0);
+
+  return (
+    <div>
+      <p className="mb-2 text-xs text-muted-foreground">{caption}</p>
+      <div className="overflow-x-auto rounded-lg border border-border">
+        <table className="w-full min-w-[520px] text-sm">
+          <thead className="bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
+            <tr>
+              <th className="px-3 py-2 text-left w-16">Rank</th>
+              <th className="px-3 py-2 text-left">Team</th>
+              <th className="px-3 py-2 text-center w-14">🥇</th>
+              <th className="px-3 py-2 text-center w-14">🥈</th>
+              <th className="px-3 py-2 text-center w-14">🥉</th>
+              <th className="px-3 py-2 text-right w-20 tabular-nums">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ranked.map((r) => {
+              const pos = r.position ?? 0;
+              const podium = PODIUM[pos];
+              return (
+                <tr
+                  key={r.id}
+                  className={cn("border-t border-border", podium?.tint)}
+                >
+                  <td className="px-3 py-2 font-semibold tabular-nums">
+                    {podium ? `${podium.medal} ` : ""}
+                    {r.position ?? "—"}
+                  </td>
+                  <td className="px-3 py-2 font-medium text-foreground">
+                    {r.name_en ?? "—"}
+                  </td>
+                  <td className="px-3 py-2 text-center tabular-nums">
+                    {r.gold ?? 0}
+                  </td>
+                  <td className="px-3 py-2 text-center tabular-nums">
+                    {r.silver ?? 0}
+                  </td>
+                  <td className="px-3 py-2 text-center tabular-nums">
+                    {r.bronze ?? 0}
+                  </td>
+                  <td className="px-3 py-2 text-right font-bold tabular-nums">
+                    {total(r)}
+                  </td>
+                </tr>
+              );
+            })}
+            {unranked.map((r) => (
+              <tr
+                key={r.id}
+                className="border-t border-border text-muted-foreground"
+              >
+                <td className="px-3 py-2 tabular-nums">—</td>
+                <td className="px-3 py-2">
+                  <span className="font-medium">{r.name_en ?? "—"}</span>
+                  <span className="ml-2 text-xs italic">({outsideLabel})</span>
+                </td>
+                <td className="px-3 py-2 text-center tabular-nums">
+                  {r.gold ?? 0}
+                </td>
+                <td className="px-3 py-2 text-center tabular-nums">
+                  {r.silver ?? 0}
+                </td>
+                <td className="px-3 py-2 text-center tabular-nums">
+                  {r.bronze ?? 0}
+                </td>
+                <td className="px-3 py-2 text-right font-bold tabular-nums">
+                  {total(r)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
