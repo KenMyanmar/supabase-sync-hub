@@ -15,6 +15,11 @@ import { RESULTS_TABS, SECTION, EMPTY } from "@/lib/strings";
 import { NoResultsYet } from "@/components/NoResultsYet";
 import { ResultsTable } from "@/components/ResultsTable";
 import { ResultsComments } from "@/components/ResultsComments";
+import {
+  PointsStanding,
+  TeamStandingTable,
+  type PointsSection,
+} from "@/components/StandingsTables";
 import { cn } from "@/lib/utils";
 
 const resultsQO = queryOptions({
