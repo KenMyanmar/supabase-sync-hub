@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Image as ImageIcon } from "lucide-react";
 import { useState } from "react";
 import { useLang, t } from "@/lib/i18n";
-import { listGalleryGroups } from "@/lib/site-content.functions";
+import { listGalleryGroups, type GalleryGroup } from "@/lib/site-content.functions";
 
 export const Route = createFileRoute("/media/gallery")({
   head: () => ({
@@ -28,7 +28,7 @@ function titleCase(s: string): string {
 
 function GalleryPage() {
   const { lang } = useLang();
-  const groups = Route.useLoaderData();
+  const groups = Route.useLoaderData() as GalleryGroup[];
   const [active, setActive] = useState<string>(groups[0]?.category ?? "");
 
   if (groups.length === 0) {
