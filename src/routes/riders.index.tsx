@@ -361,6 +361,7 @@ function JuniorCard({
 }
 
 function TeamSection({ mm }: { mm: boolean }) {
+  const { data: teams } = useSuspenseQuery(teamsQO);
   return (
     <div className="space-y-5">
       <article className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-5 sm:p-6 shadow-sm">
@@ -372,26 +373,27 @@ function TeamSection({ mm }: { mm: boolean }) {
         </div>
         <p className="mt-3 text-base">
           {mm
-            ? `အသင်းလိုက်ပြိုင်ပွဲအတွက် အသင်း ${TEAMS.length} သင်း အတည်ပြုပြီးပါသည်။`
-            : `${TEAMS.length} teams are confirmed for the team classification.`}
+            ? `အသင်းလိုက်ပြိုင်ပွဲအတွက် အသင်း ${teams.length} သင်း အတည်ပြုပြီးပါသည်။`
+            : `${teams.length} teams are confirmed for the team classification.`}
         </p>
         <RegClarifier mm={mm} />
       </article>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {TEAMS.map((tm, i) => (
-          <TeamCard key={tm.name} team={tm} index={i + 1} mm={mm} />
+        {teams.map((tm, i) => (
+          <TeamCard key={tm.id} team={tm} index={i + 1} mm={mm} />
         ))}
       </div>
     </div>
   );
 }
 
-function TeamCard({ team, index, mm }: { team: Team; index: number; mm: boolean }) {
+function TeamCard({ team, index, mm }: { team: TeamRow; index: number; mm: boolean }) {
   const isConfirmed = team.status === "confirmed";
   const borderClass = isConfirmed
     ? "border-emerald-500/30 bg-emerald-500/5"
     : "border-amber-500/30 bg-amber-500/5";
+  const slotsLabel = mm ? "နေရာ" : team.members.length === 1 ? "slot" : "slots";
 
   return (
     <article className={`rounded-lg border ${borderClass} p-4 sm:p-5 shadow-sm`}>
@@ -405,21 +407,28 @@ function TeamCard({ team, index, mm }: { team: Team; index: number; mm: boolean 
         <div className="flex flex-col items-end gap-1">
           <StatusBadge status={team.status} mm={mm} />
           <span className="text-[11px] text-muted-foreground">
-            {team.riders.length} {mm ? "နေရာ" : team.riders.length === 1 ? "slot" : "slots"}
+            {team.members.length} {slotsLabel}
           </span>
         </div>
       </header>
       <ol className="mt-3 space-y-1 text-sm">
-        {team.riders.map((r, idx) => (
-          <li key={r.reg} className="flex gap-2 items-baseline">
-            <span className="w-5 shrink-0 text-muted-foreground tabular-nums">{idx + 1}.</span>
-            <span className="flex-1">
-              <span>{r.name}</span>
-              <span className="text-muted-foreground"> — </span>
-              <span className="font-mono text-xs tabular-nums">{r.reg}</span>
-            </span>
-          </li>
-        ))}
+        {team.members.map((m, idx) => {
+          const name = (mm ? m.name_mm ?? m.rider_name : m.rider_name) || m.rider_name;
+          return (
+            <li key={m.id} className="flex gap-2 items-baseline">
+              <span className="w-5 shrink-0 text-muted-foreground tabular-nums">{idx + 1}.</span>
+              <span className="flex-1">
+                <span>{name}</span>
+                {m.registration_no ? (
+                  <>
+                    <span className="text-muted-foreground"> — </span>
+                    <span className="font-mono text-xs tabular-nums">{m.registration_no}</span>
+                  </>
+                ) : null}
+              </span>
+            </li>
+          );
+        })}
       </ol>
     </article>
   );
