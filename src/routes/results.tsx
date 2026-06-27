@@ -18,6 +18,7 @@ import { ResultsComments } from "@/components/ResultsComments";
 import {
   PointsStanding,
   TeamStandingTable,
+  MedalTable,
   type PointsSection,
 } from "@/components/StandingsTables";
 import { cn } from "@/lib/utils";
