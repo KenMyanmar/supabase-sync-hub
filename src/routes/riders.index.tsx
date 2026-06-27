@@ -5,6 +5,7 @@ import { useLang } from "@/lib/i18n";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NoResultsYet } from "@/components/NoResultsYet";
 import { getPublicRiders, type PublicRider } from "@/lib/public-riders.functions";
+import { listTeams, type Team as TeamRow } from "@/lib/site-content.functions";
 
 const publicRidersQO = queryOptions({
   queryKey: ["public-riders"],
@@ -12,6 +13,13 @@ const publicRidersQO = queryOptions({
   staleTime: 0,
   refetchOnMount: "always",
   refetchOnWindowFocus: true,
+});
+
+const teamsQO = queryOptions({
+  queryKey: ["teams"],
+  queryFn: () => listTeams(),
+  staleTime: 0,
+  refetchOnMount: "always",
 });
 
 export const Route = createFileRoute("/riders/")({
@@ -33,6 +41,7 @@ export const Route = createFileRoute("/riders/")({
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(publicRidersQO);
+    context.queryClient.ensureQueryData(teamsQO);
   },
   component: RidersPage,
   errorComponent: ({ error }) => (
@@ -45,101 +54,6 @@ type TeamStatus = "confirmed" | "provisional";
 
 type Rider = { name: string; reg: string; provisional?: boolean };
 
-type Team = {
-  name: string;
-  status: TeamStatus;
-  riders: Rider[];
-};
-
-// Team rosters remain hardcoded: the team→rider mapping is not modeled in the DB yet.
-const TEAMS: Team[] = [
-  {
-    name: "RCC",
-    status: "confirmed",
-    riders: [
-      { name: "Kaung Htet Linn", reg: "NC26-0007" },
-      { name: "Ye Myat Kyaw", reg: "NC26-0102" },
-      { name: "Pyae Sone", reg: "NC26-0103" },
-      { name: "Lu Htoo Han", reg: "NC26-0011" },
-    ],
-  },
-  {
-    name: "FCC / Flamingo Cycling Club",
-    status: "confirmed",
-    riders: [
-      { name: "Wai Hlyan Aung", reg: "NC26-0048" },
-      { name: "Bhone Pyae Paing", reg: "NC26-0131" },
-      { name: "Aung Kyaw Hein", reg: "NC26-0137" },
-      { name: "AnttAwwAung", reg: "NC26-0143" },
-    ],
-  },
-  {
-    name: "KNCC / Ko Naing Cycling Club",
-    status: "confirmed",
-    riders: [
-      { name: "Ko Thet Lwin Oo", reg: "NC26-0203" },
-      { name: "Htet Arkar Lwin", reg: "NC26-0182" },
-      { name: "Mg Than Myint Khing", reg: "NC26-0163" },
-      { name: "Saw Jimmy", reg: "NC26-0019" },
-    ],
-  },
-  {
-    name: "TSCC",
-    status: "provisional",
-    riders: [
-      { name: "Htet Aung Soe", reg: "NC26-0099" },
-      { name: "Kyaw Za Ya Nyein", reg: "NC26-0114" },
-      { name: "Khant Min Htet", reg: "NC26-0211" },
-      { name: "Htein Linn", reg: "NC26-0008" },
-    ],
-  },
-  {
-    name: "STCC",
-    status: "provisional",
-    riders: [
-      { name: "U Saw Than", reg: "NC26-0201" },
-      { name: "Ko Maung Maung", reg: "NC26-0202" },
-      { name: "Nyi Nyi Aung", reg: "NC26-0210" },
-    ],
-  },
-  {
-    name: "Lightning",
-    status: "provisional",
-    riders: [
-      { name: "Jonathan / Khant Min Myat", reg: "NC26-0176" },
-      { name: "Saw Nay Kbaw Mue", reg: "NC26-0191" },
-      { name: "Saw Alex", reg: "NC26-0240" },
-      { name: "Mg Nang Win Htet", reg: "NC26-0235" },
-    ],
-  },
-  {
-    name: "Triathlon",
-    status: "confirmed",
-    riders: [
-      { name: "Htay Ko Ko", reg: "NC26-0206" },
-      { name: "Kyaw Min Thein", reg: "NC26-0207" },
-      { name: "Aung Phyo Min", reg: "NC26-0204" },
-    ],
-  },
-  {
-    name: "TDC / Team Delta Cycling",
-    status: "provisional",
-    riders: [
-      { name: "Paing Soe Oo", reg: "NC26-0212" },
-      { name: "Pyae Sone Thant", reg: "NC26-0223" },
-      { name: "Htet Hlaing Phyo", reg: "NC26-0225" },
-    ],
-  },
-  {
-    name: "Duathlon",
-    status: "provisional",
-    riders: [
-      { name: "Kyaw Htet Aung", reg: "NC26-0205" },
-      { name: "Ko Lin Lin", reg: "NC26-0209" },
-      { name: "Aung Myint Swe", reg: "NC26-0208" },
-    ],
-  },
-];
 
 function displayName(r: PublicRider, mm: boolean): string {
   const primary = mm ? r.name_my || r.name_en : r.name_en || r.name_my;
@@ -447,6 +361,7 @@ function JuniorCard({
 }
 
 function TeamSection({ mm }: { mm: boolean }) {
+  const { data: teams } = useSuspenseQuery(teamsQO);
   return (
     <div className="space-y-5">
       <article className="rounded-lg border border-sky-500/30 bg-sky-500/5 p-5 sm:p-6 shadow-sm">
@@ -458,26 +373,27 @@ function TeamSection({ mm }: { mm: boolean }) {
         </div>
         <p className="mt-3 text-base">
           {mm
-            ? `အသင်းလိုက်ပြိုင်ပွဲအတွက် အသင်း ${TEAMS.length} သင်း အတည်ပြုပြီးပါသည်။`
-            : `${TEAMS.length} teams are confirmed for the team classification.`}
+            ? `အသင်းလိုက်ပြိုင်ပွဲအတွက် အသင်း ${teams.length} သင်း အတည်ပြုပြီးပါသည်။`
+            : `${teams.length} teams are confirmed for the team classification.`}
         </p>
         <RegClarifier mm={mm} />
       </article>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {TEAMS.map((tm, i) => (
-          <TeamCard key={tm.name} team={tm} index={i + 1} mm={mm} />
+        {teams.map((tm, i) => (
+          <TeamCard key={tm.id} team={tm} index={i + 1} mm={mm} />
         ))}
       </div>
     </div>
   );
 }
 
-function TeamCard({ team, index, mm }: { team: Team; index: number; mm: boolean }) {
+function TeamCard({ team, index, mm }: { team: TeamRow; index: number; mm: boolean }) {
   const isConfirmed = team.status === "confirmed";
   const borderClass = isConfirmed
     ? "border-emerald-500/30 bg-emerald-500/5"
     : "border-amber-500/30 bg-amber-500/5";
+  const slotsLabel = mm ? "နေရာ" : team.members.length === 1 ? "slot" : "slots";
 
   return (
     <article className={`rounded-lg border ${borderClass} p-4 sm:p-5 shadow-sm`}>
@@ -491,21 +407,28 @@ function TeamCard({ team, index, mm }: { team: Team; index: number; mm: boolean 
         <div className="flex flex-col items-end gap-1">
           <StatusBadge status={team.status} mm={mm} />
           <span className="text-[11px] text-muted-foreground">
-            {team.riders.length} {mm ? "နေရာ" : team.riders.length === 1 ? "slot" : "slots"}
+            {team.members.length} {slotsLabel}
           </span>
         </div>
       </header>
       <ol className="mt-3 space-y-1 text-sm">
-        {team.riders.map((r, idx) => (
-          <li key={r.reg} className="flex gap-2 items-baseline">
-            <span className="w-5 shrink-0 text-muted-foreground tabular-nums">{idx + 1}.</span>
-            <span className="flex-1">
-              <span>{r.name}</span>
-              <span className="text-muted-foreground"> — </span>
-              <span className="font-mono text-xs tabular-nums">{r.reg}</span>
-            </span>
-          </li>
-        ))}
+        {team.members.map((m, idx) => {
+          const name = (mm ? m.name_mm ?? m.rider_name : m.rider_name) || m.rider_name;
+          return (
+            <li key={m.id} className="flex gap-2 items-baseline">
+              <span className="w-5 shrink-0 text-muted-foreground tabular-nums">{idx + 1}.</span>
+              <span className="flex-1">
+                <span>{name}</span>
+                {m.registration_no ? (
+                  <>
+                    <span className="text-muted-foreground"> — </span>
+                    <span className="font-mono text-xs tabular-nums">{m.registration_no}</span>
+                  </>
+                ) : null}
+              </span>
+            </li>
+          );
+        })}
       </ol>
     </article>
   );

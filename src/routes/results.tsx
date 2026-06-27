@@ -15,6 +15,11 @@ import { RESULTS_TABS, SECTION, EMPTY } from "@/lib/strings";
 import { NoResultsYet } from "@/components/NoResultsYet";
 import { ResultsTable } from "@/components/ResultsTable";
 import { ResultsComments } from "@/components/ResultsComments";
+import {
+  PointsStanding,
+  TeamStandingTable,
+  type PointsSection,
+} from "@/components/StandingsTables";
 import { cn } from "@/lib/utils";
 
 const resultsQO = queryOptions({
@@ -229,14 +234,22 @@ function TabContent({
 
   if (tab === "start-lists" && startLists.length === 0) return <NoResultsYet />;
   if (tab === "provisional") return <NoResultsYet />;
-  if (tab === "standings" && standings.length === 0) return <NoResultsYet />;
   if (tab === "points") {
-    const points = standings.filter((s) => s.classification === "Points");
-    if (points.length === 0) return <NoResultsYet />;
+    const sections: PointsSection[] = groups.map((g) => ({
+      key: g.key,
+      title: stageTitle(g, lang),
+      rows: g.rows,
+    }));
+    const hasAny = sections.some((s) =>
+      s.rows.some((r) => r.points != null),
+    );
+    if (!hasAny) return <NoResultsYet />;
+    return <PointsStanding sections={sections} lang={lang} />;
   }
   if (tab === "team") {
     const team = standings.filter((s) => s.classification === "Team");
     if (team.length === 0) return <NoResultsYet />;
+    return <TeamStandingTable rows={team} lang={lang} />;
   }
   if (tab === "medal") {
     const medals = standings.filter((s) => s.classification === "Medal");

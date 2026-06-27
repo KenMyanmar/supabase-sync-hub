@@ -179,7 +179,68 @@ export const listStandings = createServerFn({ method: "GET" }).handler(
     ),
 );
 
-// ─── Confirmed riders / teams (filtered view of public.registrations) ──────
+// ─── Teams (rosters) ───────────────────────────────────────────────────────
+export type TeamMember = {
+  id: string;
+  registration_no: string | null;
+  rider_name: string;
+  name_mm: string | null;
+  display_order: number;
+};
+
+export type Team = {
+  id: string;
+  name: string;
+  short_code: string | null;
+  status: "confirmed" | "provisional";
+  display_order: number;
+  members: TeamMember[];
+};
+
+type TeamRow = {
+  id: string;
+  name: string;
+  short_code: string | null;
+  status: string | null;
+  display_order: number | null;
+};
+
+type TeamMemberRow = TeamMember & { team_id: string };
+
+export const listTeams = createServerFn({ method: "GET" }).handler(
+  async (): Promise<Team[]> => {
+    const [teams, members] = await Promise.all([
+      safeSelect<TeamRow>("teams", (q) =>
+        q.order("display_order", { ascending: true }),
+      ),
+      safeSelect<TeamMemberRow>("team_members", (q) =>
+        q.order("display_order", { ascending: true }),
+      ),
+    ]);
+    const byTeam = new Map<string, TeamMember[]>();
+    for (const m of members) {
+      const arr = byTeam.get(m.team_id) ?? [];
+      arr.push({
+        id: m.id,
+        registration_no: m.registration_no,
+        rider_name: m.rider_name,
+        name_mm: m.name_mm,
+        display_order: m.display_order ?? 0,
+      });
+      byTeam.set(m.team_id, arr);
+    }
+    return teams.map((t) => ({
+      id: t.id,
+      name: t.name,
+      short_code: t.short_code,
+      status: t.status === "confirmed" ? "confirmed" : "provisional",
+      display_order: t.display_order ?? 0,
+      members: byTeam.get(t.id) ?? [],
+    }));
+  },
+);
+
+// ─── Confirmed riders (filtered view of public.registrations) ──────────────
 // Public-safe columns only. Reuses the existing public registrations table;
 // when admin marks a registration "Confirmed for provisional start list" or
 // similar, it shows up here.

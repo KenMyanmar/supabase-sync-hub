@@ -37,7 +37,7 @@ export function formatGap(
   return `+${m}:${pad2(s)}.${pad2(cs)}`;
 }
 
-const PODIUM: Record<number, { tint: string; medal: string }> = {
+export const PODIUM: Record<number, { tint: string; medal: string }> = {
   1: { tint: "bg-amber-50 dark:bg-amber-950/30", medal: "🥇" },
   2: { tint: "bg-slate-100 dark:bg-slate-800/40", medal: "🥈" },
   3: { tint: "bg-orange-50 dark:bg-orange-950/30", medal: "🥉" },
