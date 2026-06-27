@@ -1,39 +1,39 @@
-## Render Medal Table tab on `/results`
+## Wire `/media/gallery` to the `race-photos` Supabase Storage bucket
 
-### 1. `src/lib/site-content.functions.ts`
-Add three nullable integer fields to `StandingRow`:
+### 1. `src/lib/site-content.functions.ts` — append `listGalleryGroups`
+
+Server function that walks the `race-photos` bucket and groups images by top-level folder.
+
+- Load admin inside the handler: `const { extAdmin } = await import("@/integrations/ext-supabase/admin.server")`
+- Recursive `walk(prefix)` using `store.list(prefix, { limit: 1000, sortBy: { column: "name", order: "asc" } })`; `entry.id === null` ⇒ folder, recurse
+- Root files collapse into `"General"`
+- Each image: `url` = plain `getPublicUrl(p)`, `thumbUrl` = `getPublicUrl(p, { transform: { width: 600, height: 600, resize: "cover", quality: 70 } })`
+- Sort by `ORDER = ["Opening","Racing","Race","Finisher","Finish","Awards","Archive","General"]`, then alphabetical
+- Try/catch ⇒ `[]` on any error so the bilingual empty state still renders
+
+Exports:
 ```ts
-gold: number | null;
-silver: number | null;
-bronze: number | null;
+export type GalleryImage = { url: string; thumbUrl: string; name: string };
+export type GalleryGroup = { category: string; count: number; images: GalleryImage[] };
+export const listGalleryGroups = createServerFn({ method: "GET" }).handler(...)
 ```
-No query change — `listStandings` already does `select("*")`.
 
-### 2. `src/components/StandingsTables.tsx` — new `MedalTable`
-Props: `{ rows: StandingRow[]; lang: Lang }`.
+### 2. `src/routes/media.gallery.tsx` — rewrite
 
-- Sort by `position` asc.
-- Split rows: `ranked` = `position < 99 && name_en !== "Unattached / Independent"`, `unranked` = the rest.
-- Columns: **Rank | Team | 🥇 | 🥈 | 🥉 | Total**
-  - Total = `points_or_time_ms ?? (gold ?? 0) + (silver ?? 0) + (bronze ?? 0)`
-  - Medal columns: `text-center tabular-nums`
-  - Total: `font-bold tabular-nums text-right`
-- Ranked rows: import & reuse `PODIUM` from `ResultsTable` for tint + medal emoji on rank cell (positions 1–3).
-- Unranked row(s): muted text (`text-muted-foreground`), rank cell shows `—`, team name followed by small bilingual label (EN "outside club ranking" / MM "ကလပ်အဆင့်သတ်မှတ်မှု ပြင်ပ"). No podium tint.
-- Wrapper: same `overflow-x-auto rounded-lg border border-border` + muted thead + `border-t border-border` rows as siblings.
-- Optional bilingual caption above table: EN "Provisional — updated as events finish." / MM "ယာယီ — ပြိုင်ပွဲများပြီးတိုင်း မွမ်းမံပါမည်။" rendered as `text-xs text-muted-foreground mb-2`.
-
-### 3. `src/routes/results.tsx` — wire it up
-In `TabContent`, the `tab === "medal"` branch currently filters and only short-circuits on empty. Change it to also render on success:
-```ts
-if (tab === "medal") {
-  const medals = standings.filter((s) => s.classification === "Medal");
-  if (medals.length === 0) return <NoResultsYet />;
-  return <MedalTable rows={medals} lang={lang} />;
-}
-```
-Import `MedalTable` from `@/components/StandingsTables`.
+- Remove hardcoded `GROUPS` constant
+- Add `loader: () => listGalleryGroups()` and `errorComponent`
+- In component:
+  - `const groups = Route.useLoaderData();`
+  - Call hooks first (Rules of Hooks): `const [active, setActive] = useState(groups[0]?.category ?? "");`
+  - If `groups.length === 0` → existing bilingual dashed-border `ImageIcon` empty state using `useLang()` + `t()`
+  - Else render a tab bar (skip when `groups.length === 1`) showing `Title-Case · count`
+  - Resolve `const current = groups.find(g => g.category === active) ?? groups[0];`
+  - Render grid `grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4`, each item `<a href={url} target="_blank" rel="noopener noreferrer">` wrapping `<img src={thumbUrl} loading="lazy" className="aspect-square w-full object-cover" />` inside `overflow-hidden rounded-md border border-border`
 
 ### Acceptance
-- Medal tab shows 6 club rows podium-tinted (KNCC, RCC, Mawlamyine, TYC, FCC, TDC) plus a de-emphasized Unattached row with `—` for rank.
-- Reads live from Supabase; no TS errors.
+- Tabs derived from bucket folders with photo counts
+- Thumbnails open full-res in a new tab
+- Empty bucket renders the existing bilingual empty state
+- No hardcoded image lists in `media.gallery.tsx`
+- `admin.server` loaded inside the handler — not in the client bundle
+- `useState` runs before any early return

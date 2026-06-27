@@ -468,3 +468,103 @@ export const likeResultComment = createServerFn({ method: "POST" })
   });
 
 
+
+// ─── Gallery (race-photos bucket) ──────────────────────────────────────────
+export type GalleryImage = { url: string; thumbUrl: string; name: string };
+export type GalleryGroup = {
+  category: string;
+  count: number;
+  images: GalleryImage[];
+};
+
+const IMG_RE = /\.(jpe?g|png|webp|gif|avif)$/i;
+const GALLERY_BUCKET = "race-photos";
+
+export const listGalleryGroups = createServerFn({ method: "GET" }).handler(
+  async (): Promise<GalleryGroup[]> => {
+    try {
+      const { extAdmin } = await import(
+        "@/integrations/ext-supabase/admin.server"
+      );
+      const store = extAdmin().storage.from(GALLERY_BUCKET);
+
+      async function walk(prefix: string): Promise<string[]> {
+        const { data, error } = await store.list(prefix, {
+          limit: 1000,
+          sortBy: { column: "name", order: "asc" },
+        });
+        if (error || !data) return [];
+        const files: string[] = [];
+        for (const entry of data) {
+          const path = prefix ? `${prefix}/${entry.name}` : entry.name;
+          if (entry.id === null) {
+            files.push(...(await walk(path)));
+          } else if (IMG_RE.test(entry.name)) {
+            files.push(path);
+          }
+        }
+        return files;
+      }
+
+      const { data: top, error: topErr } = await store.list("", {
+        limit: 1000,
+      });
+      if (topErr || !top) return [];
+
+      const groups: GalleryGroup[] = [];
+      for (const entry of top) {
+        const isFolder = entry.id === null;
+        const category = isFolder ? entry.name : "General";
+        const paths = isFolder
+          ? await walk(entry.name)
+          : IMG_RE.test(entry.name)
+            ? [entry.name]
+            : [];
+        if (paths.length === 0) continue;
+
+        const images: GalleryImage[] = paths.map((p) => ({
+          name: p.split("/").pop() ?? p,
+          url: store.getPublicUrl(p).data.publicUrl,
+          thumbUrl: store.getPublicUrl(p, {
+            transform: {
+              width: 600,
+              height: 600,
+              resize: "cover",
+              quality: 70,
+            },
+          }).data.publicUrl,
+        }));
+
+        const existing = groups.find((g) => g.category === category);
+        if (existing) {
+          existing.images.push(...images);
+          existing.count = existing.images.length;
+        } else {
+          groups.push({ category, count: images.length, images });
+        }
+      }
+
+      const ORDER = [
+        "Opening",
+        "Racing",
+        "Race",
+        "Finisher",
+        "Finish",
+        "Awards",
+        "Archive",
+        "General",
+      ];
+      groups.sort((a, b) => {
+        const ia = ORDER.indexOf(a.category);
+        const ib = ORDER.indexOf(b.category);
+        if (ia !== -1 || ib !== -1)
+          return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+        return a.category.localeCompare(b.category);
+      });
+      return groups;
+    } catch (e) {
+      console.error("[site-content] listGalleryGroups threw", e);
+      return [];
+    }
+  },
+);
