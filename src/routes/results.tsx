@@ -18,6 +18,7 @@ import { ResultsComments } from "@/components/ResultsComments";
 import {
   PointsStanding,
   TeamStandingTable,
+  MedalTable,
   type PointsSection,
 } from "@/components/StandingsTables";
 import { cn } from "@/lib/utils";
@@ -254,6 +255,7 @@ function TabContent({
   if (tab === "medal") {
     const medals = standings.filter((s) => s.classification === "Medal");
     if (medals.length === 0) return <NoResultsYet />;
+    return <MedalTable rows={medals} lang={lang} />;
   }
   if (tab === "notices" && notices.length === 0)
     return <NoResultsYet message={EMPTY.noNotices} />;
