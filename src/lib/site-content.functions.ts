@@ -157,6 +157,9 @@ export type StandingRow = {
   name_mm: string | null;
   team_club: string | null;
   points_or_time_ms: number | null;
+  gold: number | null;
+  silver: number | null;
+  bronze: number | null;
 };
 
 export const listStartLists = createServerFn({ method: "GET" }).handler(
