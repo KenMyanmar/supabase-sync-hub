@@ -5,6 +5,7 @@ import { useLang } from "@/lib/i18n";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NoResultsYet } from "@/components/NoResultsYet";
 import { getPublicRiders, type PublicRider } from "@/lib/public-riders.functions";
+import { listTeams, type Team as TeamRow } from "@/lib/site-content.functions";
 
 const publicRidersQO = queryOptions({
   queryKey: ["public-riders"],
@@ -12,6 +13,13 @@ const publicRidersQO = queryOptions({
   staleTime: 0,
   refetchOnMount: "always",
   refetchOnWindowFocus: true,
+});
+
+const teamsQO = queryOptions({
+  queryKey: ["teams"],
+  queryFn: () => listTeams(),
+  staleTime: 0,
+  refetchOnMount: "always",
 });
 
 export const Route = createFileRoute("/riders/")({
@@ -33,6 +41,7 @@ export const Route = createFileRoute("/riders/")({
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(publicRidersQO);
+    context.queryClient.ensureQueryData(teamsQO);
   },
   component: RidersPage,
   errorComponent: ({ error }) => (
@@ -45,11 +54,6 @@ type TeamStatus = "confirmed" | "provisional";
 
 type Rider = { name: string; reg: string; provisional?: boolean };
 
-type Team = {
-  name: string;
-  status: TeamStatus;
-  riders: Rider[];
-};
 
 // Team rosters remain hardcoded: the team→rider mapping is not modeled in the DB yet.
 const TEAMS: Team[] = [
