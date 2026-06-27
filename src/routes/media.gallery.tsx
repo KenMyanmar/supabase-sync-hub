@@ -1,84 +1,104 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Image as ImageIcon } from "lucide-react";
+import { useState } from "react";
 import { useLang, t } from "@/lib/i18n";
-
-type Group = {
-  id: string;
-  title: { en: string; mm: string };
-  date?: string;
-  images: Array<{ url: string; alt: string }>;
-};
-
-const GROUPS: Group[] = [
-  {
-    id: "road-race",
-    date: "26 June 2026",
-    title: { en: "Road Race — Hlegu 11 Hills", mm: "လမ်းမပြိုင်ပွဲ — လှည်းကူး ၁၁ တောင်" },
-    images: [],
-  },
-  {
-    id: "mtb",
-    date: "27 June 2026",
-    title: { en: "MTB XCO — Taikkyi / Mirror Mountains", mm: "MTB XCO — တိုက်ကြီး / မှန်တောင်" },
-    images: [],
-  },
-  {
-    id: "criterium",
-    date: "28 June 2026",
-    title: { en: "Criterium + Awards — Thuwunna", mm: "ခရိုက်တီးရီယမ် နှင့် ဆုပေးပွဲ — သုဝဏ္ဏ" },
-    images: [],
-  },
-  {
-    id: "archive",
-    title: { en: "Archive", mm: "မှတ်တမ်း" },
-    images: [],
-  },
-];
+import { listGalleryGroups } from "@/lib/site-content.functions";
 
 export const Route = createFileRoute("/media/gallery")({
   head: () => ({
     meta: [{ title: "Gallery — MCF National Cycling Event 2026" }],
   }),
+  loader: () => listGalleryGroups(),
   component: GalleryPage,
+  errorComponent: ({ error }) => (
+    <div role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive">
+      {error.message}
+    </div>
+  ),
 });
+
+function titleCase(s: string): string {
+  return s
+    .replace(/[_-]+/g, " ")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => w[0].toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
 
 function GalleryPage() {
   const { lang } = useLang();
+  const groups = Route.useLoaderData();
+  const [active, setActive] = useState<string>(groups[0]?.category ?? "");
+
+  if (groups.length === 0) {
+    return (
+      <div className="flex items-center gap-3 rounded-lg border border-dashed border-border bg-muted/20 p-6 text-sm text-muted-foreground">
+        <ImageIcon className="h-5 w-5 shrink-0" />
+        <span>
+          {lang === "mm"
+            ? "ဓာတ်ပုံများကို ပြိုင်ပွဲပြီးနောက် တင်ပါမည်။"
+            : "Photos will be uploaded after race day."}
+        </span>
+      </div>
+    );
+  }
+
+  const current = groups.find((g) => g.category === active) ?? groups[0];
+
   return (
-    <div className="space-y-10">
-      {GROUPS.map((g) => (
-        <section key={g.id}>
-          <div className="mb-3 flex items-baseline gap-3">
-            <h2 className="text-lg font-semibold text-foreground">{t(g.title, lang)}</h2>
-            {g.date ? (
-              <span className="font-mono text-xs text-muted-foreground">{g.date}</span>
-            ) : null}
-          </div>
-          {g.images.length === 0 ? (
-            <div className="flex items-center gap-3 rounded-lg border border-dashed border-border bg-muted/20 p-6 text-sm text-muted-foreground">
-              <ImageIcon className="h-5 w-5 shrink-0" />
-              <span>
-                {lang === "mm"
-                  ? "ဓာတ်ပုံများကို ပြိုင်ပွဲပြီးနောက် တင်ပါမည်။"
-                  : "Photos will be uploaded after race day."}
-              </span>
-            </div>
-          ) : (
-            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-              {g.images.map((img, i) => (
-                <li key={i} className="overflow-hidden rounded-md border border-border">
-                  <img
-                    src={img.url}
-                    alt={img.alt}
-                    loading="lazy"
-                    className="aspect-square w-full object-cover"
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      ))}
+    <div className="space-y-6">
+      {groups.length > 1 ? (
+        <div className="flex flex-wrap gap-2 border-b border-border pb-2">
+          {groups.map((g) => {
+            const isActive = g.category === current.category;
+            return (
+              <button
+                key={g.category}
+                type="button"
+                onClick={() => setActive(g.category)}
+                className={
+                  "rounded-md px-3 py-1.5 text-sm transition-colors " +
+                  (isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted/40 text-muted-foreground hover:bg-muted")
+                }
+              >
+                <span className="font-medium">{titleCase(g.category)}</span>
+                <span className="ml-2 font-mono text-xs opacity-70">· {g.count}</span>
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <h2 className="text-lg font-semibold text-foreground">
+          {titleCase(current.category)}{" "}
+          <span className="ml-1 font-mono text-xs text-muted-foreground">· {current.count}</span>
+        </h2>
+      )}
+
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        {current.images.map((img) => (
+          <li
+            key={img.url}
+            className="overflow-hidden rounded-md border border-border"
+          >
+            <a
+              href={img.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <img
+                src={img.thumbUrl}
+                alt={img.name}
+                loading="lazy"
+                className="aspect-square w-full object-cover transition-transform hover:scale-[1.02]"
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
