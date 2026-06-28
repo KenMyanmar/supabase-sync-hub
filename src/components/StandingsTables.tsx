@@ -1,7 +1,72 @@
+import { Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Lang } from "@/lib/i18n";
 import type { ResultRow, StandingRow } from "@/lib/site-content.functions";
 import { PODIUM } from "@/components/ResultsTable";
+
+const CHAMPION_CATEGORY: Record<string, { en: string; mm: string }> = {
+  MEN_ELITE: { en: "Men Elite", mm: "အမျိုးသား Elite" },
+  WOMEN: { en: "Women Elite", mm: "အမျိုးသမီး" },
+  JUNIOR: { en: "Men Junior", mm: "လူငယ်" },
+  TEAM: { en: "Team", mm: "အသင်း" },
+};
+
+export function ChampionsBanner({
+  rows,
+  lang,
+}: {
+  rows: StandingRow[];
+  lang: Lang;
+}) {
+  const sorted = [...rows].sort(
+    (a, b) => (a.position ?? 999) - (b.position ?? 999),
+  );
+  const titleLabel = lang === "mm" ? "အမျိုးသားချန်ပီယံ" : "National Champion";
+  const name = (r: StandingRow) =>
+    (lang === "mm" ? r.name_mm : r.name_en) || r.name_en || r.name_mm || "—";
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {sorted.map((r) => {
+        const cat = r.registration_no
+          ? CHAMPION_CATEGORY[r.registration_no]
+          : undefined;
+        const catLabel = cat
+          ? lang === "mm"
+            ? cat.mm
+            : cat.en
+          : (r.registration_no ?? "");
+        return (
+          <div
+            key={r.id}
+            className={cn(
+              "rounded-lg border-2 border-amber-400/70 bg-gradient-to-br from-amber-50 to-yellow-100/50 p-4 shadow-sm",
+              "dark:from-amber-950/30 dark:to-yellow-900/20",
+            )}
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-400/90 text-white shadow">
+                <Trophy className="h-5 w-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">
+                  {catLabel} · {titleLabel}
+                </p>
+                <p className="mt-1 text-lg font-bold text-foreground">
+                  {name(r)}
+                </p>
+                {r.team_club ? (
+                  <p className="text-sm text-muted-foreground">{r.team_club}</p>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 
 function riderName(r: ResultRow, lang: Lang): string {
   return (
