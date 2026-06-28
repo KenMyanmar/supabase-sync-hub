@@ -19,8 +19,10 @@ import {
   PointsStanding,
   TeamStandingTable,
   MedalTable,
+  ChampionsBanner,
   type PointsSection,
 } from "@/components/StandingsTables";
+
 import { cn } from "@/lib/utils";
 
 const resultsQO = queryOptions({
