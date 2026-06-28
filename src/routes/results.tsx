@@ -221,6 +221,12 @@ function TabContent({
   const startLists = useSuspenseQuery(startListsQO).data;
   const notices = useSuspenseQuery(noticesQO).data;
 
+  if (tab === "champions") {
+    const champs = standings.filter((s) => s.classification === "Champion");
+    if (champs.length === 0) return <NoResultsYet />;
+    return <ChampionsBanner rows={champs} lang={lang} />;
+  }
+
   if (tab === "results") {
     if (groups.length === 0) return <NoResultsYet />;
     return (
