@@ -3,13 +3,42 @@ import { cn } from "@/lib/utils";
 import type { Lang } from "@/lib/i18n";
 import type { ResultRow, StandingRow } from "@/lib/site-content.functions";
 import { PODIUM } from "@/components/ResultsTable";
+import menEliteAsset from "@/assets/champion-men-elite.jpg.asset.json";
+import womenAsset from "@/assets/champion-women.jpg.asset.json";
+import juniorAsset from "@/assets/champion-junior.jpg.asset.json";
+import teamAsset from "@/assets/champion-team.jpg.asset.json";
 
-const CHAMPION_CATEGORY: Record<string, { en: string; mm: string }> = {
-  MEN_ELITE: { en: "Men Elite", mm: "အမျိုးသား Elite" },
-  WOMEN: { en: "Women Elite", mm: "အမျိုးသမီး" },
-  JUNIOR: { en: "Men Junior", mm: "လူငယ်" },
-  TEAM: { en: "Team", mm: "အသင်း" },
+const CHAMPION_CATEGORY: Record<
+  string,
+  { en: string; mm: string; photo: string; objectPosition?: string }
+> = {
+  MEN_ELITE: {
+    en: "Men Elite",
+    mm: "အမျိုးသား Elite",
+    photo: menEliteAsset.url,
+    objectPosition: "center 30%",
+  },
+  WOMEN: {
+    en: "Women Elite",
+    mm: "အမျိုးသမီး Elite",
+    photo: womenAsset.url,
+    objectPosition: "center 25%",
+  },
+  JUNIOR: {
+    en: "Men Junior",
+    mm: "လူငယ်",
+    photo: juniorAsset.url,
+    objectPosition: "center 30%",
+  },
+  TEAM: {
+    en: "Team Champion",
+    mm: "အသင်းချန်ပီယံ",
+    photo: teamAsset.url,
+    objectPosition: "center 35%",
+  },
 };
+
+const CATEGORY_ORDER = ["MEN_ELITE", "WOMEN", "JUNIOR", "TEAM"];
 
 export function ChampionsBanner({
   rows,
@@ -18,52 +47,105 @@ export function ChampionsBanner({
   rows: StandingRow[];
   lang: Lang;
 }) {
-  const sorted = [...rows].sort(
-    (a, b) => (a.position ?? 999) - (b.position ?? 999),
-  );
-  const titleLabel = lang === "mm" ? "အမျိုးသားချန်ပီယံ" : "National Champion";
+  const sorted = [...rows].sort((a, b) => {
+    const ai = CATEGORY_ORDER.indexOf(a.registration_no ?? "");
+    const bi = CATEGORY_ORDER.indexOf(b.registration_no ?? "");
+    return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
+  });
+  const titleLabel =
+    lang === "mm" ? "အမျိုးသားချန်ပီယံ" : "National Champion";
+  const eyebrow =
+    lang === "mm"
+      ? "မြန်မာစက်ဘီးချန်ပီယံရှစ်ပြိုင်ပွဲ ၂၀၂၆"
+      : "MCF National Cycling Championship 2026";
   const name = (r: StandingRow) =>
     (lang === "mm" ? r.name_mm : r.name_en) || r.name_en || r.name_mm || "—";
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      {sorted.map((r) => {
-        const cat = r.registration_no
-          ? CHAMPION_CATEGORY[r.registration_no]
-          : undefined;
-        const catLabel = cat
-          ? lang === "mm"
-            ? cat.mm
-            : cat.en
-          : (r.registration_no ?? "");
-        return (
-          <div
-            key={r.id}
-            className={cn(
-              "rounded-lg border-2 border-amber-400/70 bg-gradient-to-br from-amber-50 to-yellow-100/50 p-4 shadow-sm",
-              "dark:from-amber-950/30 dark:to-yellow-900/20",
-            )}
-          >
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-400/90 text-white shadow">
-                <Trophy className="h-5 w-5" />
+    <section className="relative">
+      <div className="mb-6 flex items-end justify-between gap-4">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-600 dark:text-amber-400">
+            {eyebrow}
+          </p>
+          <h2 className="mt-1 bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
+            {lang === "mm" ? "ချန်ပီယံများ" : "Champions"}
+          </h2>
+        </div>
+        <div className="hidden h-px flex-1 bg-gradient-to-r from-transparent via-amber-400/60 to-transparent sm:block" />
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {sorted.map((r) => {
+          const cat = r.registration_no
+            ? CHAMPION_CATEGORY[r.registration_no]
+            : undefined;
+          const catLabel = cat
+            ? lang === "mm"
+              ? cat.mm
+              : cat.en
+            : (r.registration_no ?? "");
+          return (
+            <article
+              key={r.id}
+              className={cn(
+                "group relative overflow-hidden rounded-2xl",
+                "ring-1 ring-amber-400/40 dark:ring-amber-300/30",
+                "shadow-[0_8px_30px_-12px_rgba(180,120,20,0.45)]",
+                "transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_-15px_rgba(180,120,20,0.6)]",
+              )}
+            >
+              {/* gold border glow */}
+              <div className="pointer-events-none absolute inset-0 z-20 rounded-2xl ring-1 ring-inset ring-amber-200/30" />
+
+              {/* photo */}
+              <div className="relative aspect-[3/4] w-full overflow-hidden">
+                {cat?.photo ? (
+                  <img
+                    src={cat.photo}
+                    alt={`${catLabel} — ${name(r)}`}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    style={{ objectPosition: cat.objectPosition ?? "center" }}
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-200 to-yellow-400" />
+                )}
+
+                {/* dark gradient for text legibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
+
+                {/* gold accent strip top */}
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-600" />
+
+                {/* trophy badge */}
+                <div className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-yellow-600 text-white shadow-lg ring-2 ring-white/40">
+                  <Trophy className="h-5 w-5" />
+                </div>
+
+                {/* text overlay */}
+                <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-300">
+                    {titleLabel}
+                  </p>
+                  <p className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-white/80">
+                    {catLabel}
+                  </p>
+                  <h3 className="mt-1 text-lg font-bold leading-tight drop-shadow-sm">
+                    {name(r)}
+                  </h3>
+                  {r.team_club ? (
+                    <p className="mt-1 inline-block rounded-full bg-white/15 px-2 py-0.5 text-xs font-medium text-white/90 backdrop-blur-sm">
+                      {r.team_club}
+                    </p>
+                  ) : null}
+                </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">
-                  {catLabel} · {titleLabel}
-                </p>
-                <p className="mt-1 text-lg font-bold text-foreground">
-                  {name(r)}
-                </p>
-                {r.team_club ? (
-                  <p className="text-sm text-muted-foreground">{r.team_club}</p>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
