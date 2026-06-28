@@ -35,6 +35,7 @@ export const MEDIA_SUBNAV = [
 ] as const;
 
 export const RESULTS_TABS = [
+  { id: "champions", en: "National Champions", mm: "အမျိုးသားချန်ပီယံများ" },
   { id: "start-lists", en: "Start Lists", mm: "ပြိုင်ပွဲဝင်စာရင်း" },
   { id: "provisional", en: "Provisional Results", mm: "ယာယီရလဒ်" },
   { id: "results", en: "Official Results", mm: "တရားဝင်ရလဒ်" },

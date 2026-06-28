@@ -19,8 +19,10 @@ import {
   PointsStanding,
   TeamStandingTable,
   MedalTable,
+  ChampionsBanner,
   type PointsSection,
 } from "@/components/StandingsTables";
+
 import { cn } from "@/lib/utils";
 
 const resultsQO = queryOptions({
@@ -218,6 +220,12 @@ function TabContent({
   const standings = useSuspenseQuery(standingsQO).data;
   const startLists = useSuspenseQuery(startListsQO).data;
   const notices = useSuspenseQuery(noticesQO).data;
+
+  if (tab === "champions") {
+    const champs = standings.filter((s) => s.classification === "Champion");
+    if (champs.length === 0) return <NoResultsYet />;
+    return <ChampionsBanner rows={champs} lang={lang} />;
+  }
 
   if (tab === "results") {
     if (groups.length === 0) return <NoResultsYet />;
