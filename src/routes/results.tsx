@@ -254,17 +254,10 @@ function TabContent({
   if (tab === "start-lists" && startLists.length === 0) return <NoResultsYet />;
   if (tab === "provisional") return <NoResultsYet />;
   if (tab === "points") {
-    const sections: PointsSection[] = groups.map((g) => ({
-      key: g.key,
-      title: stageTitle(g, lang),
-      rows: g.rows,
-    }));
-    const hasAny = sections.some((s) =>
-      s.rows.some((r) => r.points != null),
-    );
-    if (!hasAny) return <NoResultsYet />;
-    return <PointsStanding sections={sections} lang={lang} />;
+    if (gcStandings.length === 0) return <NoResultsYet />;
+    return <GcStandings rows={gcStandings} lang={lang} />;
   }
+
   if (tab === "team") {
     const team = standings.filter((s) => s.classification === "Team");
     if (team.length === 0) return <NoResultsYet />;
