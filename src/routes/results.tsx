@@ -19,12 +19,11 @@ import { NoResultsYet } from "@/components/NoResultsYet";
 import { ResultsTable } from "@/components/ResultsTable";
 import { ResultsComments } from "@/components/ResultsComments";
 import {
-  PointsStanding,
   TeamStandingTable,
   MedalTable,
   ChampionsBanner,
-  type PointsSection,
 } from "@/components/StandingsTables";
+
 
 import { cn } from "@/lib/utils";
 
