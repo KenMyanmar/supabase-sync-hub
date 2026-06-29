@@ -182,6 +182,26 @@ export const listStandings = createServerFn({ method: "GET" }).handler(
     ),
 );
 
+// ─── GC Standings (cumulative Road Race + Criterium) ──────────────────────
+export type GcStandingRow = {
+  category: string;
+  position: number | null;
+  name_en: string | null;
+  name_mm: string | null;
+  team_club: string | null;
+  rr_pts: number | null;
+  crit_pts: number | null;
+  gc_pts: number | null;
+};
+
+export const listGcStandings = createServerFn({ method: "GET" }).handler(
+  async () =>
+    safeSelect<GcStandingRow>("gc_standings", (q) =>
+      q.order("category", { ascending: true }).order("position", { ascending: true }),
+    ),
+);
+
+
 // ─── Teams (rosters) ───────────────────────────────────────────────────────
 export type TeamMember = {
   id: string;
