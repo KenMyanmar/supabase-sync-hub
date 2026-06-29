@@ -277,3 +277,84 @@ function TabContent({
     </div>
   );
 }
+
+const GC_CATEGORY_ORDER = ["Men Elite", "Men Junior", "Women"];
+
+function GcStandings({ rows, lang }: { rows: GcStandingRow[]; lang: Lang }) {
+  const unattached = lang === "mm" ? "လွတ်လပ်ပြိုင်" : "unattached";
+  const grouped = new Map<string, GcStandingRow[]>();
+  for (const r of rows) {
+    const k = r.category ?? "";
+    const arr = grouped.get(k) ?? [];
+    arr.push(r);
+    grouped.set(k, arr);
+  }
+  const ordered = [
+    ...GC_CATEGORY_ORDER.filter((c) => grouped.has(c)).map(
+      (c) => [c, grouped.get(c)!] as const,
+    ),
+    ...[...grouped.entries()].filter(
+      ([c]) => !GC_CATEGORY_ORDER.includes(c),
+    ),
+  ];
+  const riderName = (r: GcStandingRow) =>
+    (lang === "mm" ? r.name_mm : r.name_en) || r.name_en || r.name_mm || "—";
+
+  return (
+    <div className="space-y-8">
+      {ordered.map(([cat, catRows]) => {
+        const sorted = [...catRows].sort(
+          (a, b) => (a.position ?? 999) - (b.position ?? 999),
+        );
+        return (
+          <section key={cat}>
+            <h2 className="mb-3 text-xl font-semibold">{cat}</h2>
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full min-w-[560px] text-sm">
+                <thead className="bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
+                  <tr>
+                    <th className="px-3 py-2 text-left w-14">Rank</th>
+                    <th className="px-3 py-2 text-left">Rider</th>
+                    <th className="px-3 py-2 text-left">Team / Club</th>
+                    <th className="px-3 py-2 text-right w-16 tabular-nums">RR</th>
+                    <th className="px-3 py-2 text-right w-16 tabular-nums">Crit</th>
+                    <th className="px-3 py-2 text-right w-20 tabular-nums">GC</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sorted.map((r, i) => (
+                    <tr key={`${cat}-${i}`} className="border-t border-border">
+                      <td className="px-3 py-2 font-semibold tabular-nums">
+                        {r.position ?? i + 1}
+                      </td>
+                      <td className="px-3 py-2 font-medium text-foreground">
+                        {riderName(r)}
+                      </td>
+                      <td className="px-3 py-2">
+                        {r.team_club ? (
+                          r.team_club
+                        ) : (
+                          <em className="text-muted-foreground">{unattached}</em>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {r.rr_pts ?? 0}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {r.crit_pts ?? 0}
+                      </td>
+                      <td className="px-3 py-2 text-right font-bold tabular-nums">
+                        {r.gc_pts ?? 0}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
