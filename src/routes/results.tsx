@@ -5,11 +5,14 @@ import {
   listResults,
   listStages,
   listStandings,
+  listGcStandings,
   listStartLists,
   listNotices,
+  type GcStandingRow,
   type ResultRow,
   type StageRow,
 } from "@/lib/site-content.functions";
+
 import { useLang, t, type Lang } from "@/lib/i18n";
 import { RESULTS_TABS, SECTION, EMPTY } from "@/lib/strings";
 import { NoResultsYet } from "@/components/NoResultsYet";
