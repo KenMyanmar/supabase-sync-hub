@@ -228,6 +228,8 @@ function TabContent({
   const standings = useSuspenseQuery(standingsQO).data;
   const startLists = useSuspenseQuery(startListsQO).data;
   const notices = useSuspenseQuery(noticesQO).data;
+  const gcStandings = useSuspenseQuery(gcStandingsQO).data;
+
 
   if (tab === "champions") {
     const champs = standings.filter((s) => s.classification === "Champion");
