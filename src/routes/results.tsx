@@ -5,23 +5,25 @@ import {
   listResults,
   listStages,
   listStandings,
+  listGcStandings,
   listStartLists,
   listNotices,
+  type GcStandingRow,
   type ResultRow,
   type StageRow,
 } from "@/lib/site-content.functions";
+
 import { useLang, t, type Lang } from "@/lib/i18n";
 import { RESULTS_TABS, SECTION, EMPTY } from "@/lib/strings";
 import { NoResultsYet } from "@/components/NoResultsYet";
 import { ResultsTable } from "@/components/ResultsTable";
 import { ResultsComments } from "@/components/ResultsComments";
 import {
-  PointsStanding,
   TeamStandingTable,
   MedalTable,
   ChampionsBanner,
-  type PointsSection,
 } from "@/components/StandingsTables";
+
 
 import { cn } from "@/lib/utils";
 
@@ -45,6 +47,11 @@ const noticesQO = queryOptions({
   queryKey: ["site", "notices"],
   queryFn: () => listNotices(),
 });
+const gcStandingsQO = queryOptions({
+  queryKey: ["site", "gc-standings"],
+  queryFn: () => listGcStandings(),
+});
+
 
 export const Route = createFileRoute("/results")({
   head: () => ({
@@ -72,6 +79,7 @@ export const Route = createFileRoute("/results")({
     context.queryClient.ensureQueryData(standingsQO);
     context.queryClient.ensureQueryData(startListsQO);
     context.queryClient.ensureQueryData(noticesQO);
+    context.queryClient.ensureQueryData(gcStandingsQO);
   },
   component: ResultsPage,
   errorComponent: ({ error }) => (
@@ -220,6 +228,8 @@ function TabContent({
   const standings = useSuspenseQuery(standingsQO).data;
   const startLists = useSuspenseQuery(startListsQO).data;
   const notices = useSuspenseQuery(noticesQO).data;
+  const gcStandings = useSuspenseQuery(gcStandingsQO).data;
+
 
   if (tab === "champions") {
     const champs = standings.filter((s) => s.classification === "Champion");
@@ -244,17 +254,10 @@ function TabContent({
   if (tab === "start-lists" && startLists.length === 0) return <NoResultsYet />;
   if (tab === "provisional") return <NoResultsYet />;
   if (tab === "points") {
-    const sections: PointsSection[] = groups.map((g) => ({
-      key: g.key,
-      title: stageTitle(g, lang),
-      rows: g.rows,
-    }));
-    const hasAny = sections.some((s) =>
-      s.rows.some((r) => r.points != null),
-    );
-    if (!hasAny) return <NoResultsYet />;
-    return <PointsStanding sections={sections} lang={lang} />;
+    if (gcStandings.length === 0) return <NoResultsYet />;
+    return <GcStandings rows={gcStandings} lang={lang} />;
   }
+
   if (tab === "team") {
     const team = standings.filter((s) => s.classification === "Team");
     if (team.length === 0) return <NoResultsYet />;
@@ -274,3 +277,84 @@ function TabContent({
     </div>
   );
 }
+
+const GC_CATEGORY_ORDER = ["Men Elite", "Men Junior", "Women"];
+
+function GcStandings({ rows, lang }: { rows: GcStandingRow[]; lang: Lang }) {
+  const unattached = lang === "mm" ? "လွတ်လပ်ပြိုင်" : "unattached";
+  const grouped = new Map<string, GcStandingRow[]>();
+  for (const r of rows) {
+    const k = r.category ?? "";
+    const arr = grouped.get(k) ?? [];
+    arr.push(r);
+    grouped.set(k, arr);
+  }
+  const ordered = [
+    ...GC_CATEGORY_ORDER.filter((c) => grouped.has(c)).map(
+      (c) => [c, grouped.get(c)!] as const,
+    ),
+    ...[...grouped.entries()].filter(
+      ([c]) => !GC_CATEGORY_ORDER.includes(c),
+    ),
+  ];
+  const riderName = (r: GcStandingRow) =>
+    (lang === "mm" ? r.name_mm : r.name_en) || r.name_en || r.name_mm || "—";
+
+  return (
+    <div className="space-y-8">
+      {ordered.map(([cat, catRows]) => {
+        const sorted = [...catRows].sort(
+          (a, b) => (a.position ?? 999) - (b.position ?? 999),
+        );
+        return (
+          <section key={cat}>
+            <h2 className="mb-3 text-xl font-semibold">{cat}</h2>
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full min-w-[560px] text-sm">
+                <thead className="bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
+                  <tr>
+                    <th className="px-3 py-2 text-left w-14">Rank</th>
+                    <th className="px-3 py-2 text-left">Rider</th>
+                    <th className="px-3 py-2 text-left">Team / Club</th>
+                    <th className="px-3 py-2 text-right w-16 tabular-nums">RR</th>
+                    <th className="px-3 py-2 text-right w-16 tabular-nums">Crit</th>
+                    <th className="px-3 py-2 text-right w-20 tabular-nums">GC</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sorted.map((r, i) => (
+                    <tr key={`${cat}-${i}`} className="border-t border-border">
+                      <td className="px-3 py-2 font-semibold tabular-nums">
+                        {r.position ?? i + 1}
+                      </td>
+                      <td className="px-3 py-2 font-medium text-foreground">
+                        {riderName(r)}
+                      </td>
+                      <td className="px-3 py-2">
+                        {r.team_club ? (
+                          r.team_club
+                        ) : (
+                          <em className="text-muted-foreground">{unattached}</em>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {r.rr_pts ?? 0}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {r.crit_pts ?? 0}
+                      </td>
+                      <td className="px-3 py-2 text-right font-bold tabular-nums">
+                        {r.gc_pts ?? 0}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
