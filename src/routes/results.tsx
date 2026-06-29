@@ -79,6 +79,7 @@ export const Route = createFileRoute("/results")({
     context.queryClient.ensureQueryData(standingsQO);
     context.queryClient.ensureQueryData(startListsQO);
     context.queryClient.ensureQueryData(noticesQO);
+    context.queryClient.ensureQueryData(gcStandingsQO);
   },
   component: ResultsPage,
   errorComponent: ({ error }) => (
