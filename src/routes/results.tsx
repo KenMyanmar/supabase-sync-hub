@@ -47,6 +47,11 @@ const noticesQO = queryOptions({
   queryKey: ["site", "notices"],
   queryFn: () => listNotices(),
 });
+const gcStandingsQO = queryOptions({
+  queryKey: ["site", "gc-standings"],
+  queryFn: () => listGcStandings(),
+});
+
 
 export const Route = createFileRoute("/results")({
   head: () => ({
